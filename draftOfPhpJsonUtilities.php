@@ -8,7 +8,19 @@ use \Darling\PHPTextTypes\classes\strings\Text;
 class JsonString extends Text {
 
     public function __construct(private mixed $originalValue) {
-        parent::__construct(strval(json_encode($originalValue)));
+        parent::__construct($this->encodeAsJson());
+    }
+
+    public function encodeAsJson() : string
+    {
+        return strval(json_encode($this->originalValue()));
+    }
+
+    public function __toString(): string
+    {
+        $json = $this->encodeAsJson();
+        parent::__construct($json);
+        return $json;
     }
 
     public function originalValue(): mixed {
@@ -22,20 +34,17 @@ class JsonSerializedObject extends JsonString {
     public const CLASS_INDEX = '__class__';
     public const DATA_INDEX = '__data__';
 
-    private string $json = '{}';
-
     public function __construct(
         private ObjectReflection $objectReflection
     ) {
-        parent::__construct($this->objectReflection->propertyValues());
-        $this->json = $this->encodeObjectToJson();
+        parent::__construct($this->originalObject());
     }
 
-    public function originalObject(): mixed {
+    public function originalObject(): object {
         return $this->objectReflection->reflectedObject();
     }
 
-    public function encodeObjectToJson(): string {
+    public function encodeAsJson(): string {
         return strval(
             json_encode(
                 [
@@ -47,7 +56,7 @@ class JsonSerializedObject extends JsonString {
     }
 
     public function __toString(): string {
-        return $this->json;
+        return $this->encodeAsJson();
     }
 
 }
@@ -91,13 +100,13 @@ $jsonString = new JsonString(
 $jsonSerializedObject = new JsonSerializedObject(
     new ObjectReflection($jsonString)
 );
-
 $jsonStringDecoder = new JsonStringDecoder();
+
+
 
 $unserializedObject = $jsonStringDecoder->decodeJsonToObject(
     $jsonSerializedObject
 );
-
 
 var_dump('Original Object', $jsonString);
 var_dump('JsonSerializedObject', $jsonSerializedObject);
@@ -111,5 +120,4 @@ var_dump(
     'Objects are of the same type',
     gettype($jsonString) == gettype($unserializedObject)
 );
-
 
