@@ -118,6 +118,6 @@ var_dump(
 
 var_dump(
     'Objects are of the same type',
-    gettype($jsonString) == gettype($unserializedObject)
+    gettype($jsonString) === gettype($unserializedObject)
 );
 
