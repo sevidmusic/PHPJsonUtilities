@@ -61,7 +61,7 @@ class JsonSerializedObject extends JsonString {
 
 }
 
-class JsonStringDecoder
+class JsonSerializedObjectDecoder
 {
 
     public function decodeJsonToObject(JsonString $json): object {
@@ -100,9 +100,7 @@ $jsonString = new JsonString(
 $jsonSerializedObject = new JsonSerializedObject(
     new ObjectReflection($jsonString)
 );
-$jsonStringDecoder = new JsonStringDecoder();
-
-
+$jsonStringDecoder = new JsonSerializedObjectDecoder();
 
 $unserializedObject = $jsonStringDecoder->decodeJsonToObject(
     $jsonSerializedObject
