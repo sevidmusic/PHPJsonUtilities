@@ -4,32 +4,41 @@ include('/home/darling/Git/PHPJsonUtilities/vendor/autoload.php');
 
 use \Darling\PHPReflectionUtilities\classes\utilities\ObjectReflection;
 use \Darling\PHPTextTypes\classes\strings\Text;
+use \Darling\PHPTextTypes\classes\strings\Id;
 
-class JsonString extends Text {
+class JsonString extends Text
+{
 
     public function __construct(private mixed $originalValue) {
-        parent::__construct($this->encodeAsJson());
+        $this->encodeAsJson();
     }
 
-    public function encodeAsJson() : string
+    final public function __toString(): string
     {
-        return strval(json_encode($this->originalValue()));
-    }
-
-    public function __toString(): string
-    {
-        $json = $this->encodeAsJson();
-        parent::__construct($json);
-        return $json;
+        $this->encodeAsJson();
+        return parent::__toString();
     }
 
     public function originalValue(): mixed {
         return $this->originalValue;
     }
 
+    final protected function encodeAsJson() : void
+    {
+        parent::__construct(
+            $this->jsonEncode()
+        );
+    }
+
+    protected function jsonEncode(): string
+    {
+        return strval(json_encode($this->originalValue()));
+    }
+
 }
 
-class JsonSerializedObject extends JsonString {
+class JsonSerializedObject extends JsonString
+{
 
     public const CLASS_INDEX = '__class__';
     public const DATA_INDEX = '__data__';
@@ -44,7 +53,7 @@ class JsonSerializedObject extends JsonString {
         return $this->objectReflection->reflectedObject();
     }
 
-    public function encodeAsJson(): string {
+    public function encodeObjectAsJson(): string {
         return strval(
             json_encode(
                 [
@@ -55,67 +64,59 @@ class JsonSerializedObject extends JsonString {
         );
     }
 
-    public function __toString(): string {
-        return $this->encodeAsJson();
-    }
-
-}
-
-class JsonSerializedObjectDecoder
-{
-
-    public function decodeJsonToObject(JsonString $json): object {
-        $data = json_decode($json, true);
-        if (
-            is_array($data)
-            &&
-            isset($data[JsonSerializedObject::CLASS_INDEX])
-            &&
-            isset($data[JsonSerializedObject::DATA_INDEX])
-        ) {
-            $class = $data[JsonSerializedObject::CLASS_INDEX];
-            $reflection = new ReflectionClass($class);
-            $object = $reflection->newInstanceWithoutConstructor();
-            while ($reflection) {
-                foreach ($data[JsonSerializedObject::DATA_INDEX] as $name => $originalValue) {
-                    if ($reflection->hasProperty($name)) {
-                        $property = $reflection->getProperty($name);
-                        $property->setAccessible(true);
-                        $property->setValue($object, $originalValue);
-                    }
-                }
-                $reflection = $reflection->getParentClass();
-            }
-            return $object;
+    public function recursiveEncodeAsJson(): string {
+        $data = [];
+        foreach($this->objectReflection->propertyValues() as $name => $value)
+        {
+            match(is_object($value)) {
+               true => '',
+                default => ''
+            };
         }
-        return (object) $data;
+
+        return strval(json_encode($data));
     }
 
 }
 
-$originalObject = new JsonString(
-    ['Foo', 'Bar', 'Baz' => 'bazzer',]
-);
+$closure = function (): float {
+    return floatval(
+        strval(rand(0, 100,)) . '.' . strval(rand(0, 1000))
+    );
+};
 
-$jsonSerializedObject = new JsonSerializedObject(
-    new ObjectReflection($originalObject)
-);
-$originalObjectDecoder = new JsonSerializedObjectDecoder();
+$array = [1, 2, 3, [4, 5, 6], ['7', '8', [9, 10, 11]]];
 
-$unserializedObject = $originalObjectDecoder->decodeJsonToObject(
-    $jsonSerializedObject
-);
+$testValues = [
+    'string' => 'Foo bar baz.',
+    'array' => $array,
+    'bool' => boolval(rand(0, 1)),
+    'int' => rand(0, 100),
+    'closure' => $closure,
+    'float' => $closure(),
+    'object' => new Id(),
+    'standardObject' => new stdClass(),
+    'castObject' => (object) $array,
+];
 
-var_dump('Original Object', $originalObject);
-var_dump('JsonSerializedObject', $jsonSerializedObject);
-var_dump('Unserialized Object', $unserializedObject);
+$testValue = $testValues[array_rand($testValues)];
+
 var_dump(
-    'Objects are equal in terms of property values',
-    $originalObject == $unserializedObject
+    'test value type',
+    (
+        is_object($testValue)
+        ? $testValue::class
+        : gettype($testValue)
+    )
 );
 
-var_dump(
-    'Objects are of the same type',
-    gettype($originalObject) === gettype($unserializedObject)
+$testJsonString = new JsonString($testValue);
+
+var_dump('JsonString', $testJsonString->__toString());
+
+$testJsonSerializedObject = new JsonSerializedObject(
+    new ObjectReflection($testJsonString)
 );
+
+var_dump('JsonSerializedObject(JsonString)', $testJsonSerializedObject->__toString());
 
