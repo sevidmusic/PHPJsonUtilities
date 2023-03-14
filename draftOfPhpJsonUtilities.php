@@ -93,29 +93,29 @@ class JsonSerializedObjectDecoder
 
 }
 
-$jsonString = new JsonString(
+$originalObject = new JsonString(
     ['Foo', 'Bar', 'Baz' => 'bazzer',]
 );
 
 $jsonSerializedObject = new JsonSerializedObject(
-    new ObjectReflection($jsonString)
+    new ObjectReflection($originalObject)
 );
-$jsonStringDecoder = new JsonSerializedObjectDecoder();
+$originalObjectDecoder = new JsonSerializedObjectDecoder();
 
-$unserializedObject = $jsonStringDecoder->decodeJsonToObject(
+$unserializedObject = $originalObjectDecoder->decodeJsonToObject(
     $jsonSerializedObject
 );
 
-var_dump('Original Object', $jsonString);
+var_dump('Original Object', $originalObject);
 var_dump('JsonSerializedObject', $jsonSerializedObject);
 var_dump('Unserialized Object', $unserializedObject);
 var_dump(
     'Objects are equal in terms of property values',
-    $jsonString == $unserializedObject
+    $originalObject == $unserializedObject
 );
 
 var_dump(
     'Objects are of the same type',
-    gettype($jsonString) === gettype($unserializedObject)
+    gettype($originalObject) === gettype($unserializedObject)
 );
 
