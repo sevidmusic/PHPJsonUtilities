@@ -58,13 +58,23 @@ class JsonSerializedObject extends JsonString
 
     private function encodeObjectAsJson(object $object): string
     {
+        $data = [];
         $objectReflection = $this->objectReflection($object);
+        foreach($objectReflection->propertyValues() as $propertyName => $propertyValue)
+        {
+            if(is_object($propertyValue)) {
+               $data[$propertyName] = $this->encodeObjectAsJson($propertyValue);
+               continue;
+            }
+            $data[$propertyName] = $propertyValue;
+
+        }
         // refactor to be recursive: i.e., foreach($objectReflection->propertyValues() ...) {...}
         return strval(
             json_encode(
                 [
                     self::CLASS_INDEX => $objectReflection->type()->__toString(),
-                    self::DATA_INDEX => $objectReflection->propertyValues(),
+                    self::DATA_INDEX => $data
                 ]
             )
         );
