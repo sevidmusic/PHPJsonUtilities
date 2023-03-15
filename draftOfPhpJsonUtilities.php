@@ -10,12 +10,14 @@ class JsonString extends Text
 {
 
     public function __construct(private mixed $originalValue) {
-        $this->encodeAsJson();
+        $this->encodeOriginalValueAsJson();
     }
 
     final public function __toString(): string
     {
-        $this->encodeAsJson();
+        // Always call encodeOriginalValueAsJson() before calling
+        // parent::__toString() in case original value has changed.
+        $this->encodeOriginalValueAsJson();
         return parent::__toString();
     }
 
@@ -23,7 +25,7 @@ class JsonString extends Text
         return $this->originalValue;
     }
 
-    final protected function encodeAsJson() : void
+    final protected function encodeOriginalValueAsJson() : void
     {
         parent::__construct(
             $this->jsonEncode()
@@ -53,27 +55,15 @@ class JsonSerializedObject extends JsonString
         return $this->objectReflection->reflectedObject();
     }
 
-    public function encodeObjectAsJson(): string {
-        return strval(
-            json_encode(
-                [
-                    self::CLASS_INDEX => $this->objectReflection->type()->__toString(),
-                    self::DATA_INDEX => $this->objectReflection->propertyValues(),
-                ]
-            )
-        );
-    }
-
-    public function recursiveEncodeAsJson(): string {
+    protected function jsonEncode(): string {
         $data = [];
         foreach($this->objectReflection->propertyValues() as $name => $value)
         {
-            match(is_object($value)) {
-               true => '',
-                default => ''
+            $data[$name] = match(is_object($value)) {
+               true => serialize($value),
+                default => $value,
             };
         }
-
         return strval(json_encode($data));
     }
 
