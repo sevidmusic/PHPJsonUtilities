@@ -95,54 +95,6 @@ $testJsonSerializedObject = new JsonSerializedObject($testObject);
 
 var_dump('JsonString', $jsonString->__toString());
 var_dump('JsonSerializedObject(JsonString)', $testJsonSerializedObject->__toString());
+var_dump('decoded via json_decode($value, true)', json_decode($testJsonSerializedObject));
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
-$closure = function (): float {
-    return floatval(
-        strval(rand(0, 100,)) . '.' . strval(rand(0, 1000))
-    );
-};
-
-$array = [1, 2, 3, [4, 5, 6], ['7', '8', [9, 10, 11]], 'Tz', '=', 'Tzo'];
-
-$testValues = [
-    'string' => 'Foo bar baz.',
-    'array' => $array,
-    'bool' => boolval(rand(0, 1)),
-    'int' => rand(0, 100),
-    'closure' => $closure,
-    'float' => $closure(),
-    'object' => new Id(),
-    'standardObject' => new stdClass(),
-    'castObject' => (object) $array,
-    'Id' => new Id(),
-];
-
-//$testValue = $testValues[array_rand($testValues)];
-#var_dump('test value type', ( is_object($testValue) ? $testValue::class : gettype($testValue)));
-#var_dump('test object type', $testObject::class);
-
-**/
