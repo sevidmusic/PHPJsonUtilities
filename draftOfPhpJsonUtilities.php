@@ -57,16 +57,27 @@ class JsonSerializedObject extends JsonString
 
     protected function jsonEncode(): string {
         $data = [];
-        foreach($this->objectReflection->propertyValues() as $name => $value)
+        foreach(
+            $this->objectReflection->propertyValues()
+            as
+            $name => $value
+        )
         {
             $data[$name] = match(is_object($value)) {
-               true => serialize($value),
+               true => $this->enocdeObject($value),
                 default => $value,
             };
         }
         return strval(json_encode($data));
     }
 
+    private function enocdeObject(object $object): string
+    {
+        if($object::class === 'Closure' && is_callable($object)) {
+            return strval(json_encode(['Closure', $object()]));
+        }
+        return base64_encode(serialize($object));
+    }
 }
 
 $closure = function (): float {
@@ -75,7 +86,7 @@ $closure = function (): float {
     );
 };
 
-$array = [1, 2, 3, [4, 5, 6], ['7', '8', [9, 10, 11]]];
+$array = [1, 2, 3, [4, 5, 6], ['7', '8', [9, 10, 11]], 'Tz', '=', 'Tzo'];
 
 $testValues = [
     'string' => 'Foo bar baz.',
