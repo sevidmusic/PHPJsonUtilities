@@ -95,6 +95,6 @@ $testJsonSerializedObject = new JsonSerializedObject($testObject);
 
 var_dump('JsonString', $jsonString->__toString());
 var_dump('JsonSerializedObject(JsonString)', $testJsonSerializedObject->__toString());
-var_dump('decoded via json_decode($value, true)', json_decode($testJsonSerializedObject));
+var_dump('decoded via json_decode($value, true)', json_decode($testJsonSerializedObject, true));
 
 
