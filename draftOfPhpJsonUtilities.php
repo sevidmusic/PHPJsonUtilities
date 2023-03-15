@@ -77,6 +77,39 @@ class JsonSerializedObject extends JsonString
 
 }
 
+$testObject = new Id();
+
+$jsonString = new JsonString($testObject);
+
+$testJsonSerializedObject = new JsonSerializedObject($testObject);
+
+var_dump('JsonString', $jsonString->__toString());
+var_dump('JsonSerializedObject(JsonString)', $testJsonSerializedObject->__toString());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
 $closure = function (): float {
     return floatval(
         strval(rand(0, 100,)) . '.' . strval(rand(0, 1000))
@@ -95,26 +128,11 @@ $testValues = [
     'object' => new Id(),
     'standardObject' => new stdClass(),
     'castObject' => (object) $array,
+    'Id' => new Id(),
 ];
 
-$testValue = $testValues[array_rand($testValues)];
+//$testValue = $testValues[array_rand($testValues)];
+#var_dump('test value type', ( is_object($testValue) ? $testValue::class : gettype($testValue)));
+#var_dump('test object type', $testObject::class);
 
-var_dump(
-    'test value type',
-    (
-        is_object($testValue)
-        ? $testValue::class
-        : gettype($testValue)
-    )
-);
-
-$testJsonString = new JsonString($testValue);
-
-var_dump('JsonString', $testJsonString->__toString());
-
-$testJsonSerializedObject = new JsonSerializedObject(
-    $testJsonString
-);
-
-var_dump('JsonSerializedObject(JsonString)', $testJsonSerializedObject->__toString());
-
+**/
