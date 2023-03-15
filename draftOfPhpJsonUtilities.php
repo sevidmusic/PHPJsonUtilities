@@ -15,8 +15,6 @@ class JsonString extends Text
 
     final public function __toString(): string
     {
-        // Always call encodeOriginalValueAsJson() before calling
-        // parent::__toString() in case original value has changed.
         $this->encodeOriginalValueAsJson();
         return parent::__toString();
     }
@@ -27,9 +25,7 @@ class JsonString extends Text
 
     final protected function encodeOriginalValueAsJson() : void
     {
-        parent::__construct(
-            $this->jsonEncode()
-        );
+        parent::__construct($this->jsonEncode());
     }
 
     protected function jsonEncode(): string
@@ -42,42 +38,43 @@ class JsonString extends Text
 class JsonSerializedObject extends JsonString
 {
 
-    public const CLASS_INDEX = '__class__';
-    public const DATA_INDEX = '__data__';
-
     public function __construct(
-        private ObjectReflection $objectReflection
+        private object $originalObject
     ) {
         parent::__construct($this->originalObject());
     }
 
     public function originalObject(): object {
-        return $this->objectReflection->reflectedObject();
+        return  $this->originalObject;
     }
 
     protected function jsonEncode(): string {
-        $data = [];
-        foreach(
-            $this->objectReflection->propertyValues()
-            as
-            $name => $value
-        )
-        {
-            $data[$name] = match(is_object($value)) {
-               true => $this->enocdeObject($value),
-                default => $value,
-            };
-        }
-        return strval(json_encode($data));
+        return $this->encodeObjectAsJson($this->originalObject());
     }
 
-    private function enocdeObject(object $object): string
+
+    public const CLASS_INDEX = '__class__';
+    public const DATA_INDEX = '__data__';
+
+    private function encodeObjectAsJson(object $object): string
     {
-        if($object::class === 'Closure' && is_callable($object)) {
-            return strval(json_encode(['Closure', $object()]));
-        }
-        return base64_encode(serialize($object));
+        $objectReflection = $this->objectReflection($object);
+        // refactor to be recursive: i.e., foreach($objectReflection->propertyValues() ...) {...}
+        return strval(
+            json_encode(
+                [
+                    self::CLASS_INDEX => $objectReflection->type()->__toString(),
+                    self::DATA_INDEX => $objectReflection->propertyValues(),
+                ]
+            )
+        );
     }
+
+    private function objectReflection(object $object): ObjectReflection
+    {
+        return new ObjectReflection($object);
+    }
+
 }
 
 $closure = function (): float {
@@ -116,7 +113,7 @@ $testJsonString = new JsonString($testValue);
 var_dump('JsonString', $testJsonString->__toString());
 
 $testJsonSerializedObject = new JsonSerializedObject(
-    new ObjectReflection($testJsonString)
+    $testJsonString
 );
 
 var_dump('JsonSerializedObject(JsonString)', $testJsonSerializedObject->__toString());
