@@ -3,7 +3,9 @@
 include('/home/darling/Git/PHPJsonUtilities/vendor/autoload.php');
 
 use \Darling\PHPReflectionUtilities\classes\utilities\ObjectReflection;
+use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
 use \Darling\PHPTextTypes\classes\strings\Text;
+use \Darling\PHPTextTypes\classes\strings\UnknownClass;
 use \Darling\PHPTextTypes\classes\strings\Id;
 
 class JsonString extends Text
@@ -69,7 +71,6 @@ class JsonSerializedObject extends JsonString
             $data[$propertyName] = $propertyValue;
 
         }
-        // refactor to be recursive: i.e., foreach($objectReflection->propertyValues() ...) {...}
         return strval(
             json_encode(
                 [
@@ -87,14 +88,36 @@ class JsonSerializedObject extends JsonString
 
 }
 
-$testObject = new Id();
+function decodeJsonToObject(JsonString $json): object {
+    $data = json_decode($json, true);
+    if (
+        is_array($data)
+        &&
+        isset($data[JsonSerializedObject::CLASS_INDEX])
+        &&
+        isset($data[JsonSerializedObject::DATA_INDEX])
+    ) {
+        $class = $data[JsonSerializedObject::CLASS_INDEX];
+        $reflection = new ReflectionClass($class);
+        $object = $reflection->newInstanceWithoutConstructor();
+        while ($reflection) {
+            foreach ($data[JsonSerializedObject::DATA_INDEX] as $name => $originalValue) {
+                if ($reflection->hasProperty($name)) {
+                    $property = $reflection->getProperty($name);
+                    $property->setAccessible(true);
+                    $property->setValue($object, $originalValue);
+                }
+            }
+            $reflection = $reflection->getParentClass();
+        }
+        return $object;
+    }
+    return (object) $data;
+}
 
-$jsonString = new JsonString($testObject);
+$testObject = new Id();
 
 $testJsonSerializedObject = new JsonSerializedObject($testObject);
 
-var_dump('JsonString', $jsonString->__toString());
-var_dump('JsonSerializedObject(JsonString)', $testJsonSerializedObject->__toString());
-var_dump('decoded via json_decode($value, true)', json_decode($testJsonSerializedObject, true));
-
+var_dump(decodeJsonToObject($testJsonSerializedObject));
 
