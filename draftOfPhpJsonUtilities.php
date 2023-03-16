@@ -102,10 +102,11 @@ function decodeJsonToObject(JsonString $json): object {
         $object = $reflection->newInstanceWithoutConstructor();
         while ($reflection) {
             foreach ($data[JsonSerializedObject::DATA_INDEX] as $name => $originalValue) {
+                var_dump([$name, $originalValue]);
                 if ($reflection->hasProperty($name)) {
                     $property = $reflection->getProperty($name);
-                    $property->setAccessible(true);
-                    $property->setValue($object, $originalValue);
+                    #$property->setAccessible(true);
+                    #$property->setValue($object, $originalValue);
                 }
             }
             $reflection = $reflection->getParentClass();
@@ -119,5 +120,5 @@ $testObject = new Id();
 
 $testJsonSerializedObject = new JsonSerializedObject($testObject);
 
-var_dump(decodeJsonToObject($testJsonSerializedObject));
+decodeJsonToObject($testJsonSerializedObject);
 
