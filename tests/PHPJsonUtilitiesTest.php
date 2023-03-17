@@ -1,6 +1,6 @@
 <?php
 
-namespace tests;
+namespace PHPJsonUtilitiesTest\tests;
 
 use Darling\PHPUnitTestUtilities\traits\PHPUnitConfigurationTests;
 use Darling\PHPUnitTestUtilities\traits\PHPUnitRandomValues;

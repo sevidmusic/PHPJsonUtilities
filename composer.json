@@ -18,8 +18,8 @@
     },
     "autoload": {
         "psr-4": {
-            "roady\\": "src/",
-            "tests\\": "tests/"
+            "Darling\\PHPJsonUtilities\\": "src/",
+            "Darling\\PHPJsonUtilities\\tests\\": "tests/"
         }
     },
     "require-dev": {

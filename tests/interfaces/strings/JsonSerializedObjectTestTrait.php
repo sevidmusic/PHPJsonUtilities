@@ -2,9 +2,9 @@
 
 namespace Darling\PHPJsonUtilities\tests\interfaces\strings;
 
-use tests\interfaces\strings\TextTestTrait;
+use Darling\PHPJsonUtilities\tests\interfaces\strings\JsonStringTestTrait;
 
-trait JsonStringTestTrait
+trait JsonSerializedObjectTestTrait
 {
 
     /**
@@ -13,7 +13,7 @@ trait JsonStringTestTrait
      *
      * @see TextTestTrait
      */
-    use TextTestTrait;
+    use JsonStringTestTrait;
 
 }
 
