@@ -4,14 +4,20 @@ include('/home/darling/Git/PHPJsonUtilities/vendor/autoload.php');
 
 use \Darling\PHPReflectionUtilities\classes\utilities\ObjectReflection;
 use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
+use \Darling\PHPTextTypes\classes\strings\AlphanumericText;
+use \Darling\PHPTextTypes\classes\strings\Id;
+use \Darling\PHPTextTypes\classes\strings\Name;
+use \Darling\PHPTextTypes\classes\strings\SafeText;
 use \Darling\PHPTextTypes\classes\strings\Text;
 use \Darling\PHPTextTypes\classes\strings\UnknownClass;
-use \Darling\PHPTextTypes\classes\strings\Id;
 
 class JsonString extends Text
 {
 
-    public function __construct(private mixed $originalValue, private bool $originalValueIsJson = false) {
+    public function __construct(
+        private mixed $originalValue,
+        private bool $originalValueIsJson = false
+    ) {
         $this->encodeOriginalValueAsJson();
     }
 
@@ -133,10 +139,21 @@ function decodeJsonToObject(JsonString $json): object {
         }
         return $object;
     }
-    return (object) $data;
+    return new UnknownClass();
 }
 
-$testObject = new Id();
+$testObjects = [
+    new AlphanumericText(new Text('Foo')),
+    new Id(),
+    new JsonSerializedObject(new JsonString(new Id())),
+    new JsonString(new Id()),
+    new Name(new Text('Baz')),
+    new SafeText(new Text('Bazzer')),
+    new Text('Bar'),
+    new UnknownClass(),
+];
+
+$testObject = $testObjects[array_rand($testObjects)];
 
 $testJsonSerializedObject = new JsonSerializedObject($testObject);
 
