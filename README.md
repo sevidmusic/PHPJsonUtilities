@@ -35,121 +35,165 @@ composer require darling/php-json-utilities
 include('/home/darling/Git/PHPJsonUtilities/vendor/autoload.php');
 
 use \Darling\PHPReflectionUtilities\classes\utilities\ObjectReflection;
+use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
+use \Darling\PHPTextTypes\classes\strings\AlphanumericText;
+use \Darling\PHPTextTypes\classes\strings\Id;
+use \Darling\PHPTextTypes\classes\strings\Name;
+use \Darling\PHPTextTypes\classes\strings\SafeText;
 use \Darling\PHPTextTypes\classes\strings\Text;
+use \Darling\PHPTextTypes\classes\strings\UnknownClass;
 
-class JsonString extends Text {
+class JsonString extends Text
+{
 
-    public function __construct(private mixed $originalValue) {
-        parent::__construct($this->encodeAsJson());
+    public function __construct(
+        private mixed $originalValue,
+        private bool $originalValueIsJson = false
+    ) {
+        $this->encodeOriginalValueAsJson();
     }
 
-    public function encodeAsJson() : string
+    final public function __toString(): string
     {
-        return strval(json_encode($this->originalValue()));
-    }
-
-    public function __toString(): string
-    {
-        $json = $this->encodeAsJson();
-        parent::__construct($json);
-        return $json;
+        $this->encodeOriginalValueAsJson();
+        return parent::__toString();
     }
 
     public function originalValue(): mixed {
         return $this->originalValue;
     }
 
+    public function originalValueIsJson(): mixed {
+        return $this->originalValueIsJson;
+    }
+
+    final protected function encodeOriginalValueAsJson() : void
+    {
+        parent::__construct($this->jsonEncode());
+    }
+
+    protected function jsonEncode(): string
+    {
+        return strval(
+            is_string($this->originalValue())
+            &&
+            $this->originalValueIsJson() === true
+            &&
+            false !== json_decode($this->originalValue())
+            ? $this->originalValue()
+            : json_encode($this->originalValue())
+        );
+    }
+
 }
 
-class JsonSerializedObject extends JsonString {
-
-    public const CLASS_INDEX = '__class__';
-    public const DATA_INDEX = '__data__';
+class JsonSerializedObject extends JsonString
+{
 
     public function __construct(
-        private ObjectReflection $objectReflection
+        private object $originalObject
     ) {
         parent::__construct($this->originalObject());
     }
 
     public function originalObject(): object {
-        return $this->objectReflection->reflectedObject();
+        return  $this->originalObject;
     }
 
-    public function encodeAsJson(): string {
+    protected function jsonEncode(): string {
+        return $this->encodeObjectAsJson($this->originalObject());
+    }
+
+
+    public const CLASS_INDEX = '__class__';
+    public const DATA_INDEX = '__data__';
+
+    private function encodeObjectAsJson(object $object): string
+    {
+        $data = [];
+        $objectReflection = $this->objectReflection($object);
+        foreach($objectReflection->propertyValues() as $propertyName => $propertyValue)
+        {
+            if(is_object($propertyValue)) {
+               $data[$propertyName] = $this->encodeObjectAsJson($propertyValue);
+               continue;
+            }
+            $data[$propertyName] = $propertyValue;
+
+        }
         return strval(
             json_encode(
                 [
-                    self::CLASS_INDEX => $this->objectReflection->type()->__toString(),
-                    self::DATA_INDEX => $this->objectReflection->propertyValues(),
+                    self::CLASS_INDEX => $objectReflection->type()->__toString(),
+                    self::DATA_INDEX => $data
                 ]
             )
         );
     }
 
-    public function __toString(): string {
-        return $this->encodeAsJson();
+    private function objectReflection(object $object): ObjectReflection
+    {
+        return new ObjectReflection($object);
     }
 
 }
 
-class JsonSerializedObjectDecoder
-{
-
-    public function decodeJsonToObject(JsonString $json): object {
-        $data = json_decode($json, true);
-        if (
-            is_array($data)
-            &&
-            isset($data[JsonSerializedObject::CLASS_INDEX])
-            &&
-            isset($data[JsonSerializedObject::DATA_INDEX])
-        ) {
-            $class = $data[JsonSerializedObject::CLASS_INDEX];
-            $reflection = new ReflectionClass($class);
-            $object = $reflection->newInstanceWithoutConstructor();
-            while ($reflection) {
-                foreach ($data[JsonSerializedObject::DATA_INDEX] as $name => $originalValue) {
-                    if ($reflection->hasProperty($name)) {
-                        $property = $reflection->getProperty($name);
-                        $property->setAccessible(true);
-                        $property->setValue($object, $originalValue);
+function decodeJsonToObject(JsonString $json): object {
+    $data = json_decode($json, true);
+    if (
+        is_array($data)
+        &&
+        isset($data[JsonSerializedObject::CLASS_INDEX])
+        &&
+        isset($data[JsonSerializedObject::DATA_INDEX])
+    ) {
+        $class = $data[JsonSerializedObject::CLASS_INDEX];
+        $reflection = new ReflectionClass($class);
+        $object = $reflection->newInstanceWithoutConstructor();
+        while ($reflection) {
+            foreach ($data[JsonSerializedObject::DATA_INDEX] as $name => $originalValue) {
+                if(is_string($originalValue) && (false !== json_decode($originalValue))) {
+                    if(
+                        str_contains($originalValue, JsonSerializedObject::CLASS_INDEX)
+                        &&
+                        str_contains($originalValue, JsonSerializedObject::DATA_INDEX)
+                    ) {
+                        $originalValue = decodeJsonToObject(new JsonString($originalValue, true));
                     }
                 }
-                $reflection = $reflection->getParentClass();
+                if ($reflection->hasProperty($name)) {
+                    $property = $reflection->getProperty($name);
+                    $property->setAccessible(true);
+                    $property->setValue($object, $originalValue);
+                }
             }
-            return $object;
+            $reflection = $reflection->getParentClass();
         }
-        return (object) $data;
+        return $object;
     }
-
+    return new UnknownClass();
 }
 
-$jsonString = new JsonString(
-    ['Foo', 'Bar', 'Baz' => 'bazzer',]
-);
+$testObjects = [
+    new AlphanumericText(new Text('Foo')),
+    new Id(),
+    new JsonSerializedObject(new JsonString(new Id())),
+    new JsonString(new Id()),
+    new Name(new Text('Baz')),
+    new SafeText(new Text('Bazzer')),
+    new Text('Bar'),
+    new UnknownClass(),
+];
 
-$jsonSerializedObject = new JsonSerializedObject(
-    new ObjectReflection($jsonString)
-);
-$jsonStringDecoder = new JsonSerializedObjectDecoder();
+$testObject = $testObjects[array_rand($testObjects)];
 
-$unserializedObject = $jsonStringDecoder->decodeJsonToObject(
-    $jsonSerializedObject
-);
+$testJsonSerializedObject = new JsonSerializedObject($testObject);
 
-var_dump('Original Object', $jsonString);
-var_dump('JsonSerializedObject', $jsonSerializedObject);
-var_dump('Unserialized Object', $unserializedObject);
-var_dump(
-    'Objects are equal in terms of property values',
-    $jsonString == $unserializedObject
-);
+$decodedTestObject = decodeJsonToObject($testJsonSerializedObject);
 
-var_dump(
-    'Objects are of the same type',
-    gettype($jsonString) === gettype($unserializedObject)
-);
+var_dump('$decodedTestObject matches $testObject', $decodedTestObject == $testObject);
 
+// save json for later viewing/debugging
+file_put_contents('/tmp/darlingTestJson.json', $testJsonSerializedObject->__toString());
 
 ```
