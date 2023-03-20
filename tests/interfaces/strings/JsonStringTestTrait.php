@@ -2,7 +2,7 @@
 
 namespace Darling\PHPJsonUtilities\tests\interfaces\strings;
 
-use tests\interfaces\strings\TextTestTrait;
+use Darling\PHPTextTypes\Tests\interfaces\strings\TextTestTrait;
 
 trait JsonStringTestTrait
 {

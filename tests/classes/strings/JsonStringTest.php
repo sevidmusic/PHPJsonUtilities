@@ -4,7 +4,7 @@ namespace Darling\PHPJsonUtilities\tests\classes\strings;
 
 use Darling\PHPJsonUtilities\classes\strings\JsonString;
 use Darling\PHPJsonUtilities\tests\interfaces\strings\JsonStringTestTrait;
-use tests\classes\strings\TextTest;
+use Darling\PHPTextTypes\Tests\classes\strings\TextTest;
 
 class JsonStringTest extends TextTest
 {
