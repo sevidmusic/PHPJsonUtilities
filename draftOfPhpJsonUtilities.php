@@ -10,6 +10,7 @@ use \Darling\PHPTextTypes\classes\strings\Name;
 use \Darling\PHPTextTypes\classes\strings\SafeText;
 use \Darling\PHPTextTypes\classes\strings\Text;
 use \Darling\PHPTextTypes\classes\strings\UnknownClass;
+use \Darling\PHPUnitTestUtilities\Tests\dev\mock\classes\PrivateMethods;
 
 class JsonString extends Text
 {
@@ -143,14 +144,15 @@ function decodeJsonToObject(JsonString $json): object {
 }
 
 $testObjects = [
-    new AlphanumericText(new Text('Foo')),
+    new JsonSerializedObject(new JsonString(new Id())), // FAILS
+    new JsonString(new JsonString(new Id())),
+    new AlphanumericText(new Text('AlphanumericText')),
     new Id(),
-    new JsonSerializedObject(new JsonString(new Id())),
-    new JsonString(new Id()),
-    new Name(new Text('Baz')),
-    new SafeText(new Text('Bazzer')),
-    new Text('Bar'),
+    new Name(new Text('Name')),
+    new SafeText(new Text('SafeText')),
+    new Text('Text'),
     new UnknownClass(),
+    new PrivateMethods(),
 ];
 
 $testObject = $testObjects[array_rand($testObjects)];
@@ -158,8 +160,28 @@ $testObject = $testObjects[array_rand($testObjects)];
 $testJsonSerializedObject = new JsonSerializedObject($testObject);
 
 $decodedTestObject = decodeJsonToObject($testJsonSerializedObject);
+if($decodedTestObject::class === JsonSerializedObject::class) {
+    /**
+     * @var JsonSerializedObject $decodedTestObject
+     *
+     * This is a hack, really the __construct method should
+     * be called when decoding. This will require first
+     * instantiating a mock instance, then setting the
+     * property values.
+     *
+     * @see Roady1.0::ReflectionUtilitiy::generateMockClassMethodArguments()
+     * @see Roady1.0::ReflectionUtilitiy::getClassInstance()
+     * @see https://github.com/sevidmusic/roady/blob/4307cdbb2d94b8017d5b6c825e75427d46274529/core/abstractions/utility/ReflectionUtility.php
+     *
+     * the decodeJsonToObject() method.
+     */
+    $decodedTestObject->__toString();
+}
 
+var_dump($testObject::class, $decodedTestObject::class);
 var_dump('$decodedTestObject matches $testObject', $decodedTestObject == $testObject);
+#var_dump('$testObject', $testObject);
+#var_dump('$decodedTestObject', $decodedTestObject);
 
 // save json for later viewing/debugging
 file_put_contents('/tmp/darlingTestJson.json', $testJsonSerializedObject->__toString());
