@@ -12,6 +12,166 @@ use \Darling\PHPTextTypes\classes\strings\Text;
 use \Darling\PHPTextTypes\classes\strings\UnknownClass;
 use \Darling\PHPUnitTestUtilities\Tests\dev\mock\classes\PrivateMethods;
 
+class Mocker extends Reflection
+{
+     private const ARRAY = 'array';
+     private const BOOLEAN = 'boolean';
+     private const CONSTRUCT = '__construct';
+     private const DOUBLE = 'double';
+     private const INTEGER = 'integer';
+     private const NULL = 'NULL';
+     private const STRING = 'string';
+
+
+     /**
+      * [Description]
+      *
+      * @param class-string|object $class
+      *
+      * @return ReflectionClass<object>
+      *
+      * @example
+      *
+      * ```
+      *
+      * ```
+      *
+      */
+     public function getClassReflection(
+         string|object $class
+     ): ReflectionClass
+    {
+        if(
+            class_exists(
+                (
+                    is_object($class)
+                    ? $class::class
+                    : $class
+                )
+            )
+        ) {
+            return new ReflectionClass($class);
+        }
+        return new ReflectionClass(new UnknownClass());
+    }
+
+    /**
+     * [Description]
+     *
+     * @param class-string|object $class
+     *
+     * @param array<mixed> $constructorArguments
+     *
+     * @return object
+     *
+     * @example
+     *
+     * ```
+     *
+     * ```
+     *
+     */
+     public function getClassInstance(
+         string|object $class,
+         array $constructorArguments = array()
+     ): object
+     {
+        if (method_exists($class, self::CONSTRUCT) === false) {
+            try {
+                return $this->getClassReflection($class)->newInstanceArgs([]);
+            } catch (ReflectionException $e) {
+                return $e;
+            }
+        }
+        if (empty($constructorArguments) === true) {
+            try {
+                return $this->getClassReflection($class)->newInstanceArgs($this->generateMockClassMethodArguments($class, self::CONSTRUCT));
+            } catch (ReflectionException $e) {
+                return $e;
+            }
+        }
+        return $this->getClassReflection($class)->newInstanceArgs($constructorArguments);
+    }
+
+     /**
+      * [Description]
+      *
+      * @param class-string|object $class
+      *
+      * @param string $method
+      *
+      * @return array<mixed>
+      *
+      * @example
+      *
+      * ```
+      *
+      * ```
+      *
+      */
+     public function generateMockClassMethodArguments(
+         string|object $class,
+         string $method
+     ): array
+    {
+        $reflection = new self($this->getClassReflection($class));
+        $defaults = array();
+        $id = new Id();
+        $randChars = $id->__toString();
+        if(method_exists($class, $method)) {
+            foreach (
+                $reflection->methodParameterTypes($method) as $types
+            ) {
+                foreach($types as $type) {
+                    if ($type === self::BOOLEAN || $type === 'bool') {
+                        array_push($defaults, false);
+                        continue;
+                    }
+                    if ($type === self::INTEGER) {
+                        array_push($defaults, 1);
+                        continue;
+                    }
+                    if ($type === self::DOUBLE) {
+                        array_push($defaults, 1.2345);
+                        continue;
+                    }
+                    if ($type === self::STRING) {
+                        array_push($defaults, $randChars);
+                        continue;
+                    }
+                    if ($type === self::ARRAY) {
+                        array_push($defaults, array());
+                        continue;
+                    }
+                    if ($type === self::NULL) {
+                        array_push($defaults, null);
+                        continue;
+                    }
+                    /**
+                     * For unknown types assume class instance.
+                     * @var class-string<object>|object $type
+                     */
+                    $type = '\\' . str_replace(
+                        ['interfaces'],
+                        ['classes'],
+                        $type
+                    );
+                    try {
+                        array_push(
+                            $defaults,
+                            $reflection->getClassInstance($type)
+                        );
+                    } catch (ReflectionException $e) {
+                        return [];
+                    }
+                }
+            }
+        }
+        return $defaults;
+    }
+
+}
+
 class JsonString extends Text
 {
 
@@ -84,7 +244,9 @@ class JsonSerializedObject extends JsonString
         foreach($objectReflection->propertyValues() as $propertyName => $propertyValue)
         {
             if(is_object($propertyValue)) {
-               $data[$propertyName] = $this->encodeObjectAsJson($propertyValue);
+                $data[$propertyName] = $this->encodeObjectAsJson(
+                    $propertyValue
+                );
                continue;
             }
             $data[$propertyName] = $propertyValue;
@@ -93,14 +255,18 @@ class JsonSerializedObject extends JsonString
         return strval(
             json_encode(
                 [
-                    self::CLASS_INDEX => $objectReflection->type()->__toString(),
-                    self::DATA_INDEX => $data
+                    self::CLASS_INDEX =>
+                        $objectReflection->type()->__toString(),
+                    self::DATA_INDEX =>
+                        $data
                 ]
             )
         );
     }
 
-    private function objectReflection(object $object): ObjectReflection
+    private function objectReflection(
+        object $object
+    ): ObjectReflection
     {
         return new ObjectReflection($object);
     }
@@ -120,14 +286,30 @@ function decodeJsonToObject(JsonString $json): object {
         $reflection = new ReflectionClass($class);
         $object = $reflection->newInstanceWithoutConstructor();
         while ($reflection) {
-            foreach ($data[JsonSerializedObject::DATA_INDEX] as $name => $originalValue) {
-                if(is_string($originalValue) && (false !== json_decode($originalValue))) {
+            foreach (
+                $data[JsonSerializedObject::DATA_INDEX]
+                as
+                $name => $originalValue
+            ) {
+                if(
+                    is_string($originalValue)
+                    &&
+                    (false !== json_decode($originalValue))
+                ) {
                     if(
-                        str_contains($originalValue, JsonSerializedObject::CLASS_INDEX)
+                        str_contains(
+                            $originalValue,
+                            JsonSerializedObject::CLASS_INDEX
+                        )
                         &&
-                        str_contains($originalValue, JsonSerializedObject::DATA_INDEX)
+                        str_contains(
+                            $originalValue,
+                            JsonSerializedObject::DATA_INDEX
+                        )
                     ) {
-                        $originalValue = decodeJsonToObject(new JsonString($originalValue, true));
+                        $originalValue = decodeJsonToObject(
+                            new JsonString($originalValue, true)
+                        );
                     }
                 }
                 if ($reflection->hasProperty($name)) {
@@ -178,11 +360,35 @@ if($decodedTestObject::class === JsonSerializedObject::class) {
     $decodedTestObject->__toString();
 }
 
-var_dump($testObject::class, $decodedTestObject::class);
-var_dump('$decodedTestObject matches $testObject', $decodedTestObject == $testObject);
-#var_dump('$testObject', $testObject);
-#var_dump('$decodedTestObject', $decodedTestObject);
-
 // save json for later viewing/debugging
-file_put_contents('/tmp/darlingTestJson.json', $testJsonSerializedObject->__toString());
+file_put_contents(
+    '/tmp/darlingTestJson.json',
+    $testJsonSerializedObject->__toString()
+);
+
+
+$mocker = new Mocker(new ReflectionClass($decodedTestObject));
+$mockInstance = $mocker->getClassInstance($decodedTestObject);
+
+var_dump(
+    'mock method argumetns',
+    $mocker->generateMockClassMethodArguments(
+        $decodedTestObject,
+        '__construct'
+    )
+);
+
+var_dump('original test object', $testObject);
+var_dump('decoded test object', $decodedTestObject);
+var_dump('mock instance', $mockInstance);
+var_dump($testObject::class, $decodedTestObject::class);
+var_dump(
+    '$decodedTestObject matches $testObject',
+    $decodedTestObject == $testObject
+);
+var_dump(
+    '$mockInstance type === $testObject type',
+    $mockInstance::class === $decodedTestObject::class
+);
+
 
