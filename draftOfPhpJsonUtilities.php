@@ -12,10 +12,26 @@ use \Darling\PHPTextTypes\classes\strings\Text;
 use \Darling\PHPTextTypes\classes\strings\UnknownClass;
 use \Darling\PHPUnitTestUtilities\Tests\dev\mock\classes\PrivateMethods;
 
+function dev_dump(string $name, mixed $value): void {
+    echo PHP_EOL;
+    var_dump(
+        '----- ' . $name . ' -----',
+        $value,
+    );
+    echo PHP_EOL;
+}
+
+/**
+ * This class will not  be apart of this library, it will be
+ * apart of astandalone library that will be required by this library.
+ *
+ * Drafting it here in order to draft this library's classes.
+ *
+ */
 class Mocker extends Reflection
 {
      private const ARRAY = 'array';
-     private const BOOLEAN = 'boolean';
+     private const BOOLEAN = 'bool';
      private const CONSTRUCT = '__construct';
      private const DOUBLE = 'double';
      private const INTEGER = 'integer';
@@ -85,7 +101,9 @@ class Mocker extends Reflection
         }
         if (empty($constructorArguments) === true) {
             try {
-                return $this->getClassReflection($class)->newInstanceArgs($this->generateMockClassMethodArguments($class, self::CONSTRUCT));
+                return $this->getClassReflection($class)->newInstanceArgs(
+                    $this->generateMockClassMethodArguments($class, self::CONSTRUCT)
+                );
             } catch (ReflectionException $e) {
                 return $e;
             }
@@ -120,31 +138,33 @@ class Mocker extends Reflection
         $randChars = $id->__toString();
         if(method_exists($class, $method)) {
             foreach (
-                $reflection->methodParameterTypes($method) as $types
+                $reflection->methodParameterTypes($method)
+                as
+                $name => $types
             ) {
                 foreach($types as $type) {
-                    if ($type === self::BOOLEAN || $type === 'bool') {
-                        array_push($defaults, false);
+                    if ($type === self::BOOLEAN) {
+                        $defaults[$name] = false;
                         continue;
                     }
                     if ($type === self::INTEGER) {
-                        array_push($defaults, 1);
+                        $defaults[$name] = 1;
                         continue;
                     }
                     if ($type === self::DOUBLE) {
-                        array_push($defaults, 1.2345);
+                        $defaults[$name] = 1.2345;
                         continue;
                     }
                     if ($type === self::STRING) {
-                        array_push($defaults, $randChars);
+                        $defaults[$name] = $randChars;
                         continue;
                     }
                     if ($type === self::ARRAY) {
-                        array_push($defaults, array());
+                        $defaults[$name] = [];
                         continue;
                     }
                     if ($type === self::NULL) {
-                        array_push($defaults, null);
+                        $defaults[$name] = null;
                         continue;
                     }
                     /**
@@ -156,15 +176,8 @@ class Mocker extends Reflection
                         ['classes'],
                         $type
                     );
-                    try {
-                        array_push(
-                            $defaults,
-                            $reflection->getClassInstance($type)
-                        );
-                    } catch (ReflectionException $e) {
-                        return [];
+                        $defaults[$name] = $reflection->getClassInstance($type);
                     }
-                }
             }
         }
         return $defaults;
@@ -369,26 +382,29 @@ file_put_contents(
 
 $mocker = new Mocker(new ReflectionClass($decodedTestObject));
 $mockInstance = $mocker->getClassInstance($decodedTestObject);
+$mockInstanceMethods = $mocker->methodNames();
+$methodName = $mockInstanceMethods[array_rand($mockInstanceMethods)];
 
-var_dump(
-    'mock method argumetns',
+dev_dump(
+    'mock method argumetns for ' . $mockInstance::class . '::' . $methodName,
     $mocker->generateMockClassMethodArguments(
-        $decodedTestObject,
-        '__construct'
+        $mockInstance,
+        $methodName
     )
 );
+dev_dump(
+    'mock instance',
+    $mockInstance
+);
 
-var_dump('original test object', $testObject);
-var_dump('decoded test object', $decodedTestObject);
-var_dump('mock instance', $mockInstance);
-var_dump($testObject::class, $decodedTestObject::class);
-var_dump(
+
+dev_dump(
     '$decodedTestObject matches $testObject',
     $decodedTestObject == $testObject
 );
-var_dump(
+
+dev_dump(
     '$mockInstance type === $testObject type',
     $mockInstance::class === $decodedTestObject::class
 );
-
 
