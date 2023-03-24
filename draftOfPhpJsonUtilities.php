@@ -12,15 +12,6 @@ use \Darling\PHPTextTypes\classes\strings\Text;
 use \Darling\PHPTextTypes\classes\strings\UnknownClass;
 use \Darling\PHPUnitTestUtilities\Tests\dev\mock\classes\PrivateMethods;
 
-function dev_dump(string $name, mixed $value): void {
-    echo PHP_EOL;
-    var_dump(
-        '----- ' . $name . ' -----',
-        $value,
-    );
-    echo PHP_EOL;
-}
-
 /**
  * This class will not  be apart of this library, it will be
  * apart of astandalone library that will be required by this library.
@@ -28,7 +19,7 @@ function dev_dump(string $name, mixed $value): void {
  * Drafting it here in order to draft this library's classes.
  *
  */
-class Mocker extends Reflection
+class Mocker
 {
      private const ARRAY = 'array';
      private const BOOLEAN = 'bool';
@@ -38,6 +29,13 @@ class Mocker extends Reflection
      private const NULL = 'NULL';
      private const STRING = 'string';
 
+
+     public function __construct(private Reflection $reflection) { }
+
+     private function reflection(): Reflection
+     {
+         return $this->reflection;
+     }
 
      /**
       * [Description]
@@ -53,7 +51,7 @@ class Mocker extends Reflection
       * ```
       *
       */
-     public function getClassReflection(
+     public function reflectionClass(
          string|object $class
      ): ReflectionClass
     {
@@ -71,6 +69,31 @@ class Mocker extends Reflection
         return new ReflectionClass(new UnknownClass());
     }
 
+
+     /**
+      * [Description]
+      *
+      * @param array<mixed> $constructorArguments
+      *
+      * @return object
+      *
+      * @example
+      *
+      * ```
+      *
+      * ```
+      *
+      */
+     public function mockInstance(
+         array $constructorArguments = []
+     ): object
+     {
+         return $this->getClassInstance(
+             $this->reflection()->type()->__toString(),
+             $constructorArguments
+         );
+     }
+
     /**
      * [Description]
      *
@@ -87,28 +110,35 @@ class Mocker extends Reflection
      * ```
      *
      */
-     public function getClassInstance(
+     private function getClassInstance(
          string|object $class,
-         array $constructorArguments = array()
+         array $constructorArguments = []
      ): object
      {
         if (method_exists($class, self::CONSTRUCT) === false) {
             try {
-                return $this->getClassReflection($class)->newInstanceArgs([]);
+                return $this->reflectionClass($class)
+                            ->newInstanceArgs([]);
             } catch (ReflectionException $e) {
                 return $e;
             }
         }
         if (empty($constructorArguments) === true) {
             try {
-                return $this->getClassReflection($class)->newInstanceArgs(
-                    $this->generateMockClassMethodArguments($class, self::CONSTRUCT)
+                return $this->reflectionClass($class)
+                            ->newInstanceArgs(
+                                $this->generateMockClassMethodArguments(
+                                    $class,
+                                    self::CONSTRUCT
+                                )
                 );
             } catch (ReflectionException $e) {
                 return $e;
             }
         }
-        return $this->getClassReflection($class)->newInstanceArgs($constructorArguments);
+        return $this->reflectionClass($class)->newInstanceArgs(
+            $constructorArguments
+        );
     }
 
      /**
@@ -127,12 +157,12 @@ class Mocker extends Reflection
       * ```
       *
       */
-     public function generateMockClassMethodArguments(
+     private function generateMockClassMethodArguments(
          string|object $class,
          string $method
      ): array
     {
-        $reflection = new self($this->getClassReflection($class));
+        $reflection = new Reflection($this->reflectionClass($class));
         $defaults = array();
         $id = new Id();
         $randChars = $id->__toString();
@@ -176,8 +206,10 @@ class Mocker extends Reflection
                         ['classes'],
                         $type
                     );
-                        $defaults[$name] = $reflection->getClassInstance($type);
-                    }
+                    $defaults[$name] = $this->getClassInstance(
+                        $type
+                    );
+                }
             }
         }
         return $defaults;
@@ -185,70 +217,56 @@ class Mocker extends Reflection
 
 }
 
-class JsonString extends Text
+final class JsonString extends Text
 {
+
+    public const CLASS_INDEX = '__class__';
+    public const DATA_INDEX = '__data__';
 
     public function __construct(
         private mixed $originalValue,
         private bool $originalValueIsJson = false
     ) {
-        $this->encodeOriginalValueAsJson();
+        $this->verifyOriginalValueCanBeEncoded();
+        match(is_object($this->originalValue)) {
+            true => parent::__construct(
+                $this->encodeObjectAsJson($this->originalValue)
+            ),
+            default => parent::__construct($this->encodeOriginalValueAsJson())
+        };
     }
 
-    final public function __toString(): string
+    private function verifyOriginalValueCanBeEncoded(): void
     {
-        $this->encodeOriginalValueAsJson();
-        return parent::__toString();
+        if(
+            is_object($this->originalValue)
+            &&
+            $this->originalValue::class === self::class
+        ) {
+            throw new RuntimeException(
+                self::class .
+                ' Error:' .
+                PHP_EOL .
+                'Cannot use a ' .
+                self::class .
+                ' to encode another ' .
+                self::class
+            );
+        }
     }
 
-    public function originalValue(): mixed {
-        return $this->originalValue;
-    }
-
-    public function originalValueIsJson(): mixed {
-        return $this->originalValueIsJson;
-    }
-
-    final protected function encodeOriginalValueAsJson() : void
-    {
-        parent::__construct($this->jsonEncode());
-    }
-
-    protected function jsonEncode(): string
+    protected function encodeOriginalValueAsJson(): string
     {
         return strval(
-            is_string($this->originalValue())
+            is_string($this->originalValue)
             &&
-            $this->originalValueIsJson() === true
+            $this->originalValueIsJson === true
             &&
-            false !== json_decode($this->originalValue())
-            ? $this->originalValue()
-            : json_encode($this->originalValue())
+            false !== json_decode($this->originalValue)
+            ? $this->originalValue
+            : json_encode($this->originalValue)
         );
     }
-
-}
-
-class JsonSerializedObject extends JsonString
-{
-
-    public function __construct(
-        private object $originalObject
-    ) {
-        parent::__construct($this->originalObject());
-    }
-
-    public function originalObject(): object {
-        return  $this->originalObject;
-    }
-
-    protected function jsonEncode(): string {
-        return $this->encodeObjectAsJson($this->originalObject());
-    }
-
-
-    public const CLASS_INDEX = '__class__';
-    public const DATA_INDEX = '__data__';
 
     private function encodeObjectAsJson(object $object): string
     {
@@ -286,125 +304,104 @@ class JsonSerializedObject extends JsonString
 
 }
 
-function decodeJsonToObject(JsonString $json): object {
-    $data = json_decode($json, true);
-    if (
-        is_array($data)
-        &&
-        isset($data[JsonSerializedObject::CLASS_INDEX])
-        &&
-        isset($data[JsonSerializedObject::DATA_INDEX])
-    ) {
-        $class = $data[JsonSerializedObject::CLASS_INDEX];
-        $reflection = new ReflectionClass($class);
-        $object = $reflection->newInstanceWithoutConstructor();
-        while ($reflection) {
-            foreach (
-                $data[JsonSerializedObject::DATA_INDEX]
-                as
-                $name => $originalValue
-            ) {
-                if(
-                    is_string($originalValue)
-                    &&
-                    (false !== json_decode($originalValue))
+class JsonStringDecoder
+{
+
+    public function decodeJsonToObject(JsonString $json): object {
+        $data = json_decode($json, true);
+        if (
+            is_array($data)
+            &&
+            isset($data[JsonString::CLASS_INDEX])
+            &&
+            isset($data[JsonString::DATA_INDEX])
+        ) {
+            $class = $data[JsonString::CLASS_INDEX];
+            $mocker = new Mocker(
+                new Reflection(new ReflectionClass($class))
+            );
+            $object = $mocker->mockInstance();
+            $reflection = new ReflectionClass($object);
+            while ($reflection) {
+                foreach (
+                    $data[JsonString::DATA_INDEX]
+                    as
+                    $name => $originalValue
                 ) {
                     if(
-                        str_contains(
-                            $originalValue,
-                            JsonSerializedObject::CLASS_INDEX
-                        )
+                        is_string($originalValue)
                         &&
-                        str_contains(
-                            $originalValue,
-                            JsonSerializedObject::DATA_INDEX
-                        )
+                        (false !== json_decode($originalValue))
                     ) {
-                        $originalValue = decodeJsonToObject(
-                            new JsonString($originalValue, true)
-                        );
+                        if(
+                            str_contains(
+                                $originalValue,
+                                JsonString::CLASS_INDEX
+                            )
+                            &&
+                            str_contains(
+                                $originalValue,
+                                JsonString::DATA_INDEX
+                            )
+                        ) {
+                            $originalValue = $this->decodeJsonToObject(
+                                new JsonString($originalValue, true)
+                            );
+                        }
+                    }
+                    if ($reflection->hasProperty($name)) {
+                        $property = $reflection->getProperty($name);
+                        $property->setAccessible(true);
+                        $property->setValue($object, $originalValue);
                     }
                 }
-                if ($reflection->hasProperty($name)) {
-                    $property = $reflection->getProperty($name);
-                    $property->setAccessible(true);
-                    $property->setValue($object, $originalValue);
-                }
+                $reflection = $reflection->getParentClass();
             }
-            $reflection = $reflection->getParentClass();
+              if($object::class === JsonString::class) {
+                  /**
+                   * @var JsonString $object
+                   * @todo
+                   * This is a hack, need to figure this out better
+                   */
+                  $object->__toString();
+              }
+
+            return $object;
         }
-        return $object;
+        return new UnknownClass();
     }
-    return new UnknownClass();
+
 }
 
+$jsonStringDecoder = new JsonStringDecoder();
+
 $testObjects = [
-    new JsonSerializedObject(new JsonString(new Id())), // FAILS
-    new JsonString(new JsonString(new Id())),
-    new AlphanumericText(new Text('AlphanumericText')),
-    new Id(),
-    new Name(new Text('Name')),
-    new SafeText(new Text('SafeText')),
-    new Text('Text'),
-    new UnknownClass(),
-    new PrivateMethods(),
+    new JsonString(new JsonString(new Id())), // FAILS : Solution: Do not allow JsonStrings to represent/encode other JsonStrings
+#    new AlphanumericText(new Text('AlphanumericText')),
+#    new Id(),
+#    new Name(new Text('Name')),
+#    new SafeText(new Text('SafeText')),
+#    new Text('Text'),
+#    new UnknownClass(),
+#    new PrivateMethods(),
 ];
 
 $testObject = $testObjects[array_rand($testObjects)];
 
-$testJsonSerializedObject = new JsonSerializedObject($testObject);
+$testJsonString = new JsonString($testObject);
 
-$decodedTestObject = decodeJsonToObject($testJsonSerializedObject);
-if($decodedTestObject::class === JsonSerializedObject::class) {
-    /**
-     * @var JsonSerializedObject $decodedTestObject
-     *
-     * This is a hack, really the __construct method should
-     * be called when decoding. This will require first
-     * instantiating a mock instance, then setting the
-     * property values.
-     *
-     * @see Roady1.0::ReflectionUtilitiy::generateMockClassMethodArguments()
-     * @see Roady1.0::ReflectionUtilitiy::getClassInstance()
-     * @see https://github.com/sevidmusic/roady/blob/4307cdbb2d94b8017d5b6c825e75427d46274529/core/abstractions/utility/ReflectionUtility.php
-     *
-     * the decodeJsonToObject() method.
-     */
-    $decodedTestObject->__toString();
-}
-
-// save json for later viewing/debugging
-file_put_contents(
-    '/tmp/darlingTestJson.json',
-    $testJsonSerializedObject->__toString()
+$decodedTestObject = $jsonStringDecoder->decodeJsonToObject(
+    $testJsonString
 );
-
-
-$mocker = new Mocker(new ReflectionClass($decodedTestObject));
-$mockInstance = $mocker->getClassInstance($decodedTestObject);
-$mockInstanceMethods = $mocker->methodNames();
-$methodName = $mockInstanceMethods[array_rand($mockInstanceMethods)];
-
-dev_dump(
-    'mock method argumetns for ' . $mockInstance::class . '::' . $methodName,
-    $mocker->generateMockClassMethodArguments(
-        $mockInstance,
-        $methodName
-    )
-);
-dev_dump(
-    'mock instance',
-    $mockInstance
-);
-
-
-dev_dump(
+var_dump(
     '$decodedTestObject matches $testObject',
     $decodedTestObject == $testObject
 );
 
-dev_dump(
-    '$mockInstance type === $testObject type',
-    $mockInstance::class === $decodedTestObject::class
+/*
+// save json for later viewing/debugging
+file_put_contents(
+    '/tmp/darlingTestJson.json',
+    $testJsonString->__toString()
 );
-
+*/
