@@ -4,6 +4,7 @@ include('/home/darling/Git/PHPJsonUtilities/vendor/autoload.php');
 
 use \Darling\PHPReflectionUtilities\classes\utilities\ObjectReflection;
 use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
+use \Darling\PHPReflectionUtilities\interfaces\utilities\Reflection as ReflectionInterface;
 use \Darling\PHPTextTypes\classes\strings\AlphanumericText;
 use \Darling\PHPTextTypes\classes\strings\Id;
 use \Darling\PHPTextTypes\classes\strings\Name;
@@ -253,6 +254,45 @@ final class JsonString extends Text
                 self::class
             );
         }
+        if(
+            is_object($this->originalValue)
+            &&
+            in_array(
+                Reflector::class,
+                class_implements($this->originalValue::class),
+            )
+        ) {
+            throw new RuntimeException(
+                self::class .
+                ' Error:' .
+                PHP_EOL .
+                'Cannot use a ' .
+                self::class .
+                ' to encode an object that ' .
+                'is an implementation of a ' .
+                Reflector::class
+            );
+        }
+
+        if(
+            is_object($this->originalValue)
+            &&
+            in_array(
+                ReflectionInterface::class,
+                class_implements($this->originalValue::class),
+            )
+        ) {
+            throw new RuntimeException(
+                self::class .
+                ' Error:' .
+                PHP_EOL .
+                'Cannot use a ' .
+                self::class .
+                ' to encode an object that ' .
+                'is an implementation of a ' .
+                ReflectionInterface::class
+            );
+        }
     }
 
     protected function encodeOriginalValueAsJson(): string
@@ -373,35 +413,32 @@ class JsonStringDecoder
 
 }
 
-$jsonStringDecoder = new JsonStringDecoder();
-
 $testObjects = [
-    new JsonString(new JsonString(new Id())), // FAILS : Solution: Do not allow JsonStrings to represent/encode other JsonStrings
-#    new AlphanumericText(new Text('AlphanumericText')),
-#    new Id(),
-#    new Name(new Text('Name')),
-#    new SafeText(new Text('SafeText')),
-#    new Text('Text'),
-#    new UnknownClass(),
-#    new PrivateMethods(),
+    new AlphanumericText(new Text('AlphanumericText')),
+    new Id(),
+    new Name(new Text('Name')),
+    new SafeText(new Text('SafeText')),
+    new Text('Text'),
+    new UnknownClass(),
+    new PrivateMethods(),
 ];
 
 $testObject = $testObjects[array_rand($testObjects)];
 
 $testJsonString = new JsonString($testObject);
 
+$jsonStringDecoder = new JsonStringDecoder();
+
 $decodedTestObject = $jsonStringDecoder->decodeJsonToObject(
     $testJsonString
 );
+
 var_dump(
     '$decodedTestObject matches $testObject',
     $decodedTestObject == $testObject
 );
 
-/*
-// save json for later viewing/debugging
 file_put_contents(
     '/tmp/darlingTestJson.json',
     $testJsonString->__toString()
 );
-*/
