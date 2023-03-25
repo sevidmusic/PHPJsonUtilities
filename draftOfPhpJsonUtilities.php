@@ -13,20 +13,13 @@ use \Darling\PHPTextTypes\classes\strings\Text;
 use \Darling\PHPTextTypes\classes\strings\UnknownClass;
 use \Darling\PHPUnitTestUtilities\Tests\dev\mock\classes\PrivateMethods;
 
-/**
- * This class will not  be apart of this library, it will be
- * apart of astandalone library that will be required by this library.
- *
- * Drafting it here in order to draft this library's classes.
- *
- */
-class Mocker
+final class Mocker
 {
      private const ARRAY = 'array';
      private const BOOLEAN = 'bool';
      private const CONSTRUCT = '__construct';
      private const DOUBLE = 'double';
-     private const INTEGER = 'integer';
+     private const INTEGER = 'int';
      private const NULL = 'NULL';
      private const STRING = 'string';
 
@@ -52,7 +45,7 @@ class Mocker
       * ```
       *
       */
-     public function reflectionClass(
+     private function reflectionClass(
          string|object $class
      ): ReflectionClass
     {
@@ -164,9 +157,8 @@ class Mocker
      ): array
     {
         $reflection = new Reflection($this->reflectionClass($class));
+        $defaultText = new SafeText(new Text(self::class . '-DEFAULT_STRING'));
         $defaults = array();
-        $id = new Id();
-        $randChars = $id->__toString();
         if(method_exists($class, $method)) {
             foreach (
                 $reflection->methodParameterTypes($method)
@@ -187,7 +179,7 @@ class Mocker
                         continue;
                     }
                     if ($type === self::STRING) {
-                        $defaults[$name] = $randChars;
+                        $defaults[$name] = $defaultText->__toString();
                         continue;
                     }
                     if ($type === self::ARRAY) {
@@ -199,17 +191,36 @@ class Mocker
                         continue;
                     }
                     /**
-                     * For unknown types assume class instance.
-                     * @var class-string<object>|object $type
+                     * For unknown types check if $type matches an
+                     * existing class, if so, assign an instance of
+                     * that class.
+                     * @var class-string<object> $type
                      */
                     $type = '\\' . str_replace(
                         ['interfaces'],
                         ['classes'],
                         $type
                     );
-                    $defaults[$name] = $this->getClassInstance(
-                        $type
-                    );
+                    if(class_exists($type)) {
+                        $defaults[$name] = $this->getClassInstance(
+                            $type
+                        );
+                    }
+                    if(empty($defaults)) {
+                        throw new RuntimeException(
+                            self::class .
+                            ' Error:' .
+                            PHP_EOL .
+                            'Failed to mock argument ' .
+                            $name .
+                            ' of type ' .
+                            $type .
+                            ' for method ' .
+                            self::class .
+                            '->' .
+                            $method
+                        );
+                    }
                 }
             }
         }
@@ -277,6 +288,25 @@ final class JsonString extends Text
         if(
             is_object($this->originalValue)
             &&
+            Closure::class
+            ===
+            $this->originalValue::class
+        ) {
+            throw new RuntimeException(
+                self::class .
+                ' Error:' .
+                PHP_EOL .
+                'Cannot use a ' .
+                self::class .
+                ' to encode an object that ' .
+                'is an implementation of a ' .
+                Closure::class
+            );
+        }
+
+        if(
+            is_object($this->originalValue)
+            &&
             in_array(
                 ReflectionInterface::class,
                 class_implements($this->originalValue::class),
@@ -293,6 +323,24 @@ final class JsonString extends Text
                 ReflectionInterface::class
             );
         }
+
+        if(
+            is_object($this->originalValue)
+            &&
+            Directory::class === get_class($this->originalValue)
+        ) {
+            throw new RuntimeException(
+                self::class .
+                ' Error:' .
+                PHP_EOL .
+                'Cannot use a ' .
+                self::class .
+                ' to encode an object that ' .
+                'is an implementation of a ' .
+                Directory::class
+            );
+        }
+
     }
 
     protected function encodeOriginalValueAsJson(): string
@@ -344,7 +392,7 @@ final class JsonString extends Text
 
 }
 
-class JsonStringDecoder
+final class JsonStringDecoder
 {
 
     public function decodeJsonToObject(JsonString $json): object {
@@ -397,15 +445,6 @@ class JsonStringDecoder
                 }
                 $reflection = $reflection->getParentClass();
             }
-              if($object::class === JsonString::class) {
-                  /**
-                   * @var JsonString $object
-                   * @todo
-                   * This is a hack, need to figure this out better
-                   */
-                  $object->__toString();
-              }
-
             return $object;
         }
         return new UnknownClass();
@@ -413,7 +452,98 @@ class JsonStringDecoder
 
 }
 
+final class TestClassA
+{
+
+    public function __construct(private Id $id, private Name $name) {}
+
+
+        public function id(): Id
+        {
+            return $this->id;
+        }
+
+        public function name(): Name
+        {
+            return $this->name;
+        }
+
+}
+
+final class TestClassB
+{
+
+    public string $data = '';
+
+    /**
+     * @param array<mixed> $array
+     */
+    public function __construct(
+        private array $array = [],
+        private bool $bool = false,
+        private float $float = 1.2345,
+        private int $int = 12345,
+        private string $string = '',
+    )
+    {
+        $this->data = strval(
+            json_encode(
+                [
+                    $this->array,
+                    $this->bool,
+                    $this->float,
+                    $this->int,
+                    $this->string
+                ]
+            )
+        );
+    }
+}
+
+/**
+ * @template T
+ * @implements Iterator<string>
+ */
+class TestIterator implements Iterator
+{
+
+    /**
+     *
+     * @param int $position
+     * @param array<int, string> $array
+     *
+     */
+    public function __construct(private int $position = 0, private array $array = []) {
+        if(empty($this->array)) {
+            $this->array = array( "foo", "bar", "baz", "bazzer");
+        }
+    }
+
+    public function rewind(): void {
+        $this->position = 0;
+    }
+
+    public function current(): string {
+        return $this->array[$this->position];
+    }
+
+    public function key(): int {
+        return $this->position;
+    }
+
+    public function next(): void {
+        ++$this->position;
+    }
+
+    public function valid(): bool {
+        return isset($this->array[$this->position]);
+    }
+}
+
 $testObjects = [
+    new TestClassA(new Id(), new Name(new Text('Name'))),
+    new TestIterator(),
+    new TestClassB(),
     new AlphanumericText(new Text('AlphanumericText')),
     new Id(),
     new Name(new Text('Name')),
@@ -440,5 +570,7 @@ var_dump(
 
 file_put_contents(
     '/tmp/darlingTestJson.json',
-    $testJsonString->__toString()
+    PHP_EOL . $testJsonString->__toString()
 );
+
+
