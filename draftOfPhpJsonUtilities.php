@@ -13,6 +13,26 @@ use \Darling\PHPTextTypes\classes\strings\Text;
 use \Darling\PHPTextTypes\classes\strings\UnknownClass;
 use \Darling\PHPUnitTestUtilities\Tests\dev\mock\classes\PrivateMethods;
 
+/**
+ * A Mocker can mock an instance of a class or object instance
+ * that is reflected by a Reflection.
+ *
+ * @example
+ *
+ * ```
+ * $mocker = new Mocker(new ObjectReflection(new stdClass()));
+ *
+ * $mockInstance = $mocker->mockInstance();
+ *
+ * var_dump($mockInstance);
+ *
+ * // example output:
+ * class stdClass#38 (0) {
+ * }
+ *
+ * ```
+ *
+ */
 final class Mocker
 {
      private const ARRAY = 'array';
@@ -24,15 +44,25 @@ final class Mocker
      private const STRING = 'string';
 
 
+     /**
+      * Instantiate a new instance of a Mocker.
+      *
+      * @example
+      *
+      * ```
+      * $mocker = new Mocker(new ObjectReflection(new stdClass()));
+      *
+      * ```
+      *
+      * @see \Darling\PHPReflectionUtilities\classes\utilities\Reflection
+      * @see https://github.com/sevidmusic/PHPReflectionUtilities/blob/main/src/interfaces/utilities/Reflection.php
+      *
+      */
      public function __construct(private Reflection $reflection) { }
 
-     private function reflection(): Reflection
-     {
-         return $this->reflection;
-     }
-
      /**
-      * [Description]
+      * Return an instance of a ReflectionClass that reflects the
+      * specified class or object instance.
       *
       * @param class-string|object $class
       *
@@ -41,8 +71,16 @@ final class Mocker
       * @example
       *
       * ```
+      * var_dump($this->reflectionClass(new stdClass()));
+      *
+      * // example output:
+      * class ReflectionClass#1 (1) {
+      *   public string $name =>
+      *   string(8) "stdClass"
+      * }
       *
       * ```
+      * @todo Consider refactoring $class to accept Darling\PHPTextTypes\classes\strings\ClassString once https://github.com/sevidmusic/PHPReflectionUtilities/issues/25 is resolved
       *
       */
      private function reflectionClass(
@@ -65,7 +103,12 @@ final class Mocker
 
 
      /**
-      * [Description]
+      * Return a mock instance of the same type as the
+      * class or object instance reflected by the
+      * Reflection assigned to the $reflection property.
+      *
+      * If supplied, the specified $constructorArguments will
+      * be passed to the mock instance's constructor.
       *
       * @param array<mixed> $constructorArguments
       *
@@ -74,6 +117,15 @@ final class Mocker
       * @example
       *
       * ```
+      * $mocker = new Mocker(new ObjectReflection(new stdClass()));
+      *
+      * $mockInstance = $mocker->mockInstance();
+      *
+      * var_dump($mockInstance);
+      *
+      * // example output:
+      * class stdClass#38 (0) {
+      * }
       *
       * ```
       *
@@ -83,27 +135,38 @@ final class Mocker
      ): object
      {
          return $this->getClassInstance(
-             $this->reflection()->type()->__toString(),
+             $this->reflection->type()->__toString(),
              $constructorArguments
          );
      }
 
-    /**
-     * [Description]
-     *
-     * @param class-string|object $class
-     *
-     * @param array<mixed> $constructorArguments
-     *
-     * @return object
-     *
-     * @example
-     *
-     * ```
-     *
-     * ```
-     *
-     */
+     /**
+      * Return a mock instance of the same type as the
+      * specified class or object instance.
+      *
+      * If supplied, the specified $constructorArguments will
+      * be passed to the mock instance's constructor.
+      *
+      * @param class-string|object $class
+      *
+      * @param array<mixed> $constructorArguments
+      *
+      * @return object
+      *
+      * @example
+      *
+      * ```
+      * $mockInstance = $this->getClassInstance(new stdClass());
+      *
+      * var_dump($mockInstance);
+      *
+      * // example output:
+      * class stdClass#38 (0) {
+      * }
+      *
+      * ```
+      *
+      */
      private function getClassInstance(
          string|object $class,
          array $constructorArguments = []
@@ -136,25 +199,39 @@ final class Mocker
     }
 
      /**
-      * [Description]
+      * Generate mock method arguments for the specified method of the
+      * provided class or object instance.
       *
-      * @param class-string|object $class
+      * @param class-string|object $class The class or object instance.
       *
-      * @param string $method
+      * @param string $method The name of the method to generate
+      *                       arguments for.
       *
       * @return array<mixed>
       *
       * @example
       *
       * ```
+      * //
+      * var_dump(
+      *     $mocker->generateMockClassMethodArguments(
+      *         \Darling\PHPTextTypes\classes\strings\Text::class,
+      *         '__construct'
+      *     )
+      * );
+      *
+      * array(1) {
+      *   'string' =>
+      *   string(21) "Mocker-DEFAULT_STRING"
+      * }
       *
       * ```
       *
       */
-     private function generateMockClassMethodArguments(
+    private function generateMockClassMethodArguments(
          string|object $class,
          string $method
-     ): array
+    ): array
     {
         $reflection = new Reflection($this->reflectionClass($class));
         $defaultText = new SafeText(new Text(self::class . '-DEFAULT_STRING'));
@@ -563,9 +640,18 @@ $decodedTestObject = $jsonStringDecoder->decodeJsonToObject(
     $testJsonString
 );
 
+$mocker = new Mocker(new ObjectReflection($decodedTestObject));
+
+$mockInstance = $mocker->mockInstance();
+
 var_dump(
     '$decodedTestObject matches $testObject',
     $decodedTestObject == $testObject
+);
+
+var_dump(
+    '$mockInstance type matches $testObject type',
+    $mockInstance::class === $testObject::class
 );
 
 file_put_contents(
