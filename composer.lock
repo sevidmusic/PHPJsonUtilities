@@ -4,8 +4,53 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9f69c75a9158c990ca0f9ffaca5859e6",
+    "content-hash": "b1cdd24999813031fa207a57fd4d963e",
     "packages": [
+        {
+            "name": "darling/php-darling-dev-tools",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sevidmusic/PHPDarlingDevTools.git",
+                "reference": "bac2216683682febcca2b0978561d57b58473fb8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sevidmusic/PHPDarlingDevTools/zipball/bac2216683682febcca2b0978561d57b58473fb8",
+                "reference": "bac2216683682febcca2b0978561d57b58473fb8",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "*",
+                "phpunit/phpunit": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Darling\\PHPDarlingDevTools\\": "src/",
+                    "Darling\\PHPDarlingDevTools\\Tests\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "sevidmusic",
+                    "email": "sdmwebsdm@gmail.com"
+                }
+            ],
+            "description": "Development tools for development of Darling PHP libraries and projects. ",
+            "support": {
+                "issues": "https://github.com/sevidmusic/PHPDarlingDevTools/issues",
+                "source": "https://github.com/sevidmusic/PHPDarlingDevTools/tree/v1.0.1"
+            },
+            "time": "2023-03-26T17:55:05+00:00"
+        },
         {
             "name": "darling/php-reflection-utilities",
             "version": "v1.0.5",
