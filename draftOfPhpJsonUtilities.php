@@ -2,6 +2,7 @@
 
 include('/home/darling/Git/PHPJsonUtilities/vendor/autoload.php');
 
+use \Darling\PHPMockingUtilities\classes\mock\values\MockClassInstance;
 use \Darling\PHPReflectionUtilities\classes\utilities\ObjectReflection;
 use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
 use \Darling\PHPReflectionUtilities\interfaces\utilities\Reflection as ReflectionInterface;
@@ -483,7 +484,7 @@ final class JsonStringDecoder
             isset($data[JsonString::DATA_INDEX])
         ) {
             $class = $data[JsonString::CLASS_INDEX];
-            $mocker = new Mocker(
+            $mocker = new MockClassInstance(
                 new Reflection(new ClassString($class))
             );
             $object = $mocker->mockInstance();
@@ -641,7 +642,7 @@ $decodedTestObject = $jsonStringDecoder->decodeJsonToObject(
     $testJsonString
 );
 
-$mocker = new Mocker(new ObjectReflection($decodedTestObject));
+$mocker = new MockClassInstance(new ObjectReflection($decodedTestObject));
 
 $mockInstance = $mocker->mockInstance();
 

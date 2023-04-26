@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b1cdd24999813031fa207a57fd4d963e",
+    "content-hash": "59c2b722037d55f8524d2b9136cdc74c",
     "packages": [
         {
             "name": "darling/php-darling-dev-tools",
@@ -50,6 +50,55 @@
                 "source": "https://github.com/sevidmusic/PHPDarlingDevTools/tree/v1.0.3"
             },
             "time": "2023-03-30T16:00:53+00:00"
+        },
+        {
+            "name": "darling/php-mocking-utilities",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sevidmusic/PHPMockingUtilities.git",
+                "reference": "d3ac4ab7c1a59674da518b6e178f6e8e07136393"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sevidmusic/PHPMockingUtilities/zipball/d3ac4ab7c1a59674da518b6e178f6e8e07136393",
+                "reference": "d3ac4ab7c1a59674da518b6e178f6e8e07136393",
+                "shasum": ""
+            },
+            "require": {
+                "darling/php-darling-dev-tools": "^1.0",
+                "darling/php-reflection-utilities": "^1.0",
+                "darling/php-text-types": "^1.0",
+                "darling/php-unit-test-utilities": "^1.0",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "*",
+                "phpunit/phpunit": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Darling\\PHPMockingUtilities\\": "src/",
+                    "Darling\\PHPMockingUtilities\\tests\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sevi Donnelly Foreman",
+                    "email": "sdmwebsdm@gmail.com"
+                }
+            ],
+            "description": "The PHPMockingUtilities library provides classes that can be used to mock various types of values.",
+            "support": {
+                "issues": "https://github.com/sevidmusic/PHPMockingUtilities/issues",
+                "source": "https://github.com/sevidmusic/PHPMockingUtilities/tree/v1.0.0"
+            },
+            "time": "2023-04-26T05:48:13+00:00"
         },
         {
             "name": "darling/php-reflection-utilities",
