@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "darling/php-darling-dev-tools",
-            "version": "v1.0.1",
+            "version": "v1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sevidmusic/PHPDarlingDevTools.git",
-                "reference": "bac2216683682febcca2b0978561d57b58473fb8"
+                "reference": "5bb54a03ff771398896658730d01b8fd86b08425"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sevidmusic/PHPDarlingDevTools/zipball/bac2216683682febcca2b0978561d57b58473fb8",
-                "reference": "bac2216683682febcca2b0978561d57b58473fb8",
+                "url": "https://api.github.com/repos/sevidmusic/PHPDarlingDevTools/zipball/5bb54a03ff771398896658730d01b8fd86b08425",
+                "reference": "5bb54a03ff771398896658730d01b8fd86b08425",
                 "shasum": ""
             },
             "require": {
@@ -47,22 +47,22 @@
             "description": "Development tools for development of Darling PHP libraries and projects. ",
             "support": {
                 "issues": "https://github.com/sevidmusic/PHPDarlingDevTools/issues",
-                "source": "https://github.com/sevidmusic/PHPDarlingDevTools/tree/v1.0.1"
+                "source": "https://github.com/sevidmusic/PHPDarlingDevTools/tree/v1.0.3"
             },
-            "time": "2023-03-26T17:55:05+00:00"
+            "time": "2023-03-30T16:00:53+00:00"
         },
         {
             "name": "darling/php-reflection-utilities",
-            "version": "v1.0.5",
+            "version": "v1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sevidmusic/PHPReflectionUtilities.git",
-                "reference": "3afae1f318a7a61e55acba48a1f332115ddc0c2c"
+                "reference": "41393088fd8fdff2f662c7cf5df3020680da6353"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sevidmusic/PHPReflectionUtilities/zipball/3afae1f318a7a61e55acba48a1f332115ddc0c2c",
-                "reference": "3afae1f318a7a61e55acba48a1f332115ddc0c2c",
+                "url": "https://api.github.com/repos/sevidmusic/PHPReflectionUtilities/zipball/41393088fd8fdff2f662c7cf5df3020680da6353",
+                "reference": "41393088fd8fdff2f662c7cf5df3020680da6353",
                 "shasum": ""
             },
             "require": {
@@ -94,22 +94,22 @@
             "description": "A collection of php classes that can be used to aide in reflection with PHP",
             "support": {
                 "issues": "https://github.com/sevidmusic/PHPReflectionUtilities/issues",
-                "source": "https://github.com/sevidmusic/PHPReflectionUtilities/tree/v1.0.5"
+                "source": "https://github.com/sevidmusic/PHPReflectionUtilities/tree/v1.0.6"
             },
-            "time": "2023-03-20T21:59:33+00:00"
+            "time": "2023-04-20T20:24:04+00:00"
         },
         {
             "name": "darling/php-text-types",
-            "version": "v1.0.8",
+            "version": "v1.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sevidmusic/PHPTextTypes.git",
-                "reference": "1a938b16e22684c8d2112efaf836b2a4acb9763f"
+                "reference": "d80acec8454d015664e22ff4c5e342e1cff0b344"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sevidmusic/PHPTextTypes/zipball/1a938b16e22684c8d2112efaf836b2a4acb9763f",
-                "reference": "1a938b16e22684c8d2112efaf836b2a4acb9763f",
+                "url": "https://api.github.com/repos/sevidmusic/PHPTextTypes/zipball/d80acec8454d015664e22ff4c5e342e1cff0b344",
+                "reference": "d80acec8454d015664e22ff4c5e342e1cff0b344",
                 "shasum": ""
             },
             "require": {
@@ -140,9 +140,9 @@
             "description": "A collection of classes that represent various types of text.",
             "support": {
                 "issues": "https://github.com/sevidmusic/PHPTextTypes/issues",
-                "source": "https://github.com/sevidmusic/PHPTextTypes/tree/v1.0.8"
+                "source": "https://github.com/sevidmusic/PHPTextTypes/tree/v1.0.9"
             },
-            "time": "2023-03-20T21:57:17+00:00"
+            "time": "2023-04-18T18:58:57+00:00"
         },
         {
             "name": "darling/php-unit-test-utilities",
@@ -419,16 +419,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.8",
+            "version": "1.10.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "0166aef76e066f0dd2adc2799bdadfa1635711e9"
+                "reference": "d232901b09e67538e5c86a724be841bea5768a7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/0166aef76e066f0dd2adc2799bdadfa1635711e9",
-                "reference": "0166aef76e066f0dd2adc2799bdadfa1635711e9",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/d232901b09e67538e5c86a724be841bea5768a7c",
+                "reference": "d232901b09e67538e5c86a724be841bea5768a7c",
                 "shasum": ""
             },
             "require": {
@@ -477,20 +477,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-03-24T10:28:16+00:00"
+            "time": "2023-04-19T13:47:27+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "10.0.2",
+            "version": "10.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "20800e84296ea4732f9a125e08ce86b4004ae3e4"
+                "reference": "884a0da7f9f46f28b2cb69134217fd810b793974"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/20800e84296ea4732f9a125e08ce86b4004ae3e4",
-                "reference": "20800e84296ea4732f9a125e08ce86b4004ae3e4",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/884a0da7f9f46f28b2cb69134217fd810b793974",
+                "reference": "884a0da7f9f46f28b2cb69134217fd810b793974",
                 "shasum": ""
             },
             "require": {
@@ -509,7 +509,7 @@
                 "theseer/tokenizer": "^1.2.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^10.0"
+                "phpunit/phpunit": "^10.1"
             },
             "suggest": {
                 "ext-pcov": "PHP extension that provides line coverage",
@@ -518,7 +518,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "10.0-dev"
+                    "dev-main": "10.1-dev"
                 }
             },
             "autoload": {
@@ -546,7 +546,8 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/10.0.2"
+                "security": "https://github.com/sebastianbergmann/php-code-coverage/security/policy",
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/10.1.1"
             },
             "funding": [
                 {
@@ -554,7 +555,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-03-06T13:00:19+00:00"
+            "time": "2023-04-17T12:15:40+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -799,16 +800,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "10.0.18",
+            "version": "10.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "582563ed2edc62d1455cdbe00ea49fe09428eef3"
+                "reference": "6f0cd95be71add539f8fd2be25b2a4a29789000b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/582563ed2edc62d1455cdbe00ea49fe09428eef3",
-                "reference": "582563ed2edc62d1455cdbe00ea49fe09428eef3",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/6f0cd95be71add539f8fd2be25b2a4a29789000b",
+                "reference": "6f0cd95be71add539f8fd2be25b2a4a29789000b",
                 "shasum": ""
             },
             "require": {
@@ -822,7 +823,7 @@
                 "phar-io/manifest": "^2.0.3",
                 "phar-io/version": "^3.0.2",
                 "php": ">=8.1",
-                "phpunit/php-code-coverage": "^10.0",
+                "phpunit/php-code-coverage": "^10.1.1",
                 "phpunit/php-file-iterator": "^4.0",
                 "phpunit/php-invoker": "^4.0",
                 "phpunit/php-text-template": "^3.0",
@@ -848,7 +849,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "10.0-dev"
+                    "dev-main": "10.1-dev"
                 }
             },
             "autoload": {
@@ -880,7 +881,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.0.18"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.1.2"
             },
             "funding": [
                 {
@@ -896,7 +897,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-03-22T06:15:31+00:00"
+            "time": "2023-04-22T07:38:19+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -1267,16 +1268,16 @@
         },
         {
             "name": "sebastian/environment",
-            "version": "6.0.0",
+            "version": "6.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/environment.git",
-                "reference": "b6f3694c6386c7959915a0037652e0c40f6f69cc"
+                "reference": "43c751b41d74f96cbbd4e07b7aec9675651e2951"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/b6f3694c6386c7959915a0037652e0c40f6f69cc",
-                "reference": "b6f3694c6386c7959915a0037652e0c40f6f69cc",
+                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/43c751b41d74f96cbbd4e07b7aec9675651e2951",
+                "reference": "43c751b41d74f96cbbd4e07b7aec9675651e2951",
                 "shasum": ""
             },
             "require": {
@@ -1318,7 +1319,8 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/environment/issues",
-                "source": "https://github.com/sebastianbergmann/environment/tree/6.0.0"
+                "security": "https://github.com/sebastianbergmann/environment/security/policy",
+                "source": "https://github.com/sebastianbergmann/environment/tree/6.0.1"
             },
             "funding": [
                 {
@@ -1326,7 +1328,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-02-03T07:03:04+00:00"
+            "time": "2023-04-11T05:39:26+00:00"
         },
         {
             "name": "sebastian/exporter",

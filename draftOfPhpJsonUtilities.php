@@ -11,6 +11,7 @@ use \Darling\PHPTextTypes\classes\strings\Name;
 use \Darling\PHPTextTypes\classes\strings\SafeText;
 use \Darling\PHPTextTypes\classes\strings\Text;
 use \Darling\PHPTextTypes\classes\strings\UnknownClass;
+use \Darling\PHPTextTypes\classes\strings\ClassString;
 use \Darling\PHPUnitTestUtilities\Tests\dev\mock\classes\PrivateMethods;
 
 /**
@@ -233,7 +234,7 @@ final class Mocker
          string $method
     ): array
     {
-        $reflection = new Reflection($this->reflectionClass($class));
+        $reflection = new Reflection(new ClassString($class));
         $defaultText = new SafeText(new Text(self::class . '-DEFAULT_STRING'));
         $defaults = array();
         if(method_exists($class, $method)) {
@@ -483,7 +484,7 @@ final class JsonStringDecoder
         ) {
             $class = $data[JsonString::CLASS_INDEX];
             $mocker = new Mocker(
-                new Reflection(new ReflectionClass($class))
+                new Reflection(new ClassString($class))
             );
             $object = $mocker->mockInstance();
             $reflection = new ReflectionClass($object);
