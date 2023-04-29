@@ -26,8 +26,11 @@ class JsonTest extends PHPJsonUtilitiesTest
             $this->randomChars(),
             $this->randomObjectInstance(),
         ];
+        $data = $values[array_rand($values)];
+        $this->setOriginalData($data);
+        $this->expectExceptionIfOriginalDataCannotBeEncodedAsJson();
         $this->setJsonTestInstance(
-            new Json($values[array_rand($values)])
+            new Json($data)
         );
     }
 }

@@ -3,6 +3,11 @@
 namespace Darling\PHPJsonUtilities\tests\interfaces\encoders;
 
 use Darling\PHPJsonUtilities\interfaces\encoders\Json;
+use \Directory;
+use \Closure;
+use \RuntimeException;
+use \Darling\PHPReflectionUtilities\interfaces\utilities\Reflection as ReflectionInterface;
+
 
 /**
  * The JsonTestTrait defines common tests for
@@ -21,6 +26,8 @@ trait JsonTestTrait
      *                              implementation to test.
      */
     protected Json $json;
+
+    private mixed $originalData;
 
     /**
      * Set up an instance of a Json implementation to test.
@@ -78,5 +85,58 @@ trait JsonTestTrait
         $this->json = $jsonTestInstance;
     }
 
+    protected function setOriginalData(mixed $data): void
+    {
+        $this->originalData = $data;
+    }
+
+    private function expectExceptionIfOriginalDataCannotBeEncodedAsJson(): void
+    {
+        if(
+            $this->dataIsAJsonImplementationInstance()
+            ||
+            $this->dataIsAReflectionImplementationInstance()
+            ||
+            $this->dataIsAClosure()
+            ||
+            $this->dataIsADirectory()
+        ) {
+            $this->expectException(RuntimeException::class);
+        }
+
+    }
+
+    private function dataIsAJsonImplementationInstance(): bool
+    {
+        return is_object($this->originalData)
+        &&
+        in_array(Json::class, class_implements($this->originalData::class));
+    }
+
+    private function dataIsAReflectionImplementationInstance(): bool
+    {
+        return is_object($this->originalData)
+        &&
+        in_array(
+            ReflectionInterface::class,
+            class_implements($this->originalData::class),
+        );
+    }
+
+    private function dataIsAClosure(): bool
+    {
+        return is_object($this->originalData)
+        &&
+        Closure::class
+        ===
+        $this->originalData::class;
+    }
+
+    private function dataIsADirectory(): bool
+    {
+        return is_object($this->originalData)
+        &&
+        Directory::class === $this->originalData::class;
+    }
 }
 
