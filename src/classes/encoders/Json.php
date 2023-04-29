@@ -12,11 +12,20 @@ class Json extends Text implements JsonInterface
      * Instantiate a Json instance for the specified $data.
      *
      * If the specified $data is not a valid json string,
-     * it will be enocded as json.
+     * or an implementation of the JsonInterface, it will
+     * be enocded as json if possible.
      *
-     * If the specified $data is a valid json string, and
-     * the $dataIsJson parameter is set to true, then the
-     * $data will be used as is.
+     * If the $data cannot be encoded the encoded $data
+     * will be an empty json object:
+     *
+     * ```
+     * {}
+     *
+     * ```
+     * If the specified $data is an instance of an implementation
+     * of the JsonInterface, or if the $dataIsJson parameter is
+     * set to true and the specified $data is a valid json string,
+     * then the $data will not be encoded as josn.
      *
      * @example
      *

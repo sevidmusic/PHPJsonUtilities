@@ -3,10 +3,18 @@
 namespace Darling\PHPJsonUtilities\tests\interfaces\encoders;
 
 use Darling\PHPJsonUtilities\interfaces\encoders\Json;
-use \Directory;
 use \Closure;
-use \RuntimeException;
+use \Darling\PHPJsonUtilities\tests\PHPJsonUtilitiesTest;
+use \Darling\PHPJsonUtilities\tests\interfaces\encoders\JsonTestTrait;
+use \Darling\PHPReflectionUtilities\classes\utilities\ObjectReflection;
+use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
 use \Darling\PHPReflectionUtilities\interfaces\utilities\Reflection as ReflectionInterface;
+use \Darling\PHPTextTypes\classes\strings\ClassString;
+use \Darling\PHPTextTypes\classes\strings\Id;
+use \Darling\PHPTextTypes\classes\strings\Text;
+use \Directory;
+use \ReflectionClass;
+use \RuntimeException;
 
 
 /**
@@ -20,14 +28,11 @@ trait JsonTestTrait
 {
 
     /**
-     * @var Json $json
-     *                              An instance of a
-     *                              Json
-     *                              implementation to test.
+     * @var Json $json An instance of a Json implementation to test.
      */
-    protected Json $json;
+    private Json $json;
 
-    private mixed $originalData;
+    private string $expectedJsonString;
 
     /**
      * Set up an instance of a Json implementation to test.
@@ -85,58 +90,59 @@ trait JsonTestTrait
         $this->json = $jsonTestInstance;
     }
 
-    protected function setOriginalData(mixed $data): void
+    protected function setExpectedJsonString(mixed $data): void
     {
-        $this->originalData = $data;
+        $this-> expectedJsonString = match(is_object($data)) {
+            true => $this->encodeObjectAsJson($data),
+            default => $this->encodeValueAsJson($data),
+        };
     }
 
-    private function expectExceptionIfOriginalDataCannotBeEncodedAsJson(): void
+    protected function encodeValueAsJson(mixed $data, bool $dataIsJson = false): string
     {
-        if(
-            $this->dataIsAJsonImplementationInstance()
-            ||
-            $this->dataIsAReflectionImplementationInstance()
-            ||
-            $this->dataIsAClosure()
-            ||
-            $this->dataIsADirectory()
-        ) {
-            $this->expectException(RuntimeException::class);
-        }
-
-    }
-
-    private function dataIsAJsonImplementationInstance(): bool
-    {
-        return is_object($this->originalData)
-        &&
-        in_array(Json::class, class_implements($this->originalData::class));
-    }
-
-    private function dataIsAReflectionImplementationInstance(): bool
-    {
-        return is_object($this->originalData)
-        &&
-        in_array(
-            ReflectionInterface::class,
-            class_implements($this->originalData::class),
+        return strval(
+            is_string($data)
+            &&
+            $dataIsJson === true
+            &&
+            false !== json_decode($data)
+            ? $data
+            : json_encode($data)
         );
     }
 
-    private function dataIsAClosure(): bool
+    private function encodeObjectAsJson(object $object): string
     {
-        return is_object($this->originalData)
-        &&
-        Closure::class
-        ===
-        $this->originalData::class;
+        $data = [];
+        $objectReflection = $this->objectReflection($object);
+        foreach($objectReflection->propertyValues() as $propertyName => $propertyValue)
+        {
+            if(is_object($propertyValue)) {
+                $data[$propertyName] = $this->encodeObjectAsJson(
+                    $propertyValue
+                );
+               continue;
+            }
+            $data[$propertyName] = $propertyValue;
+
+        }
+        return strval(
+            json_encode(
+                [
+                    self::CLASS_INDEX =>
+                        $objectReflection->type()->__toString(),
+                    self::DATA_INDEX =>
+                        $data
+                ]
+            )
+        );
     }
 
-    private function dataIsADirectory(): bool
+    private function objectReflection(
+        object $object
+    ): ObjectReflection
     {
-        return is_object($this->originalData)
-        &&
-        Directory::class === $this->originalData::class;
+        return new ObjectReflection($object);
     }
 }
 
