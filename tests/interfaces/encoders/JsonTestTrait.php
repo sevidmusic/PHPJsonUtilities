@@ -16,10 +16,9 @@ use \Directory;
 use \ReflectionClass;
 use \RuntimeException;
 
-
 /**
- * The JsonTestTrait defines common tests for
- * implementations of the Json interface.
+ * The JsonTestTrait defines common tests for implementations of
+ * the Json interface.
  *
  * @see Json
  *
@@ -37,6 +36,9 @@ trait JsonTestTrait
     /**
      * Set up an instance of a Json implementation to test.
      *
+     * This method must set the expected json string
+     * via the setExpectedJsonString() method.
+     *
      * This method must also set the Json implementation instance
      * to be tested via the setJsonTestInstance() method.
      *
@@ -48,10 +50,16 @@ trait JsonTestTrait
      * @example
      *
      * ```
-     * protected function setUp(): void
+     * public function setUp(): void
      * {
+     *     $values = [
+     *         $this->randomChars(),
+     *         $this->randomObjectInstance(),
+     *     ];
+     *     $data = $values[array_rand($values)];
+     *     $this->setExpectedJsonString($data);
      *     $this->setJsonTestInstance(
-     *         new \Darling\PHPJsonUtilities\classes\encoders\Json()
+     *         new Json($data)
      *     );
      * }
      *
@@ -74,11 +82,8 @@ trait JsonTestTrait
     /**
      * Set the Json implementation instance to test.
      *
-     * @param Json $jsonTestInstance
-     *                              An instance of an
-     *                              implementation of
-     *                              the Json
-     *                              interface to test.
+     * @param Json $jsonTestInstance An instance of an implementation
+     *                               of the Json interface to test.
      *
      * @return void
      *
@@ -98,12 +103,10 @@ trait JsonTestTrait
         };
     }
 
-    protected function encodeValueAsJson(mixed $data, bool $dataIsJson = false): string
+    protected function encodeValueAsJson(mixed $data): string
     {
         return strval(
             is_string($data)
-            &&
-            $dataIsJson === true
             &&
             false !== json_decode($data)
             ? $data
@@ -143,6 +146,84 @@ trait JsonTestTrait
     ): ObjectReflection
     {
         return new ObjectReflection($object);
+    }
+
+    /**
+     * Test that the __toString() method returns the expected json
+     * string.
+     *
+     * @return void
+     *
+     * @covers \Darling\PHPJsonUtilities\classes\encoders\Json::__toString()
+     *
+     */
+    public function test___toString_returns_the_expected_json_string(): void
+    {
+        $this->assertEquals(
+            $this->expectedJsonString,
+            $this->jsonTestInstance()->__toString(),
+            $this->testFailedMessage(
+                $this->jsonTestInstance(),
+                '__toString',
+                'return the expected json string'
+            )
+        );
+    }
+
+    /**
+     * Test that the CLASS_INDEX constant is assigned the
+     * string:
+     *
+     * ```
+     * __class__
+     *
+     * ```
+     *
+     * @return void
+     *
+     * @covers Json::CLASS_INDEX
+     *
+     */
+    public function test_CLASS_INDEX_is_assigned_the_string___class__(): void
+    {
+        $this->assertEquals(
+            '__class__',
+            $this->jsonTestInstance()::CLASS_INDEX,
+            $this->testFailedMessage(
+                $this->jsonTestInstance(),
+                '',
+                'the CLASS_INDEX constant must be assigned the ' .
+                'string __class__'
+            )
+        );
+    }
+
+    /**
+     * Test that the DATA_INDEX constant is assigned the
+     * string:
+     *
+     * ```
+     * __data__
+     *
+     * ```
+     *
+     * @return void
+     *
+     * @covers Json::DATA_INDEX
+     *
+     */
+    public function test_DATA_INDEX_is_assigned_the_string___data__(): void
+    {
+        $this->assertEquals(
+            '__data__',
+            $this->jsonTestInstance()::DATA_INDEX,
+            $this->testFailedMessage(
+                $this->jsonTestInstance(),
+                '',
+                'the DATA_INDEX constant must be assigned the ' .
+                'string __data__'
+            )
+        );
     }
 }
 

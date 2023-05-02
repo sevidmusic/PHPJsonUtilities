@@ -5,7 +5,7 @@ namespace Darling\PHPJsonUtilities\interfaces\encoders;
 use \Darling\PHPTextTypes\interfaces\strings\Text;
 
 /**
- * Json can be used to encode data as a json string.
+ * Json is Text whose string value is a valid json string.
  *
  * @example
  *
@@ -20,8 +20,12 @@ use \Darling\PHPTextTypes\interfaces\strings\Text;
 interface Json extends Text
 {
 
+    public const CLASS_INDEX = '__class__';
+
+    public const DATA_INDEX = '__data__';
+
     /**
-     * Return the data encoded as a json string.
+     * Return a valid json string.
      *
      * @return string
      *
