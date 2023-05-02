@@ -1,8 +1,8 @@
 <?php
 
-namespace Darling\PHPJsonUtilities\classes\encoders;
+namespace Darling\PHPJsonUtilities\classes\encoded\data;
 
-use Darling\PHPJsonUtilities\interfaces\encoders\Json as JsonInterface;
+use Darling\PHPJsonUtilities\interfaces\encoded\data\Json as JsonInterface;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockClassInstance;
 use \Darling\PHPReflectionUtilities\classes\utilities\ObjectReflection;
 use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
@@ -32,7 +32,7 @@ class Json extends Text implements JsonInterface
      * @example
      *
      * ```
-     * $json = new \Darling\PHPJsonUtilities\classes\encoders\Json(
+     * $json = new \Darling\PHPJsonUtilities\classes\encoded\data\Json(
      *     'some data'
      * );
      *
