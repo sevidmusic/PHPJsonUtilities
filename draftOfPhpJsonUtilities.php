@@ -2,6 +2,7 @@
 
 include('/home/darling/Git/PHPJsonUtilities/vendor/autoload.php');
 
+use \Darling\PHPJsonUtilities\classes\encoders\Json;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockClassInstance;
 use \Darling\PHPReflectionUtilities\classes\utilities\ObjectReflection;
 use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
@@ -15,182 +16,19 @@ use \Darling\PHPTextTypes\classes\strings\Text;
 use \Darling\PHPTextTypes\classes\strings\UnknownClass;
 use \Darling\PHPUnitTestUtilities\Tests\dev\mock\classes\PrivateMethods;
 
-final class JsonString extends Text
+final class JsonDecoder
 {
 
-    public const CLASS_INDEX = '__class__';
-    public const DATA_INDEX = '__data__';
-
-    public function __construct(
-        private mixed $originalValue,
-        private bool $originalValueIsJson = false
-    ) {
-        $this->verifyOriginalValueCanBeEncoded();
-        match(is_object($this->originalValue)) {
-            true => parent::__construct(
-                $this->encodeObjectAsJson($this->originalValue)
-            ),
-            default => parent::__construct($this->encodeOriginalValueAsJson())
-        };
-    }
-
-    private function verifyOriginalValueCanBeEncoded(): void
-    {
-        if(
-            is_object($this->originalValue)
-            &&
-            $this->originalValue::class === self::class
-        ) {
-            throw new RuntimeException(
-                self::class .
-                ' Error:' .
-                PHP_EOL .
-                'Cannot use a ' .
-                self::class .
-                ' to encode another ' .
-                self::class
-            );
-        }
-        if(
-            is_object($this->originalValue)
-            &&
-            in_array(
-                Reflector::class,
-                class_implements($this->originalValue::class),
-            )
-        ) {
-            throw new RuntimeException(
-                self::class .
-                ' Error:' .
-                PHP_EOL .
-                'Cannot use a ' .
-                self::class .
-                ' to encode an object that ' .
-                'is an implementation of a ' .
-                Reflector::class
-            );
-        }
-
-        if(
-            is_object($this->originalValue)
-            &&
-            Closure::class
-            ===
-            $this->originalValue::class
-        ) {
-            throw new RuntimeException(
-                self::class .
-                ' Error:' .
-                PHP_EOL .
-                'Cannot use a ' .
-                self::class .
-                ' to encode an object that ' .
-                'is an implementation of a ' .
-                Closure::class
-            );
-        }
-
-        if(
-            is_object($this->originalValue)
-            &&
-            in_array(
-                ReflectionInterface::class,
-                class_implements($this->originalValue::class),
-            )
-        ) {
-            throw new RuntimeException(
-                self::class .
-                ' Error:' .
-                PHP_EOL .
-                'Cannot use a ' .
-                self::class .
-                ' to encode an object that ' .
-                'is an implementation of a ' .
-                ReflectionInterface::class
-            );
-        }
-
-        if(
-            is_object($this->originalValue)
-            &&
-            Directory::class === get_class($this->originalValue)
-        ) {
-            throw new RuntimeException(
-                self::class .
-                ' Error:' .
-                PHP_EOL .
-                'Cannot use a ' .
-                self::class .
-                ' to encode an object that ' .
-                'is an implementation of a ' .
-                Directory::class
-            );
-        }
-
-    }
-
-    protected function encodeOriginalValueAsJson(): string
-    {
-        return strval(
-            is_string($this->originalValue)
-            &&
-            $this->originalValueIsJson === true
-            &&
-            false !== json_decode($this->originalValue)
-            ? $this->originalValue
-            : json_encode($this->originalValue)
-        );
-    }
-
-    private function encodeObjectAsJson(object $object): string
-    {
-        $data = [];
-        $objectReflection = $this->objectReflection($object);
-        foreach($objectReflection->propertyValues() as $propertyName => $propertyValue)
-        {
-            if(is_object($propertyValue)) {
-                $data[$propertyName] = $this->encodeObjectAsJson(
-                    $propertyValue
-                );
-               continue;
-            }
-            $data[$propertyName] = $propertyValue;
-
-        }
-        return strval(
-            json_encode(
-                [
-                    self::CLASS_INDEX =>
-                        $objectReflection->type()->__toString(),
-                    self::DATA_INDEX =>
-                        $data
-                ]
-            )
-        );
-    }
-
-    private function objectReflection(
-        object $object
-    ): ObjectReflection
-    {
-        return new ObjectReflection($object);
-    }
-
-}
-
-final class JsonStringDecoder
-{
-
-    public function decodeJsonToObject(JsonString $json): object {
+    public function decodeJsonToObject(Json $json): object {
         $data = json_decode($json, true);
         if (
             is_array($data)
             &&
-            isset($data[JsonString::CLASS_INDEX])
+            isset($data[Json::CLASS_INDEX])
             &&
-            isset($data[JsonString::DATA_INDEX])
+            isset($data[Json::DATA_INDEX])
         ) {
-            $class = $data[JsonString::CLASS_INDEX];
+            $class = $data[Json::CLASS_INDEX];
             $mocker = new MockClassInstance(
                 new Reflection(new ClassString($class))
             );
@@ -198,7 +36,7 @@ final class JsonStringDecoder
             $reflection = new ReflectionClass($object);
             while ($reflection) {
                 foreach (
-                    $data[JsonString::DATA_INDEX]
+                    $data[Json::DATA_INDEX]
                     as
                     $name => $originalValue
                 ) {
@@ -210,16 +48,16 @@ final class JsonStringDecoder
                         if(
                             str_contains(
                                 $originalValue,
-                                JsonString::CLASS_INDEX
+                                Json::CLASS_INDEX
                             )
                             &&
                             str_contains(
                                 $originalValue,
-                                JsonString::DATA_INDEX
+                                Json::DATA_INDEX
                             )
                         ) {
                             $originalValue = $this->decodeJsonToObject(
-                                new JsonString($originalValue, true)
+                                new Json($originalValue, true)
                             );
                         }
                     }
@@ -341,12 +179,12 @@ $testObjects = [
 
 $testObject = $testObjects[array_rand($testObjects)];
 
-$testJsonString = new JsonString($testObject);
+$testJson = new Json($testObject);
 
-$jsonStringDecoder = new JsonStringDecoder();
+$jsonDecoder = new JsonDecoder();
 
-$decodedTestObject = $jsonStringDecoder->decodeJsonToObject(
-    $testJsonString
+$decodedTestObject = $jsonDecoder->decodeJsonToObject(
+    $testJson
 );
 
 $mocker = new MockClassInstance(new ObjectReflection($decodedTestObject));
@@ -365,7 +203,7 @@ var_dump(
 
 file_put_contents(
     '/tmp/darlingTestJson.json',
-    PHP_EOL . $testJsonString->__toString()
+    PHP_EOL . $testJson->__toString()
 );
 
 
