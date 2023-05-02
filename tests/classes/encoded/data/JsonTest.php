@@ -1,10 +1,10 @@
 <?php
 
-namespace Darling\PHPJsonUtilities\tests\classes\encoders;
+namespace Darling\PHPJsonUtilities\tests\classes\encoded\data;
 
-use \Darling\PHPJsonUtilities\classes\encoders\Json;
+use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPJsonUtilities\tests\PHPJsonUtilitiesTest;
-use \Darling\PHPJsonUtilities\tests\interfaces\encoders\JsonTestTrait;
+use \Darling\PHPJsonUtilities\tests\interfaces\encoded\data\JsonTestTrait;
 use \Darling\PHPReflectionUtilities\classes\utilities\ObjectReflection;
 use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
 use \Darling\PHPTextTypes\classes\strings\ClassString;
@@ -22,7 +22,7 @@ class JsonTest extends PHPJsonUtilitiesTest
 
     /**
      * The JsonTestTrait defines common tests for implementations
-     * of the Darling\PHPJsonUtilities\interfaces\encoders\Json
+     * of the Darling\PHPJsonUtilities\interfaces\encoded\data\Json
      * interface.
      *
      * @see JsonTestTrait

@@ -1,6 +1,6 @@
 <?php
 
-namespace Darling\PHPJsonUtilities\interfaces\encoders;
+namespace Darling\PHPJsonUtilities\interfaces\encoded\data;
 
 use \Darling\PHPTextTypes\interfaces\strings\Text;
 

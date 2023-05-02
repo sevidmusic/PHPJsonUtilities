@@ -1,11 +1,11 @@
 <?php
 
-namespace Darling\PHPJsonUtilities\tests\interfaces\encoders;
+namespace Darling\PHPJsonUtilities\tests\interfaces\encoded\data;
 
-use Darling\PHPJsonUtilities\interfaces\encoders\Json;
+use Darling\PHPJsonUtilities\interfaces\encoded\data\Json;
 use \Closure;
 use \Darling\PHPJsonUtilities\tests\PHPJsonUtilitiesTest;
-use \Darling\PHPJsonUtilities\tests\interfaces\encoders\JsonTestTrait;
+use \Darling\PHPJsonUtilities\tests\interfaces\encoded\data\JsonTestTrait;
 use \Darling\PHPReflectionUtilities\classes\utilities\ObjectReflection;
 use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
 use \Darling\PHPReflectionUtilities\interfaces\utilities\Reflection as ReflectionInterface;
@@ -154,7 +154,7 @@ trait JsonTestTrait
      *
      * @return void
      *
-     * @covers \Darling\PHPJsonUtilities\classes\encoders\Json::__toString()
+     * @covers \Darling\PHPJsonUtilities\classes\encoded\data\Json::__toString()
      *
      */
     public function test___toString_returns_the_expected_json_string(): void

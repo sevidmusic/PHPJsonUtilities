@@ -2,7 +2,7 @@
 
 include('/home/darling/Git/PHPJsonUtilities/vendor/autoload.php');
 
-use \Darling\PHPJsonUtilities\classes\encoders\Json;
+use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockClassInstance;
 use \Darling\PHPReflectionUtilities\classes\utilities\ObjectReflection;
 use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
