@@ -34,166 +34,209 @@ composer require darling/php-json-utilities
 
 include('/home/darling/Git/PHPJsonUtilities/vendor/autoload.php');
 
+use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
+use \Darling\PHPMockingUtilities\classes\mock\values\MockClassInstance;
 use \Darling\PHPReflectionUtilities\classes\utilities\ObjectReflection;
 use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
+use \Darling\PHPReflectionUtilities\interfaces\utilities\Reflection as ReflectionInterface;
 use \Darling\PHPTextTypes\classes\strings\AlphanumericText;
+use \Darling\PHPTextTypes\classes\strings\ClassString;
 use \Darling\PHPTextTypes\classes\strings\Id;
 use \Darling\PHPTextTypes\classes\strings\Name;
 use \Darling\PHPTextTypes\classes\strings\SafeText;
 use \Darling\PHPTextTypes\classes\strings\Text;
 use \Darling\PHPTextTypes\classes\strings\UnknownClass;
+use \Darling\PHPUnitTestUtilities\Tests\dev\mock\classes\PrivateMethods;
 
-class JsonString extends Text
+final class JsonDecoder
 {
 
-    public function __construct(
-        private mixed $originalValue,
-        private bool $originalValueIsJson = false
-    ) {
-        $this->encodeOriginalValueAsJson();
-    }
-
-    final public function __toString(): string
-    {
-        $this->encodeOriginalValueAsJson();
-        return parent::__toString();
-    }
-
-    public function originalValue(): mixed {
-        return $this->originalValue;
-    }
-
-    public function originalValueIsJson(): mixed {
-        return $this->originalValueIsJson;
-    }
-
-    final protected function encodeOriginalValueAsJson() : void
-    {
-        parent::__construct($this->jsonEncode());
-    }
-
-    protected function jsonEncode(): string
-    {
-        return strval(
-            is_string($this->originalValue())
+    public function decodeJsonToObject(Json $json): object {
+        $data = json_decode($json, true);
+        if (
+            is_array($data)
             &&
-            $this->originalValueIsJson() === true
+            isset($data[Json::CLASS_INDEX])
             &&
-            false !== json_decode($this->originalValue())
-            ? $this->originalValue()
-            : json_encode($this->originalValue())
-        );
+            isset($data[Json::DATA_INDEX])
+        ) {
+            $class = $data[Json::CLASS_INDEX];
+            $mocker = new MockClassInstance(
+                new Reflection(new ClassString($class))
+            );
+            $object = $mocker->mockInstance();
+            $reflection = new ReflectionClass($object);
+            while ($reflection) {
+                foreach (
+                    $data[Json::DATA_INDEX]
+                    as
+                    $name => $originalValue
+                ) {
+                    if(
+                        is_string($originalValue)
+                        &&
+                        (false !== json_decode($originalValue))
+                    ) {
+                        if(
+                            str_contains(
+                                $originalValue,
+                                Json::CLASS_INDEX
+                            )
+                            &&
+                            str_contains(
+                                $originalValue,
+                                Json::DATA_INDEX
+                            )
+                        ) {
+                            $originalValue = $this->decodeJsonToObject(
+                                new Json($originalValue, true)
+                            );
+                        }
+                    }
+                    if ($reflection->hasProperty($name)) {
+                        $property = $reflection->getProperty($name);
+                        $property->setAccessible(true);
+                        $property->setValue($object, $originalValue);
+                    }
+                }
+                $reflection = $reflection->getParentClass();
+            }
+            return $object;
+        }
+        return new UnknownClass();
     }
 
 }
 
-class JsonSerializedObject extends JsonString
+final class TestClassA
 {
 
-    public function __construct(
-        private object $originalObject
-    ) {
-        parent::__construct($this->originalObject());
-    }
-
-    public function originalObject(): object {
-        return  $this->originalObject;
-    }
-
-    protected function jsonEncode(): string {
-        return $this->encodeObjectAsJson($this->originalObject());
-    }
+    public function __construct(private Id $id, private Name $name) {}
 
 
-    public const CLASS_INDEX = '__class__';
-    public const DATA_INDEX = '__data__';
-
-    private function encodeObjectAsJson(object $object): string
-    {
-        $data = [];
-        $objectReflection = $this->objectReflection($object);
-        foreach($objectReflection->propertyValues() as $propertyName => $propertyValue)
+        public function id(): Id
         {
-            if(is_object($propertyValue)) {
-               $data[$propertyName] = $this->encodeObjectAsJson($propertyValue);
-               continue;
-            }
-            $data[$propertyName] = $propertyValue;
-
+            return $this->id;
         }
-        return strval(
+
+        public function name(): Name
+        {
+            return $this->name;
+        }
+
+}
+
+final class TestClassB
+{
+
+    public string $data = '';
+
+    /**
+     * @param array<mixed> $array
+     */
+    public function __construct(
+        private array $array = [],
+        private bool $bool = false,
+        private float $float = 1.2345,
+        private int $int = 12345,
+        private string $string = '',
+    )
+    {
+        $this->data = strval(
             json_encode(
                 [
-                    self::CLASS_INDEX => $objectReflection->type()->__toString(),
-                    self::DATA_INDEX => $data
+                    $this->array,
+                    $this->bool,
+                    $this->float,
+                    $this->int,
+                    $this->string
                 ]
             )
         );
     }
-
-    private function objectReflection(object $object): ObjectReflection
-    {
-        return new ObjectReflection($object);
-    }
-
 }
 
-function decodeJsonToObject(JsonString $json): object {
-    $data = json_decode($json, true);
-    if (
-        is_array($data)
-        &&
-        isset($data[JsonSerializedObject::CLASS_INDEX])
-        &&
-        isset($data[JsonSerializedObject::DATA_INDEX])
-    ) {
-        $class = $data[JsonSerializedObject::CLASS_INDEX];
-        $reflection = new ReflectionClass($class);
-        $object = $reflection->newInstanceWithoutConstructor();
-        while ($reflection) {
-            foreach ($data[JsonSerializedObject::DATA_INDEX] as $name => $originalValue) {
-                if(is_string($originalValue) && (false !== json_decode($originalValue))) {
-                    if(
-                        str_contains($originalValue, JsonSerializedObject::CLASS_INDEX)
-                        &&
-                        str_contains($originalValue, JsonSerializedObject::DATA_INDEX)
-                    ) {
-                        $originalValue = decodeJsonToObject(new JsonString($originalValue, true));
-                    }
-                }
-                if ($reflection->hasProperty($name)) {
-                    $property = $reflection->getProperty($name);
-                    $property->setAccessible(true);
-                    $property->setValue($object, $originalValue);
-                }
-            }
-            $reflection = $reflection->getParentClass();
+/**
+ * @template T
+ * @implements Iterator<string>
+ */
+class TestIterator implements Iterator
+{
+
+    /**
+     *
+     * @param int $position
+     * @param array<int, string> $array
+     *
+     */
+    public function __construct(private int $position = 0, private array $array = []) {
+        if(empty($this->array)) {
+            $this->array = array( "foo", "bar", "baz", "bazzer");
         }
-        return $object;
     }
-    return new UnknownClass();
+
+    public function rewind(): void {
+        $this->position = 0;
+    }
+
+    public function current(): string {
+        return $this->array[$this->position];
+    }
+
+    public function key(): int {
+        return $this->position;
+    }
+
+    public function next(): void {
+        ++$this->position;
+    }
+
+    public function valid(): bool {
+        return isset($this->array[$this->position]);
+    }
 }
 
 $testObjects = [
-    new AlphanumericText(new Text('Foo')),
+    new TestClassA(new Id(), new Name(new Text('Name'))),
+    new TestIterator(),
+    new TestClassB(),
+    new AlphanumericText(new Text('AlphanumericText')),
     new Id(),
-    new JsonSerializedObject(new JsonString(new Id())),
-    new JsonString(new Id()),
-    new Name(new Text('Baz')),
-    new SafeText(new Text('Bazzer')),
-    new Text('Bar'),
+    new Name(new Text('Name')),
+    new SafeText(new Text('SafeText')),
+    new Text('Text'),
     new UnknownClass(),
+    new PrivateMethods(),
 ];
 
 $testObject = $testObjects[array_rand($testObjects)];
 
-$testJsonSerializedObject = new JsonSerializedObject($testObject);
+$testJson = new Json($testObject);
 
-$decodedTestObject = decodeJsonToObject($testJsonSerializedObject);
+$jsonDecoder = new JsonDecoder();
 
-var_dump('$decodedTestObject matches $testObject', $decodedTestObject == $testObject);
+$decodedTestObject = $jsonDecoder->decodeJsonToObject(
+    $testJson
+);
 
-// save json for later viewing/debugging
-file_put_contents('/tmp/darlingTestJson.json', $testJsonSerializedObject->__toString());
+$mocker = new MockClassInstance(new ObjectReflection($decodedTestObject));
+
+$mockInstance = $mocker->mockInstance();
+
+var_dump(
+    '$decodedTestObject matches $testObject',
+    $decodedTestObject == $testObject
+);
+
+var_dump(
+    '$mockInstance type matches $testObject type',
+    $mockInstance::class === $testObject::class
+);
+
+file_put_contents(
+    '/tmp/darlingTestJson.json',
+    PHP_EOL . $testJson->__toString()
+);
+
 
 ```
