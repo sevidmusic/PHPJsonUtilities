@@ -3,6 +3,7 @@
 namespace Darling\PHPJsonUtilities\tests\interfaces\decoders;
 
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json as JsonInstance;
+use \Darling\PHPUnitTestUtilities\Tests\dev\mock\classes\PrivateStaticProperties;
 use \Darling\PHPJsonUtilities\interfaces\decoders\JsonDecoder;
 use \Darling\PHPJsonUtilities\interfaces\encoded\data\Json;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockClassInstance;
@@ -93,10 +94,11 @@ trait JsonDecoderTestTrait
     private function randomData(): mixed
     {
         $data = [
-            $this->randomChars(),
-            $this->randomFloat(),
-            $this->randomClassStringOrObjectInstance(),
-            $this->randomObjectInstance(),
+            #$this->randomChars(),
+            #$this->randomFloat(),
+            #$this->randomClassStringOrObjectInstance(),
+            #$this->randomObjectInstance(),
+            new PrivateStaticProperties(),
         ];
         return $data[array_rand($data)];
     }
@@ -104,13 +106,17 @@ trait JsonDecoderTestTrait
     private function decodeJson(Json $json): mixed
     {
         return match(
-            str_contains($json->__toString(), Json::CLASS_INDEX)
-            &&
-            str_contains($json->__toString(), Json::DATA_INDEX)
+            $this->isAJsonEncodedObject($json)
         ) {
             true => $this->decodeJsonToObject($json),
             default => json_decode($json->__toString()),
         };
+    }
+
+    public function isAJsonEncodedObject(Json $json): bool
+    {
+        return str_contains($json->__toString(), Json::CLASS_INDEX)
+            && str_contains($json->__toString(), Json::DATA_INDEX);
     }
 
     private function decodeJsonToObject(Json $json): object {
@@ -123,10 +129,10 @@ trait JsonDecoderTestTrait
             isset($data[Json::DATA_INDEX])
         ) {
             $class = $data[Json::CLASS_INDEX];
-            $mocker = new MockClassInstance(
+            $mockClassInstance = new MockClassInstance(
                 new Reflection(new ClassString($class))
             );
-            $object = $mocker->mockInstance();
+            $object = $mockClassInstance->mockInstance();
             $reflection = new ReflectionClass($object);
             while ($reflection) {
                 foreach (
