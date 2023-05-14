@@ -3,6 +3,7 @@
 include('/home/darling/Git/PHPJsonUtilities/vendor/autoload.php');
 
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
+use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockClassInstance;
 use \Darling\PHPReflectionUtilities\classes\utilities\ObjectReflection;
 use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
@@ -15,66 +16,6 @@ use \Darling\PHPTextTypes\classes\strings\SafeText;
 use \Darling\PHPTextTypes\classes\strings\Text;
 use \Darling\PHPTextTypes\classes\strings\UnknownClass;
 use \Darling\PHPUnitTestUtilities\Tests\dev\mock\classes\PrivateMethods;
-
-final class JsonDecoder
-{
-
-    public function decodeJsonToObject(Json $json): object {
-        $data = json_decode($json, true);
-        if (
-            is_array($data)
-            &&
-            isset($data[Json::CLASS_INDEX])
-            &&
-            isset($data[Json::DATA_INDEX])
-        ) {
-            $class = $data[Json::CLASS_INDEX];
-            $mocker = new MockClassInstance(
-                new Reflection(new ClassString($class))
-            );
-            $object = $mocker->mockInstance();
-            $reflection = new ReflectionClass($object);
-            while ($reflection) {
-                foreach (
-                    $data[Json::DATA_INDEX]
-                    as
-                    $name => $originalValue
-                ) {
-                    if(
-                        is_string($originalValue)
-                        &&
-                        (false !== json_decode($originalValue))
-                    ) {
-                        if(
-                            str_contains(
-                                $originalValue,
-                                Json::CLASS_INDEX
-                            )
-                            &&
-                            str_contains(
-                                $originalValue,
-                                Json::DATA_INDEX
-                            )
-                        ) {
-                            $originalValue = $this->decodeJsonToObject(
-                                new Json($originalValue, true)
-                            );
-                        }
-                    }
-                    if ($reflection->hasProperty($name)) {
-                        $property = $reflection->getProperty($name);
-                        $property->setAccessible(true);
-                        $property->setValue($object, $originalValue);
-                    }
-                }
-                $reflection = $reflection->getParentClass();
-            }
-            return $object;
-        }
-        return new UnknownClass();
-    }
-
-}
 
 final class TestClassA
 {
@@ -183,27 +124,32 @@ $testJson = new Json($testObject);
 
 $jsonDecoder = new JsonDecoder();
 
-$decodedTestObject = $jsonDecoder->decodeJsonToObject(
+$decodedTestObject = $jsonDecoder->decode(
     $testJson
 );
 
-$mocker = new MockClassInstance(new ObjectReflection($decodedTestObject));
+if(is_object($decodedTestObject)) {
 
-$mockInstance = $mocker->mockInstance();
+    $mocker = new MockClassInstance(new ObjectReflection($decodedTestObject));
 
-var_dump(
-    '$decodedTestObject matches $testObject',
-    $decodedTestObject == $testObject
-);
+    $mockInstance = $mocker->mockInstance();
 
-var_dump(
-    '$mockInstance type matches $testObject type',
-    $mockInstance::class === $testObject::class
-);
+    var_dump('original type:', $testObject::class, 'decoded type', $decodedTestObject::class);
 
-file_put_contents(
-    '/tmp/darlingTestJson.json',
-    PHP_EOL . $testJson->__toString()
-);
+    var_dump(
+        '$decodedTestObject matches $testObject',
+        $decodedTestObject == $testObject
+    );
 
+    var_dump(
+        '$mockInstance type matches $testObject type',
+        $mockInstance::class === $testObject::class
+    );
 
+    file_put_contents(
+        '/tmp/darlingTestJson.json',
+        PHP_EOL . $testJson->__toString()
+    );
+} else {
+    var_dump('Failed to decode object', $decodedTestObject);
+}
