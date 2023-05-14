@@ -94,85 +94,105 @@ trait JsonDecoderTestTrait
     private function randomData(): mixed
     {
         $data = [
-            #$this->randomChars(),
-            #$this->randomFloat(),
-            #$this->randomClassStringOrObjectInstance(),
-            #$this->randomObjectInstance(),
+            new \Darling\PHPUnitTestUtilities\Tests\dev\mock\classes\ReflectedBaseClass(),
+            $this->randomChars(),
+            $this->randomFloat(),
+            $this->randomClassStringOrObjectInstance(),
+            $this->randomObjectInstance(),
             new PrivateStaticProperties(),
+            function(): void {},
+            new \Directory(),
         ];
         return $data[array_rand($data)];
     }
 
     private function decodeJson(Json $json): mixed
     {
-        return match(
-            $this->isAJsonEncodedObject($json)
-        ) {
-            true => $this->decodeJsonToObject($json),
-            default => json_decode($json->__toString()),
-        };
-    }
-
-    public function isAJsonEncodedObject(Json $json): bool
-    {
-        return str_contains($json->__toString(), Json::CLASS_INDEX)
-            && str_contains($json->__toString(), Json::DATA_INDEX);
-    }
-
-    private function decodeJsonToObject(Json $json): object {
-        $data = json_decode($json, true);
-        if (
-            is_array($data)
-            &&
+        $data = $this->decodeToArray($json);
+        if(
             isset($data[Json::CLASS_INDEX])
             &&
+            is_string($data[Json::CLASS_INDEX])
+            &&
+            class_exists($data[Json::CLASS_INDEX])
+            &&
             isset($data[Json::DATA_INDEX])
+            &&
+            is_array($data[Json::DATA_INDEX])
         ) {
             $class = $data[Json::CLASS_INDEX];
-            $mockClassInstance = new MockClassInstance(
-                new Reflection(new ClassString($class))
-            );
-            $object = $mockClassInstance->mockInstance();
-            $reflection = new ReflectionClass($object);
-            while ($reflection) {
-                foreach (
-                    $data[Json::DATA_INDEX]
-                    as
-                    $name => $originalValue
-                ) {
-                    if(
-                        is_string($originalValue)
-                        &&
-                        (false !== json_decode($originalValue))
+            if(is_string($class) && class_exists($class)) {
+                $reflection = new Reflection(new ClassString($class));
+                $mockClassInstance = new MockClassInstance($reflection);
+                $object = $mockClassInstance->mockInstance();
+                $reflectionClass = new ReflectionClass($object);
+                while ($reflectionClass) {
+                    foreach (
+                        $data[Json::DATA_INDEX]
+                        as
+                        $name => $originalValue
                     ) {
                         if(
-                            str_contains(
-                                $originalValue,
-                                Json::CLASS_INDEX
-                            )
+                            is_string($originalValue)
                             &&
-                            str_contains(
-                                $originalValue,
-                                Json::DATA_INDEX
-                            )
+                            (false !== json_decode($originalValue))
                         ) {
-                            $originalValue = $this->decodeJsonToObject(
-                                new JsonInstance($originalValue)
-                            );
+                            if(
+                                str_contains(
+                                    $originalValue,
+                                    Json::CLASS_INDEX
+                                )
+                                &&
+                                str_contains(
+                                    $originalValue,
+                                    Json::DATA_INDEX
+                                )
+                            ) {
+                                $originalValue = $this->decodeJson(
+                                    new JsonInstance($originalValue)
+                                );
+                            }
+                        }
+                        if($reflectionClass->hasProperty($name)) {
+                            // possible fix: check if original property is null and if property in mock is uninitialized
+                            if(!is_null($originalValue)) {
+                                $acceptedTypes = $reflection->propertyTypes();
+                                $property = $reflectionClass->getProperty($name);
+                                $property->setAccessible(true);
+                                $property->setValue($object, $originalValue);
+                            }
                         }
                     }
-                    if ($reflection->hasProperty($name)) {
-                        $property = $reflection->getProperty($name);
-                        $property->setAccessible(true);
-                        $property->setValue($object, $originalValue);
+                    $reflectionClass = $reflectionClass->getParentClass();
+                    if($reflectionClass !== false) {
+                        $reflection = new Reflection(new ClassString($reflectionClass->getName()));
                     }
                 }
-                $reflection = $reflection->getParentClass();
+                return $object;
             }
-            return $object;
-        }
-        return new UnknownClass();
+            return new UnknownClass();
+        };
+        return json_decode($json->__toString());
     }
+
+    /**
+     * [Description]
+     *
+     * @return array<mixed>
+     *
+     * @example
+     *
+     * ```
+     *
+     * ```
+     *
+     */
+    private function decodeToArray(Json $json): array
+    {
+        $data = json_decode($json, true);
+        return (is_array($data) ? $data : []);
+    }
+
 
     /**
      * Test that the decode() method returns the original data.
