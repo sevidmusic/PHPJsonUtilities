@@ -2,8 +2,8 @@
 
 include('/home/darling/Git/PHPJsonUtilities/vendor/autoload.php');
 
-use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
+use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockClassInstance;
 use \Darling\PHPReflectionUtilities\classes\utilities\ObjectReflection;
 use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
@@ -20,18 +20,27 @@ use \Darling\PHPUnitTestUtilities\Tests\dev\mock\classes\PrivateMethods;
 final class TestClassA
 {
 
+    private mixed $uninitialized;
+
     public function __construct(private Id $id, private Name $name) {}
 
 
-        public function id(): Id
-        {
-            return $this->id;
-        }
+    public function id(): Id
+    {
+        $this->uninitialized = $this->id;
+        return $this->id;
+    }
 
-        public function name(): Name
-        {
-            return $this->name;
-        }
+    public function name(): Name
+    {
+        $this->uninitialized = $this->name;
+        return $this->name;
+    }
+
+    public function uninitialized(): mixed
+    {
+        return $this->uninitialized;
+    }
 
 }
 
@@ -103,6 +112,7 @@ class TestIterator implements Iterator
     public function valid(): bool {
         return isset($this->array[$this->position]);
     }
+
 }
 
 $testObjects = [
