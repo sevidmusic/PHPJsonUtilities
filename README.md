@@ -14,9 +14,9 @@
 The PHPJsonUtilities library provides classes for working with
 `JSON` in php.
 
-The main goals of this library is to provide an alternative
-to `json_encode()` that can be used to `JSON` encode object
-instances in a way that preserves their property values.
+The main goal of this library is to provide an object oriented
+alternative to `json_encode()` that can be used encode object
+instances as `JSON` in a way that preserves their property values.
 
 The following classes are provided by this library:
 
@@ -24,40 +24,68 @@ The following classes are provided by this library:
 \Darling\PHPJsonUtilities\classes\encoded\data\Json
 
 ```
-Which can be used to encode values of various types as `Json`.
+Which can be used to encode values of various types as valid `JSON`.
 
 ```
 \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder
 
 ```
 
-Which can be used to decode values encoded as `Json`.
+Which can be used to decode values that were encoded as `JSON` via a
+`Json` instance.
 
 # Overview
 
 - [Installation](#installation)
-- [Classes](#classes)
+- [Examples](#examples)
+      1. [Json](#json)
+      1. [JsonDecoder](#jsondecoder)
 
 # Installation
 
 ```
 composer require darling/php-json-utilities
+
 ```
 
-# Classes
+# Examples
 
 ### Json
 
-Json is Text whose string value is a valid json string.
+The `\Darling\PHPJsonUtilities\classes\encoded\data\Json` can be used
+to encode values of various types as `JSON`.
+
+Any value that can be encoded as `JSON` via `json_encode()`
+can be encoded as `JSON` via a
+`\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance.
+
+Unlike with `json_encode()`, objects encoded as `JSON` via a
+`\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance
+will have their property values preserved.
 
 Example:
 
 ```
-class A { private Closure $uninitializedProperty; private Closure $initializedProperty; public function __construct(Closure $closure) { $this->initializedProperty = $closure; } }
+class A {
+
+    private Closure $uninitializedProperty;
+
+    private Closure $initializedProperty;
+
+    public function __construct(Closure $closure) {
+        $this->initializedProperty = $closure;
+    }
+
+}
 
 $instance = new A(function(): void {});
 
 $json = new \Darling\PHPJsonUtilities\classes\encoded\data\Json($instance);
+
+echo json_encode($instance);
+
+// example output:
+{}
 
 echo $json;
 
