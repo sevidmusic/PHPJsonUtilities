@@ -1,4 +1,3 @@
-
 ```
    ___  __ _____     __              __  ____  _ ___ __  _
   / _ \/ // / _ \__ / /__ ___  ___  / / / / /_(_) (_) /_(_)__ ___
@@ -12,10 +11,27 @@
          https://github.com/sevidmusic/PHPJsonUtilities
 ```
 
-The PHPJsonUtilities library provides classes for working with json
-in php.
+The PHPJsonUtilities library provides classes for working with
+`JSON` in php.
 
-Note: This library is still under development, it is not ready for use.
+The main goals of this library is to provide an alternative
+to `json_encode()` that can be used to `JSON` encode object
+instances in a way that preserves their property values.
+
+The following classes are provided by this library:
+
+```
+\Darling\PHPJsonUtilities\classes\encoded\data\Json
+
+```
+Which can be used to encode values of various types as `Json`.
+
+```
+\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder
+
+```
+
+Which can be used to decode values encoded as `Json`.
 
 # Overview
 
@@ -37,10 +53,16 @@ Json is Text whose string value is a valid json string.
 Example:
 
 ```
+class A { private Closure $uninitializedProperty; private Closure $initializedProperty; public function __construct(Closure $closure) { $this->initializedProperty = $closure; } }
+
+$instance = new A(function(): void {});
+
+$json = new \Darling\PHPJsonUtilities\classes\encoded\data\Json($instance);
+
 echo $json;
 
-// example output
-["Some data","encoded as json"]
+// example output:
+{"__class__":"A","__data__":{"uninitializedProperty":null,"initializedProperty":"{\"__class__\":\"Closure\",\"__data__\":[]}"}}
 
 ```
 
@@ -52,6 +74,29 @@ as Json.
 Example:
 
 ```
+class A { private Closure $uninitializedProperty; private Closure $initializedProperty; public function __construct(Closure $closure) { $this->initializedProperty = $closure; } }
+
+$instance = new A(function(): void {});
+
+$json = new \Darling\PHPJsonUtilities\classes\encoded\data\Json($instance);
+
+$jsonDecoder = new \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder();
+
+var_dump($jsonDecoder->decode($json));
+
+// example output:
+class A#11 (2) {
+  private Closure $uninitializedProperty =>
+  *uninitialized*
+  private Closure $initializedProperty =>
+  class Closure#18 (1) {
+      virtual $closure =>
+      "$this->Darling\PHPMockingUtilities\classes\mock\values\{closure}"
+    public $this =>
+    class Darling\PHPMockingUtilities\classes\mock\values\MockClosure#17 (0) {
+    }
+  }
+}
 
 ```
 
