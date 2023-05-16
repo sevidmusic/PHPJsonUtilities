@@ -115,7 +115,7 @@ class TestIterator implements Iterator
 
 }
 
-$testObjects = [
+$originalObjects = [
     new TestClassA(new Id(), new Name(new Text('Name'))),
     new TestIterator(),
     new TestClassB(),
@@ -128,38 +128,23 @@ $testObjects = [
     new PrivateMethods(),
 ];
 
-$testObject = $testObjects[array_rand($testObjects)];
-
-$testJson = new Json($testObject);
-
+$originalObject = $originalObjects[array_rand($originalObjects)];
+$testJson = new Json($originalObject);
 $jsonDecoder = new JsonDecoder();
+$decodedObject = $jsonDecoder->decode($testJson);
 
-$decodedTestObject = $jsonDecoder->decode(
-    $testJson
-);
-
-if(is_object($decodedTestObject)) {
-
-    $mocker = new MockClassInstance(new ObjectReflection($decodedTestObject));
-
-    $mockInstance = $mocker->mockInstance();
-
-    var_dump('original type:', $testObject::class, 'decoded type', $decodedTestObject::class);
-
-    var_dump(
-        '$decodedTestObject matches $testObject',
-        $decodedTestObject == $testObject
-    );
-
-    var_dump(
-        '$mockInstance type matches $testObject type',
-        $mockInstance::class === $testObject::class
-    );
-
+if(is_object($decodedObject)) {
+    echo 'Type of original object: ' . $originalObject::class . PHP_EOL;
+    echo 'Type of decoded object: ' . $decodedObject::class . PHP_EOL;
+    echo 'Decoded object matches original object:' . PHP_EOL;
+    echo ($decodedObject == $originalObject ? 'true' : 'false') . PHP_EOL;
     file_put_contents(
         '/tmp/darlingTestJson.json',
-        PHP_EOL . $testJson->__toString()
+        PHP_EOL . $testJson
     );
 } else {
-    var_dump('Failed to decode object', $decodedTestObject);
+    echo 'Failed to decode the following json:' . PHP_EOL;
 }
+
+echo $testJson . PHP_EOL;
+
