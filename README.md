@@ -66,65 +66,119 @@ will have their property values preserved.
 Example:
 
 ```
-class A {
+<?php
 
-    private Closure $uninitializedProperty;
+require_once(
+    __DIR__ .
+    DIRECTORY_SEPARATOR .
+    'vendor' .
+    DIRECTORY_SEPARATOR .
+    'autoload.php'
+);
 
-    private Closure $initializedProperty;
+use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
+use \Darling\PHPTextTypes\classes\strings\Id;
 
-    public function __construct(Closure $closure) {
-        $this->initializedProperty = $closure;
-    }
+$objectInstance = new Id();
 
-}
+$jsonEncodedObject = new Json($objectInstance);
 
-$instance = new A(function(): void {});
-
-$json = new \Darling\PHPJsonUtilities\classes\encoded\data\Json($instance);
-
-echo json_encode($instance);
-
-// example output:
-{}
-
-echo $json;
+echo $jsonEncodedObject . PHP_EOL;
 
 // example output:
-{"__class__":"A","__data__":{"uninitializedProperty":null,"initializedProperty":"{\"__class__\":\"Closure\",\"__data__\":[]}"}}
+// {"__class__":"Darling\\PHPTextTypes\\classes\\strings\\Id","__data__":{"text":"{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\AlphanumericText\",\"__data__\":{\"text\":\"{\\\"__class__\\\":\\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\Text\\\",\\\"__data__\\\":{\\\"string\\\":\\\"IxVFLvhpJCzvuEyoYjt3TqQL7xE4lSKaFgNhOTwRUjN8yiizaF7gfADZHVl7WJfmHdg52i0Nrl12Kc\\\"}}\",\"string\":\"IxVFLvhpJCzvuEyoYjt3TqQL7xE4lSKaFgNhOTwRUjN8yiizaF7gfADZHVl7WJfmHdg52i0Nrl12Kc\"}}","string":"IxVFLvhpJCzvuEyoYjt3TqQL7xE4lSKaFgNhOTwRUjN8yiizaF7gfADZHVl7WJfmHdg52i0Nrl12Kc"}}
+
+$array = [1, 'foo' => 'bar',[null, false]];
+
+$jsonEncodedArray = new Json($array);
+
+echo $jsonEncodedArray . PHP_EOL;
+
+// example output:
+// {"0":1,"foo":"bar","1":[null,false]}
 
 ```
 
+
 ### JsonDecoder
 
-A JsonDecoder can be used to decode data that was encoded
-as Json.
+A JsonDecoder can be used to decode values that were encoded as
+`JSON` via a `\Darling\PHPJsonUtilities\classes\encoded\data\Json`
+instance.
 
 Example:
 
 ```
-class A { private Closure $uninitializedProperty; private Closure $initializedProperty; public function __construct(Closure $closure) { $this->initializedProperty = $closure; } }
+<?php
 
-$instance = new A(function(): void {});
+require_once(
+    __DIR__ .
+    DIRECTORY_SEPARATOR .
+    'vendor' .
+    DIRECTORY_SEPARATOR .
+    'autoload.php'
+);
 
-$json = new \Darling\PHPJsonUtilities\classes\encoded\data\Json($instance);
+use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
+use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
+use \Darling\PHPTextTypes\classes\strings\Id;
 
-$jsonDecoder = new \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder();
+$jsonDecoder = new JsonDecoder();
 
-var_dump($jsonDecoder->decode($json));
+$objectInstance = new Id();
 
-// example output:
-class A#11 (2) {
-  private Closure $uninitializedProperty =>
-  *uninitialized*
-  private Closure $initializedProperty =>
-  class Closure#18 (1) {
-      virtual $closure =>
-      "$this->Darling\PHPMockingUtilities\classes\mock\values\{closure}"
-    public $this =>
-    class Darling\PHPMockingUtilities\classes\mock\values\MockClosure#17 (0) {
-    }
-  }
-}
+$jsonEncodedObject = new Json($objectInstance);
+
+$decodedObject = $jsonDecoder->decode($jsonEncodedObject);
+
+var_dump($decodedObject);
+
+/**
+ * example output:
+ *
+ * class Darling\PHPTextTypes\classes\strings\Id#9 (2) {
+ *   private string $string =>
+ *   string(76) "GlyJ9DGMzRfbqXVvi2Z5orA8p4taCXguejgZNSTimGwo9EaqJjlNFzQLm8NCMFAhk3YlEcWYQwsc"
+ *   private Darling\PHPTextTypes\interfaces\strings\Text $text =>
+ *   class Darling\PHPTextTypes\classes\strings\AlphanumericText#17 (2) {
+ *     private string $string =>
+ *     string(76) "GlyJ9DGMzRfbqXVvi2Z5orA8p4taCXguejgZNSTimGwo9EaqJjlNFzQLm8NCMFAhk3YlEcWYQwsc"
+ *     private Darling\PHPTextTypes\interfaces\strings\Text $text =>
+ *     class Darling\PHPTextTypes\classes\strings\Text#18 (1) {
+ *       private string $string =>
+ *       string(76) "GlyJ9DGMzRfbqXVvi2Z5orA8p4taCXguejgZNSTimGwo9EaqJjlNFzQLm8NCMFAhk3YlEcWYQwsc"
+ *     }
+ *   }
+ * }
+ *
+ */
+
+$array = [1, 'foo' => 'bar',[null, false]];
+
+$jsonEncodedArray = new Json($array);
+
+$decodedArray = $jsonDecoder->decode($jsonEncodedArray);
+
+var_dump($decodedArray);
+
+/**
+ * example output:
+ *
+ * class stdClass#12 (3) {
+ *   public $0 =>
+ *   int(1)
+ *   public $foo =>
+ *   string(3) "bar"
+ *   public $1 =>
+ *   array(2) {
+ *     [0] =>
+ *     NULL
+ *     [1] =>
+ *     bool(false)
+ *   }
+ * }
+ *
+ */
 
 ```
 
