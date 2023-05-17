@@ -1,4 +1,3 @@
-
 ```
    ___  __ _____     __              __  ____  _ ___ __  _
   / _ \/ // / _ \__ / /__ ___  ___  / / / / /_(_) (_) /_(_)__ ___
@@ -12,231 +11,175 @@
          https://github.com/sevidmusic/PHPJsonUtilities
 ```
 
-The PHPJsonUtilities library provides classes for working with json
-in php.
+The PHPJsonUtilities library provides classes for working with
+`JSON` in php.
 
-Note: This library is still under development, it is not ready for use.
+The main goal of this library is to provide an object oriented
+alternative to `json_encode()` that can be used encode object
+instances as `JSON` in a way that preserves their property values.
+
+The following classes are provided by this library:
+
+```
+\Darling\PHPJsonUtilities\classes\encoded\data\Json
+
+```
+Which can be used to encode values of various types as valid `JSON`.
+
+```
+\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder
+
+```
+
+Which can be used to decode values that were encoded as `JSON` via a
+`Json` instance.
 
 # Overview
 
 - [Installation](#installation)
+- [Examples](#examples)
+      1. [Json](#json)
+      1. [JsonDecoder](#jsondecoder)
 
 # Installation
 
 ```
 composer require darling/php-json-utilities
+
 ```
 
-# Draft
+# Examples
+
+### Json
+
+The `\Darling\PHPJsonUtilities\classes\encoded\data\Json` can be used
+to encode values of various types as `JSON`.
+
+Any value that can be encoded as `JSON` via `json_encode()`
+can be encoded as `JSON` via a
+`\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance.
+
+Unlike with `json_encode()`, objects encoded as `JSON` via a
+`\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance
+will have their property values preserved.
+
+Example:
 
 ```
 <?php
 
-include('/home/darling/Git/PHPJsonUtilities/vendor/autoload.php');
+require_once(
+    __DIR__ .
+    DIRECTORY_SEPARATOR .
+    'vendor' .
+    DIRECTORY_SEPARATOR .
+    'autoload.php'
+);
 
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
-use \Darling\PHPMockingUtilities\classes\mock\values\MockClassInstance;
-use \Darling\PHPReflectionUtilities\classes\utilities\ObjectReflection;
-use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
-use \Darling\PHPReflectionUtilities\interfaces\utilities\Reflection as ReflectionInterface;
-use \Darling\PHPTextTypes\classes\strings\AlphanumericText;
-use \Darling\PHPTextTypes\classes\strings\ClassString;
 use \Darling\PHPTextTypes\classes\strings\Id;
-use \Darling\PHPTextTypes\classes\strings\Name;
-use \Darling\PHPTextTypes\classes\strings\SafeText;
-use \Darling\PHPTextTypes\classes\strings\Text;
-use \Darling\PHPTextTypes\classes\strings\UnknownClass;
-use \Darling\PHPUnitTestUtilities\Tests\dev\mock\classes\PrivateMethods;
 
-final class JsonDecoder
-{
+$objectInstance = new Id();
 
-    public function decodeJsonToObject(Json $json): object {
-        $data = json_decode($json, true);
-        if (
-            is_array($data)
-            &&
-            isset($data[Json::CLASS_INDEX])
-            &&
-            isset($data[Json::DATA_INDEX])
-        ) {
-            $class = $data[Json::CLASS_INDEX];
-            $mocker = new MockClassInstance(
-                new Reflection(new ClassString($class))
-            );
-            $object = $mocker->mockInstance();
-            $reflection = new ReflectionClass($object);
-            while ($reflection) {
-                foreach (
-                    $data[Json::DATA_INDEX]
-                    as
-                    $name => $originalValue
-                ) {
-                    if(
-                        is_string($originalValue)
-                        &&
-                        (false !== json_decode($originalValue))
-                    ) {
-                        if(
-                            str_contains(
-                                $originalValue,
-                                Json::CLASS_INDEX
-                            )
-                            &&
-                            str_contains(
-                                $originalValue,
-                                Json::DATA_INDEX
-                            )
-                        ) {
-                            $originalValue = $this->decodeJsonToObject(
-                                new Json($originalValue, true)
-                            );
-                        }
-                    }
-                    if ($reflection->hasProperty($name)) {
-                        $property = $reflection->getProperty($name);
-                        $property->setAccessible(true);
-                        $property->setValue($object, $originalValue);
-                    }
-                }
-                $reflection = $reflection->getParentClass();
-            }
-            return $object;
-        }
-        return new UnknownClass();
-    }
+$jsonEncodedObject = new Json($objectInstance);
 
-}
+echo $jsonEncodedObject . PHP_EOL;
 
-final class TestClassA
-{
+// example output:
+// {"__class__":"Darling\\PHPTextTypes\\classes\\strings\\Id","__data__":{"text":"{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\AlphanumericText\",\"__data__\":{\"text\":\"{\\\"__class__\\\":\\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\Text\\\",\\\"__data__\\\":{\\\"string\\\":\\\"IxVFLvhpJCzvuEyoYjt3TqQL7xE4lSKaFgNhOTwRUjN8yiizaF7gfADZHVl7WJfmHdg52i0Nrl12Kc\\\"}}\",\"string\":\"IxVFLvhpJCzvuEyoYjt3TqQL7xE4lSKaFgNhOTwRUjN8yiizaF7gfADZHVl7WJfmHdg52i0Nrl12Kc\"}}","string":"IxVFLvhpJCzvuEyoYjt3TqQL7xE4lSKaFgNhOTwRUjN8yiizaF7gfADZHVl7WJfmHdg52i0Nrl12Kc"}}
 
-    public function __construct(private Id $id, private Name $name) {}
+$array = [1, 'foo' => 'bar',[null, false]];
+
+$jsonEncodedArray = new Json($array);
+
+echo $jsonEncodedArray . PHP_EOL;
+
+// example output:
+// {"0":1,"foo":"bar","1":[null,false]}
+
+```
 
 
-        public function id(): Id
-        {
-            return $this->id;
-        }
+### JsonDecoder
 
-        public function name(): Name
-        {
-            return $this->name;
-        }
+A JsonDecoder can be used to decode values that were encoded as
+`JSON` via a `\Darling\PHPJsonUtilities\classes\encoded\data\Json`
+instance.
 
-}
+Example:
 
-final class TestClassB
-{
+```
+<?php
 
-    public string $data = '';
+require_once(
+    __DIR__ .
+    DIRECTORY_SEPARATOR .
+    'vendor' .
+    DIRECTORY_SEPARATOR .
+    'autoload.php'
+);
 
-    /**
-     * @param array<mixed> $array
-     */
-    public function __construct(
-        private array $array = [],
-        private bool $bool = false,
-        private float $float = 1.2345,
-        private int $int = 12345,
-        private string $string = '',
-    )
-    {
-        $this->data = strval(
-            json_encode(
-                [
-                    $this->array,
-                    $this->bool,
-                    $this->float,
-                    $this->int,
-                    $this->string
-                ]
-            )
-        );
-    }
-}
-
-/**
- * @template T
- * @implements Iterator<string>
- */
-class TestIterator implements Iterator
-{
-
-    /**
-     *
-     * @param int $position
-     * @param array<int, string> $array
-     *
-     */
-    public function __construct(private int $position = 0, private array $array = []) {
-        if(empty($this->array)) {
-            $this->array = array( "foo", "bar", "baz", "bazzer");
-        }
-    }
-
-    public function rewind(): void {
-        $this->position = 0;
-    }
-
-    public function current(): string {
-        return $this->array[$this->position];
-    }
-
-    public function key(): int {
-        return $this->position;
-    }
-
-    public function next(): void {
-        ++$this->position;
-    }
-
-    public function valid(): bool {
-        return isset($this->array[$this->position]);
-    }
-}
-
-$testObjects = [
-    new TestClassA(new Id(), new Name(new Text('Name'))),
-    new TestIterator(),
-    new TestClassB(),
-    new AlphanumericText(new Text('AlphanumericText')),
-    new Id(),
-    new Name(new Text('Name')),
-    new SafeText(new Text('SafeText')),
-    new Text('Text'),
-    new UnknownClass(),
-    new PrivateMethods(),
-];
-
-$testObject = $testObjects[array_rand($testObjects)];
-
-$testJson = new Json($testObject);
+use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
+use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
+use \Darling\PHPTextTypes\classes\strings\Id;
 
 $jsonDecoder = new JsonDecoder();
 
-$decodedTestObject = $jsonDecoder->decodeJsonToObject(
-    $testJson
-);
+$objectInstance = new Id();
 
-$mocker = new MockClassInstance(new ObjectReflection($decodedTestObject));
+$jsonEncodedObject = new Json($objectInstance);
 
-$mockInstance = $mocker->mockInstance();
+$decodedObject = $jsonDecoder->decode($jsonEncodedObject);
 
-var_dump(
-    '$decodedTestObject matches $testObject',
-    $decodedTestObject == $testObject
-);
+var_dump($decodedObject);
 
-var_dump(
-    '$mockInstance type matches $testObject type',
-    $mockInstance::class === $testObject::class
-);
+/**
+ * example output:
+ *
+ * class Darling\PHPTextTypes\classes\strings\Id#9 (2) {
+ *   private string $string =>
+ *   string(76) "GlyJ9DGMzRfbqXVvi2Z5orA8p4taCXguejgZNSTimGwo9EaqJjlNFzQLm8NCMFAhk3YlEcWYQwsc"
+ *   private Darling\PHPTextTypes\interfaces\strings\Text $text =>
+ *   class Darling\PHPTextTypes\classes\strings\AlphanumericText#17 (2) {
+ *     private string $string =>
+ *     string(76) "GlyJ9DGMzRfbqXVvi2Z5orA8p4taCXguejgZNSTimGwo9EaqJjlNFzQLm8NCMFAhk3YlEcWYQwsc"
+ *     private Darling\PHPTextTypes\interfaces\strings\Text $text =>
+ *     class Darling\PHPTextTypes\classes\strings\Text#18 (1) {
+ *       private string $string =>
+ *       string(76) "GlyJ9DGMzRfbqXVvi2Z5orA8p4taCXguejgZNSTimGwo9EaqJjlNFzQLm8NCMFAhk3YlEcWYQwsc"
+ *     }
+ *   }
+ * }
+ *
+ */
 
-file_put_contents(
-    '/tmp/darlingTestJson.json',
-    PHP_EOL . $testJson->__toString()
-);
+$array = [1, 'foo' => 'bar',[null, false]];
 
+$jsonEncodedArray = new Json($array);
+
+$decodedArray = $jsonDecoder->decode($jsonEncodedArray);
+
+var_dump($decodedArray);
+
+/**
+ * example output:
+ *
+ * class stdClass#12 (3) {
+ *   public $0 =>
+ *   int(1)
+ *   public $foo =>
+ *   string(3) "bar"
+ *   public $1 =>
+ *   array(2) {
+ *     [0] =>
+ *     NULL
+ *     [1] =>
+ *     bool(false)
+ *   }
+ * }
+ *
+ */
 
 ```
+
+
