@@ -25,7 +25,8 @@ The following classes are provided by this library:
 \Darling\PHPJsonUtilities\classes\encoded\data\Json
 
 ```
-Which can be used to encode values of various types as valid `JSON`.
+Which is a `\Stringable` type that can be used to encode values of
+various types as valid `JSON`.
 
 ```
 \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder
@@ -33,14 +34,14 @@ Which can be used to encode values of various types as valid `JSON`.
 ```
 
 Which can be used to decode values that were encoded as `JSON` via a
-`Json` instance.
+`\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance.
 
 # Overview
 
 - [Installation](#installation)
 - [Examples](#examples)
-      1. [Json](#json)
-      1. [JsonDecoder](#jsondecoder)
+    1. [Json](#darlingphpjsonutilitiesclassesencodeddatajson)
+    2. [JsonDecoder](#darlingphpjsonutilitiesclassesdecodersjsondecoder)
 
 # Installation
 
@@ -51,10 +52,10 @@ composer require darling/php-json-utilities
 
 # Examples
 
-### Json
+### `\Darling\PHPJsonUtilities\classes\encoded\data\Json`
 
-The `\Darling\PHPJsonUtilities\classes\encoded\data\Json` can be used
-to encode values of various types as `JSON`.
+A `\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance can
+be used to encode values of various types as `JSON`.
 
 Any value that can be encoded as `JSON` via `json_encode()`
 can be encoded as `JSON` via a
@@ -62,7 +63,7 @@ can be encoded as `JSON` via a
 
 Unlike with `json_encode()`, objects encoded as `JSON` via a
 `\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance
-will have their property values preserved.
+will have it's property values preserved.
 
 Example:
 
@@ -101,11 +102,11 @@ echo $jsonEncodedArray . PHP_EOL;
 ```
 
 
-### JsonDecoder
+### `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder`
 
-A JsonDecoder can be used to decode values that were encoded as
-`JSON` via a `\Darling\PHPJsonUtilities\classes\encoded\data\Json`
-instance.
+A `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder` can be used
+to decode values that were encoded as `JSON` via a
+`\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance.
 
 Example:
 
@@ -187,6 +188,13 @@ var_dump($decodedArray);
  * instance will be decoded to an array by
  * `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder->decode()`.
  * @see https://github.com/sevidmusic/PHPJsonUtilities/issues/36
+ *
+ * Also Note:
+ * At the moment objects that are values of an array are not
+ * properly encoded. This is being addressed.
+ * @see https://github.com/sevidmusic/PHPJsonUtilities/issues/34
+ * @see https://github.com/sevidmusic/PHPJsonUtilities/issues/35
+ *
  */
 
 ```
