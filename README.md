@@ -25,7 +25,8 @@ The following classes are provided by this library:
 \Darling\PHPJsonUtilities\classes\encoded\data\Json
 
 ```
-Which can be used to encode values of various types as valid `JSON`.
+Which is a `\Stringable` type that can be used to encode values of
+various types as valid `JSON`.
 
 ```
 \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder
@@ -39,8 +40,8 @@ Which can be used to decode values that were encoded as `JSON` via a
 
 - [Installation](#installation)
 - [Examples](#examples)
-      1. [Json](#json)
-      1. [JsonDecoder](#jsondecoder)
+    1. [Json](#json)
+    2. [JsonDecoder](#jsondecoder)
 
 # Installation
 
@@ -53,8 +54,8 @@ composer require darling/php-json-utilities
 
 ### Json
 
-The `\Darling\PHPJsonUtilities\classes\encoded\data\Json` can be used
-to encode values of various types as `JSON`.
+A `\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance can
+be used to encode values of various types as `JSON`.
 
 Any value that can be encoded as `JSON` via `json_encode()`
 can be encoded as `JSON` via a
