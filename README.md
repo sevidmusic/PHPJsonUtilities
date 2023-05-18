@@ -34,7 +34,7 @@ various types as valid `JSON`.
 ```
 
 Which can be used to decode values that were encoded as `JSON` via a
-`Json` instance.
+`\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance.
 
 # Overview
 
