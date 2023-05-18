@@ -15,8 +15,9 @@ The PHPJsonUtilities library provides classes for working with
 `JSON` in php.
 
 The main goal of this library is to provide an object oriented
-alternative to `json_encode()` that can be used encode object
-instances as `JSON` in a way that preserves their property values.
+alternative to `json_encode()` and `json_decode()` that can be
+used encode object instances as `JSON` in a way that preserves
+their property values.
 
 The following classes are provided by this library:
 
@@ -178,8 +179,15 @@ var_dump($decodedArray);
  *   }
  * }
  *
+ * Note:
+ * At the moment arrays are decoded to an instance of `stdClass`.
+ * This is an issue that is being addressed, in the future arrays
+ * encoded as `JSON` via a
+ * `\Darling\PHPJsonUtilities\classes\encoded\data\Json`
+ * instance will be decoded to an array by
+ * `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder->decode()`.
+ * @see https://github.com/sevidmusic/PHPJsonUtilities/issues/36
  */
 
 ```
-
 
