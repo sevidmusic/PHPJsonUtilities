@@ -40,8 +40,8 @@ Which can be used to decode values that were encoded as `JSON` via a
 
 - [Installation](#installation)
 - [Examples](#examples)
-    1. [Json](#json)
-    2. [JsonDecoder](#jsondecoder)
+    1. [Json](#darlingphpjsonutilitiesclassesencodeddatajson)
+    2. [JsonDecoder](#darlingphpjsonutilitiesclassesdecodersjsondecoder)
 
 # Installation
 
@@ -52,7 +52,7 @@ composer require darling/php-json-utilities
 
 # Examples
 
-### Json
+### `\Darling\PHPJsonUtilities\classes\encoded\data\Json`
 
 A `\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance can
 be used to encode values of various types as `JSON`.
@@ -102,7 +102,7 @@ echo $jsonEncodedArray . PHP_EOL;
 ```
 
 
-### JsonDecoder
+### `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder`
 
 A JsonDecoder can be used to decode values that were encoded as
 `JSON` via a `\Darling\PHPJsonUtilities\classes\encoded\data\Json`
