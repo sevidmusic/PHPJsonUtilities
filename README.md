@@ -63,7 +63,7 @@ can be encoded as `JSON` via a
 
 Unlike with `json_encode()`, objects encoded as `JSON` via a
 `\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance
-will have their property values preserved.
+will have it's property values preserved.
 
 Example:
 
@@ -104,9 +104,9 @@ echo $jsonEncodedArray . PHP_EOL;
 
 ### `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder`
 
-A JsonDecoder can be used to decode values that were encoded as
-`JSON` via a `\Darling\PHPJsonUtilities\classes\encoded\data\Json`
-instance.
+A `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder` can be used
+to decode values that were encoded as `JSON` via a
+`\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance.
 
 Example:
 
@@ -188,6 +188,13 @@ var_dump($decodedArray);
  * instance will be decoded to an array by
  * `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder->decode()`.
  * @see https://github.com/sevidmusic/PHPJsonUtilities/issues/36
+ *
+ * Also Note:
+ * At the moment objects that are values of an array are not
+ * properly encoded. This is being addressed.
+ * @see https://github.com/sevidmusic/PHPJsonUtilities/issues/34
+ * @see https://github.com/sevidmusic/PHPJsonUtilities/issues/35
+ *
  */
 
 ```
