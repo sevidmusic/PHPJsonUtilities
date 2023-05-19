@@ -31,7 +31,7 @@ array(1) {
   class stdClass#7 (0) {
   }
 }
- */
+*/
 
 // expected output:
 /**
@@ -51,4 +51,4 @@ array(1) {
     }
   }
 }
- */
+*/
