@@ -14,11 +14,6 @@
 The PHPJsonUtilities library provides classes for working with
 `JSON` in php.
 
-The main goal of this library is to provide an object oriented
-alternative to `json_encode()` and `json_decode()` that can be
-used encode object instances as `JSON` in a way that preserves
-their property values.
-
 The following classes are provided by this library:
 
 ```
@@ -33,8 +28,10 @@ various types as valid `JSON`.
 
 ```
 
-Which can be used to decode values that were encoded as `JSON` via a
-`\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance.
+Which provides a `decode()` method that can be used
+to decode values that were encoded as `JSON` via a
+`\Darling\PHPJsonUtilities\classes\encoded\data\Json`
+instance.
 
 # Overview
 
@@ -61,9 +58,15 @@ Any value that can be encoded as `JSON` via `json_encode()`
 can be encoded as `JSON` via a
 `\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance.
 
-Unlike with `json_encode()`, objects encoded as `JSON` via a
-`\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance
-will have it's property values preserved.
+However, unlike with `json_encode()`, objects encoded as `JSON`
+via a `\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance
+will have their property values preserved.
+
+Note:
+At the moment objects that are values of an array are not
+properly encoded. This is being addressed.
+@see https://github.com/sevidmusic/PHPJsonUtilities/issues/34
+@see https://github.com/sevidmusic/PHPJsonUtilities/issues/35
 
 Example:
 
@@ -101,12 +104,29 @@ echo $jsonEncodedArray . PHP_EOL;
 
 ```
 
-
 ### `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder`
 
 A `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder` can be used
 to decode values that were encoded as `JSON` via a
 `\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance.
+
+Note:
+At the moment arrays encoded with a
+`\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance are
+decoded to an instance of `stdClass`. This is an issue that is being
+addressed. In the future arrays encoded as `JSON` via a
+`\Darling\PHPJsonUtilities\classes\encoded\data\Json`
+instance will be decoded to an array by
+`\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder->decode()`.
+
+@see https://github.com/sevidmusic/PHPJsonUtilities/issues/36
+
+Note:
+At the moment objects that are values of an array are not
+properly decoded. This is being addressed.
+
+@see https://github.com/sevidmusic/PHPJsonUtilities/issues/34
+@see https://github.com/sevidmusic/PHPJsonUtilities/issues/35
 
 Example:
 
@@ -179,21 +199,6 @@ var_dump($decodedArray);
  *     bool(false)
  *   }
  * }
- *
- * Note:
- * At the moment arrays are decoded to an instance of `stdClass`.
- * This is an issue that is being addressed, in the future arrays
- * encoded as `JSON` via a
- * `\Darling\PHPJsonUtilities\classes\encoded\data\Json`
- * instance will be decoded to an array by
- * `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder->decode()`.
- * @see https://github.com/sevidmusic/PHPJsonUtilities/issues/36
- *
- * Also Note:
- * At the moment objects that are values of an array are not
- * properly encoded. This is being addressed.
- * @see https://github.com/sevidmusic/PHPJsonUtilities/issues/34
- * @see https://github.com/sevidmusic/PHPJsonUtilities/issues/35
  *
  */
 
