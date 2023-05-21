@@ -58,15 +58,16 @@ Any value that can be encoded as `JSON` via `json_encode()`
 can be encoded as `JSON` via a
 `\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance.
 
-However, unlike with `json_encode()`, objects encoded as `JSON`
-via a `\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance
+However, unlike `json_encode()`, objects encoded as `JSON` via a
+`\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance
 will have their property values preserved.
 
 Note:
 At the moment objects that are values of an array are not
-properly encoded. This is being addressed.
-@see https://github.com/sevidmusic/PHPJsonUtilities/issues/34
-@see https://github.com/sevidmusic/PHPJsonUtilities/issues/35
+properly encoded. This issue is being addressed.
+
+@see [Issue #34](https://github.com/sevidmusic/PHPJsonUtilities/issues/34)
+@see [Issue #35](https://github.com/sevidmusic/PHPJsonUtilities/issues/35)
 
 Example:
 
@@ -106,20 +107,9 @@ echo $jsonEncodedArray . PHP_EOL;
 
 ### `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder`
 
-A `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder` can be used
-to decode values that were encoded as `JSON` via a
+A `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder` can
+be used to decode values that were encoded as `JSON` via a
 `\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance.
-
-Note:
-At the moment arrays encoded with a
-`\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance are
-decoded to an instance of `stdClass`. This is an issue that is being
-addressed. In the future arrays encoded as `JSON` via a
-`\Darling\PHPJsonUtilities\classes\encoded\data\Json`
-instance will be decoded to an array by
-`\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder->decode()`.
-
-@see https://github.com/sevidmusic/PHPJsonUtilities/issues/36
 
 Note:
 At the moment objects that are values of an array are not
