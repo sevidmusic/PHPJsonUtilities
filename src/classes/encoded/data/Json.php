@@ -41,37 +41,100 @@ class Json extends Text implements JsonInterface
      */
     public function __construct(mixed $data)
     {
-        parent::__construct($this->encodeAsJson($data));
+        parent::__construct($this->encodeMixedValueAsJson($data));
     }
 
-    private function encodeAsJson(mixed $data): string
+    protected function encodeMixedValueAsJson(mixed $data): string
     {
-        return match(is_object($data)) {
-            true => $this->encodeObjectAsJson($data),
-            default => $this->encodeValueAsJson($data),
+        if(is_object($data)) {
+            return $this->encodeObjectAsJson($data);
+        }
+        return match(gettype($data)) {
+            'string' => $this->encodeStringAsJson($data),
+            'array' => $this->encodeArrayAsData($data),
+            default => strval(json_encode($data))
         };
     }
 
-    protected function encodeValueAsJson(mixed $data): string
+    private function stringIsAJsonString(string $string): bool
     {
-        return strval(
-            is_string($data)
-            &&
-            false !== json_decode($data)
-            ? $data
-            : json_encode($data)
-        );
+        return false !== json_decode($string);
+    }
+
+    private function encodeStringAsJson(string $string): string
+    {
+        return match($this->stringIsAJsonString($string)) {
+            true => $string,
+            default => strval(json_encode($string)),
+        };
+    }
+
+
+    /**
+     * Encode an array as json, making sure to properly encode
+     * objects that exist in the array.
+     *
+     * @param array<mixed> $array
+     *
+     * @return string
+     *
+     * @example
+     *
+     * ```
+     *
+     * ```
+     *
+     */
+    private function encodeArrayAsData(array $array): string
+    {
+        foreach($array as $key => $value) {
+            if(is_array($value)) {
+                $array[$key] = $this->encodeObjectsInArrayAsJson(
+                    $value
+                );
+                continue;
+            }
+            if(is_object($value)) {
+                $array[$key] = $this->encodeObjectAsJson($value);
+            }
+        }
+        return strval(json_encode($array));
+    }
+
+    /**
+     * Recursively encode objects in an array as json.
+     *
+     * @param array<mixed> $array
+     *
+     * @return array<mixed>
+     *
+     * @example
+     *
+     * ```
+     *
+     * ```
+     *
+     */
+    private function encodeObjectsInArrayAsJson(array $array): array
+    {
+        foreach($array as $key => $value) {
+            if(is_array($value)) {
+                $array[$key] = $this->encodeObjectsInArrayAsJson(
+                    $value
+                );
+            }
+            if(is_object($value)) {
+                $array[$key] = $this->encodeObjectAsJson($value);
+            }
+        }
+        return $array;
     }
 
     private function encodeObjectAsJson(object $object): string
     {
         $data = [];
         $objectReflection = $this->objectReflection($object);
-        foreach(
-            $objectReflection->propertyValues()
-            as
-            $propertyName => $propertyValue
-        )
+        foreach($objectReflection->propertyValues() as $propertyName => $propertyValue)
         {
             if(is_object($propertyValue)) {
                 $data[$propertyName] = $this->encodeObjectAsJson(
