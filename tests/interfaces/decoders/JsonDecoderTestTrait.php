@@ -172,7 +172,8 @@ trait JsonDecoderTestTrait
             }
             return new UnknownClass();
         };
-        return json_decode($json->__toString());
+        // maybe use $this->decodeToArray()? to resolve issue 39
+        return json_decode($json->__toString()); // Issue 39, Issue 35
     }
 
     /**

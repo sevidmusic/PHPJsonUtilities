@@ -33,13 +33,23 @@ class JsonTest extends PHPJsonUtilitiesTest
     public function setUp(): void
     {
         $values = [
+            new Id(),
+            new Text(new Id()),
+            new ClassString(Id::class),
             $this->randomChars(),
             $this->randomClassStringOrObjectInstance(),
             $this->randomFloat(),
             $this->randomObjectInstance(),
-            ['1' => 1, 'foo' => 'bar', 'baz' => [1, 2, 3]],
-            [1, 2, 3],
+            [1, true, false, null, 'string', [], new Text($this->randomChars()), 'baz' => ['secondary_id' => new Id()], 'foo' => 'bar', 'id' => new Id(),],
+            true,
+            false,
+            function (): void {},
+            1,
+            1.2,
+            0,
             [],
+            null,
+            'foo',
             function (): void {},
             json_encode("Foo bar baz"),
             json_encode($this->randomChars()),
@@ -51,6 +61,7 @@ class JsonTest extends PHPJsonUtilitiesTest
             new Json(json_encode(['foo', 'bar', 'baz'])),
             new Reflection(new ClassString(Id::class)),
             new ReflectionClass($this),
+            new ObjectReflection(new Id()),
         ];
         $data = $values[array_rand($values)];
         $this->setExpectedJsonString($data);
