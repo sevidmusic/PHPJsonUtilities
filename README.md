@@ -62,13 +62,6 @@ However, unlike `json_encode()`, objects encoded as `JSON` via a
 `\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance
 will have their property values preserved.
 
-Note:
-At the moment objects that are values of an array are not
-properly encoded. This issue is being addressed.
-
-@see [Issue #34](https://github.com/sevidmusic/PHPJsonUtilities/issues/34)
-@see [Issue #35](https://github.com/sevidmusic/PHPJsonUtilities/issues/35)
-
 Example:
 
 ```
@@ -134,13 +127,6 @@ echo $jsonEncodedArray . PHP_EOL;
 A `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder` can
 be used to decode values that were encoded as `JSON` via a
 `\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance.
-
-Note:
-At the moment objects that are values of an array are not
-properly decoded. This is being addressed.
-
-@see https://github.com/sevidmusic/PHPJsonUtilities/issues/34
-@see https://github.com/sevidmusic/PHPJsonUtilities/issues/35
 
 Example:
 
