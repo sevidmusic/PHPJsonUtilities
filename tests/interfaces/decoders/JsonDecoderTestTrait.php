@@ -100,43 +100,38 @@ trait JsonDecoderTestTrait
     private function randomData(): mixed
     {
         $data = [
-            new Id(),
-            new Text(new Id()),
-            new ClassString(Id::class),
             $this->randomChars(),
             $this->randomClassStringOrObjectInstance(),
             $this->randomFloat(),
             $this->randomObjectInstance(),
-            [1, true, false, null, 'string', [], new Text($this->randomChars()), 'baz' => ['secondary_id' => new Id()], 'foo' => 'bar', 'id' => new Id(),],
-            true,
-            false,
-            function (): void {},
+            'foo',
+            0,
             1,
             1.2,
-            0,
+            [1, true, false, null, 'string', [], new Text($this->randomChars()), 'baz' => ['secondary_id' => new Id()], 'foo' => 'bar', 'id' => new Id(),],
             [],
-            null,
-            'foo',
+            false,
             function (): void {},
+            function(): void {},
             json_encode("Foo bar baz"),
             json_encode($this->randomChars()),
             json_encode(['foo', 'bar', 'baz']),
             json_encode([1, 2, 3]),
             json_encode([PHP_INT_MIN, PHP_INT_MAX]),
+            new ClassString(Id::class),
             new Directory(),
+            new Id(),
             new JsonInstance($this->randomClassStringOrObjectInstance()),
             new JsonInstance(json_encode(['foo', 'bar', 'baz'])),
-            new Reflection(new ClassString(Id::class)),
-           new ObjectReflection(new Id()),
-            new \Darling\PHPUnitTestUtilities\Tests\dev\mock\classes\ReflectedBaseClass(),
-            $this->randomChars(),
-            $this->randomFloat(),
-            $this->randomClassStringOrObjectInstance(),
-            $this->randomObjectInstance(),
             new PrivateStaticProperties(),
-            function(): void {},
+            new Reflection(new ClassString(Id::class)),
+            new Text(new Id()),
+            new \Darling\PHPUnitTestUtilities\Tests\dev\mock\classes\ReflectedBaseClass(),
             new \Directory(),
-###            new ReflectionClass($this), // error | Reflection Exception
+            null,
+            true,
+            new ObjectReflection(new Id()),
+#            new ReflectionClass($this), // This causes an error: Reflection Exception
         ];
         return $data[array_rand($data)];
     }
@@ -189,25 +184,69 @@ trait JsonDecoderTestTrait
                             }
                         }
                         if($reflectionClass->hasProperty($name)) {
-                            // possible fix: check if original property is null and if property in mock is uninitialized
                             if(!is_null($originalValue)) {
-                                $acceptedTypes = $reflection->propertyTypes();
-                                $property = $reflectionClass->getProperty($name);
+                                $acceptedTypes =
+                                    $reflection->propertyTypes();
+                                $property =
+                                    $reflectionClass->getProperty(
+                                        $name
+                                    );
                                 $property->setAccessible(true);
-                                $property->setValue($object, $originalValue);
+                                $property->setValue(
+                                    $object,
+                                    $originalValue
+                                );
                             }
                         }
                     }
-                    $reflectionClass = $reflectionClass->getParentClass();
+                    $reflectionClass =
+                        $reflectionClass->getParentClass();
                     if($reflectionClass !== false) {
-                        $reflection = new Reflection(new ClassString($reflectionClass->getName()));
+                        $reflection = new Reflection(
+                            new ClassString($reflectionClass->getName()
+                            )
+                        );
                     }
                 }
                 return $object;
             }
             return new UnknownClass();
         };
-        return json_decode($json->__toString(), true); // Issue 39
+        $decodedValue = json_decode($json->__toString(), true);
+        if(is_array($decodedValue)) {
+            $decodedValue = $this->decodeObjectsInArray($decodedValue);
+        }
+        return $decodedValue;
+    }
+
+    /**
+     * Decode objects that are encoded as Json in the specified array.
+     *
+     * @param array<mixed> $array
+     *
+     * @return array<mixed>
+     *
+     * @example
+     *
+     * ```
+     *
+     * ```
+     *
+     */
+    private function decodeObjectsInArray(array $array): array
+    {
+        foreach($array as $key => $value) {
+            if(is_array($value)) {
+                $array[$key] = $this->decodeObjectsInArray($value);
+                continue;
+            }
+
+            if(is_string($value) && str_contains($value, Json::CLASS_INDEX) && str_contains($value, Json::DATA_INDEX)) {
+                $jsonEncodedValue = new JsonInstance($value);
+                $array[$key] = $this->decodeJson($jsonEncodedValue);
+            }
+        }
+        return $array;
     }
 
     /**

@@ -13,7 +13,6 @@ use \ReflectionClass;
 
 class JsonDecoder implements JsonDecoderInterface
 {
-
     public function decode(Json $json): mixed
     {
         $data = $this->decodeToArray($json);
@@ -62,25 +61,69 @@ class JsonDecoder implements JsonDecoderInterface
                             }
                         }
                         if($reflectionClass->hasProperty($name)) {
-                            // possible fix: check if original property is null and if property in mock is uninitialized
                             if(!is_null($originalValue)) {
-                                $acceptedTypes = $reflection->propertyTypes();
-                                $property = $reflectionClass->getProperty($name);
+                                $acceptedTypes =
+                                    $reflection->propertyTypes();
+                                $property =
+                                    $reflectionClass->getProperty(
+                                        $name
+                                    );
                                 $property->setAccessible(true);
-                                $property->setValue($object, $originalValue);
+                                $property->setValue(
+                                    $object,
+                                    $originalValue
+                                );
                             }
                         }
                     }
-                    $reflectionClass = $reflectionClass->getParentClass();
+                    $reflectionClass =
+                        $reflectionClass->getParentClass();
                     if($reflectionClass !== false) {
-                        $reflection = new Reflection(new ClassString($reflectionClass->getName()));
+                        $reflection = new Reflection(
+                            new ClassString($reflectionClass->getName()
+                            )
+                        );
                     }
                 }
                 return $object;
             }
             return new UnknownClass();
         };
-        return json_decode($json->__toString(), true);
+        $decodedValue = json_decode($json->__toString(), true);
+        if(is_array($decodedValue)) {
+            $decodedValue = $this->decodeObjectsInArray($decodedValue);
+        }
+        return $decodedValue;
+    }
+
+    /**
+     * Decode objects that are encoded as Json in the specified array.
+     *
+     * @param array<mixed> $array
+     *
+     * @return array<mixed>
+     *
+     * @example
+     *
+     * ```
+     *
+     * ```
+     *
+     */
+    private function decodeObjectsInArray(array $array): array
+    {
+        foreach($array as $key => $value) {
+            if(is_array($value)) {
+                $array[$key] = $this->decodeObjectsInArray($value);
+                continue;
+            }
+
+            if(is_string($value) && str_contains($value, Json::CLASS_INDEX) && str_contains($value, Json::DATA_INDEX)) {
+                $jsonEncodedValue = new JsonInstance($value);
+                $array[$key] = $this->decode($jsonEncodedValue);
+            }
+        }
+        return $array;
     }
 
     /**
