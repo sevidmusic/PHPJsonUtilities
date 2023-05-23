@@ -25,6 +25,7 @@ var_dump($decodedObject);
 
 /**
  * example output:
+ *
  * class Darling\PHPTextTypes\classes\strings\Id#9 (2) {
  *   private string $string =>
  *   string(74) "Zz7SsSjwk1XAyOwIfaJpJkQ7tCWmRxBEql5P8WXFB1rKE9TqWYvgs6A5VbnZ8GioHNFAwhvjKd"
@@ -39,6 +40,7 @@ var_dump($decodedObject);
  *     }
  *   }
  * }
+ *
  */
 
 $array = [
@@ -70,6 +72,7 @@ var_dump($decodedArray);
 
 /**
  * example output:
+ *
  * array(13) {
  *   [0] =>
  *   int(1)
@@ -159,5 +162,6 @@ var_dump($decodedArray);
  *     }
  *   }
  * }
+ *
  */
 
