@@ -80,7 +80,7 @@ class JsonDecoder implements JsonDecoderInterface
             }
             return new UnknownClass();
         };
-        return json_decode($json->__toString());
+        return json_decode($json->__toString(), true);
     }
 
     /**
