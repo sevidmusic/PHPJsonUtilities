@@ -116,7 +116,7 @@ trait JsonTestTrait
 
     private function stringIsAJsonString(string $string): bool
     {
-        return false !== json_decode($string);
+        return (false !== json_decode($string)) && (json_last_error() === JSON_ERROR_NONE);
     }
 
     private function encodeStringAsJson(string $string): string

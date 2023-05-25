@@ -28,7 +28,7 @@ class Json extends Text implements JsonInterface
      *
      * If the specified $data is is already a valid json string,
      * then the $data will not be encoded, i.e., the __toString()
-     * method will return the original $data.
+     * method will return the $data unmodified.
      *
      * @example
      *
@@ -126,7 +126,7 @@ class Json extends Text implements JsonInterface
         }
         return match(gettype($data)) {
             'string' => $this->encodeStringAsJson($data),
-            'array' => $this->encodeArrayAsData($data),
+            'array' => $this->encodeArrayAsJson($data),
             default => strval(json_encode($data))
         };
     }
@@ -151,14 +151,49 @@ class Json extends Text implements JsonInterface
      *
      * // example output
      * // false
+     *
      * ```
      *
      */
     private function stringIsAJsonString(string $string): bool
     {
-        return false !== json_decode($string);
+        return (false !== json_decode($string)) && (json_last_error() === JSON_ERROR_NONE);
     }
 
+    /**
+     * Return a json encoded version of specified string.
+     *
+     * If the string is already valid json string it will
+     * be returned unmodified.
+     *
+     * @return string
+     *
+     * @example
+     *
+     * ```
+     * var_dump($string);
+     *
+     * // example output:
+     * string(75) "Darling\PHPUnitTestUtilities\Tests\dev\mock\classes\ReflectedSubParentClass"
+     *
+     * var_dump($this->encodeStringAsJson($string));
+     *
+     * // example output:
+     * string(83) ""Darling\\PHPUnitTestUtilities\\Tests\\dev\\mock\\classes\\ReflectedSubParentClass""
+     *
+     * var_dump($string);
+     *
+     * // example output:
+     * string(38) "{"__class__":"stdClass","__data__":[]}"
+     *
+     * var_dump($this->encodeStringAsJson($string));
+     *
+     * // example output:
+     * string(38) "{"__class__":"stdClass","__data__":[]}"
+     *
+     * ```
+     *
+     */
     private function encodeStringAsJson(string $string): string
     {
         return match($this->stringIsAJsonString($string)) {
@@ -166,7 +201,6 @@ class Json extends Text implements JsonInterface
             default => strval(json_encode($string)),
         };
     }
-
 
     /**
      * Encode an array as json, making sure to properly encode
@@ -179,11 +213,60 @@ class Json extends Text implements JsonInterface
      * @example
      *
      * ```
+     * var_dump($array);
+     *
+     * // example output:
+     * array(2) {
+     *   [0] =>
+     *   array(10) {
+     *     [0] =>
+     *     int(1)
+     *     [1] =>
+     *     bool(true)
+     *     [2] =>
+     *     bool(false)
+     *     [3] =>
+     *     NULL
+     *     [4] =>
+     *     string(6) "string"
+     *     [5] =>
+     *     array(0) {
+     *     }
+     *     [6] =>
+     *     class Darling\PHPTextTypes\classes\strings\Text#359 (1) {
+     *       private string $string =>
+     *       string(270) "zy@/d@u`^w:y7f5I$|*cg(ha/1Hl
+     * AW2=p`^8J9J@_2(</@zWd5g56q#4m+1qۗ4s<p=9Os5Awg#3op4!eWa$*7b%b0x6u^te!imoV=0>y59c^4%im^4&+&j=r^@,kf-;j8h3-)nZimZ4nfT_t"
+     *     }
+     *     'baz' =>
+     *     array(1) {
+     *       'secondary_id' =>
+     *       class Darling\PHPTextTypes\classes\strings\Id#360 (2) {
+     *         ...
+     *       }
+     *     }
+     *     'foo' =>
+     *     string(3) "bar"
+     *     'id' =>
+     *     class Darling\PHPTextTypes\classes\strings\Id#355 (2) {
+     *       private string $string =>
+     *       string(71) "QLmAr0bji5DOVPLxTUgsm0CV6zBzFFuaZfs9PtbbIZ57cJLV123gwBIGJPK8N6jMXeYi2yO"
+     *       private Darling\PHPTextTypes\interfaces\strings\Text $text =>
+     *       class Darling\PHPTextTypes\classes\strings\AlphanumericText#356 (2) {
+     *         ...
+     *       }
+     *     }
+     *   }
+     *
+     * var_dump($this->encodeArrayAsJson($array));
+     *
+     * // example output:
+     * string(1547) "{"0":1,"1":true,"2":false,"3":null,"4":"string","5":[],"6":"","baz":{"secondary_id":"{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\Id\",\"__data__\":{\"text\":\"{\\\"__class__\\\":\\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\AlphanumericText\\\",\\\"__data__\\\":{\\\"text\\\":\\\"{\\\\\\\"__class__\\\\\\\":\\\\\\\"Darling\\\\\\\\\\\\\\\\PHPTextTypes\\\\\\\\\\\\\\\\classes\\\\\\\\\\\\\\\\strings\\\\\\\\\\\\\\\\Text\\\\\\\",\\\\\\\"__data__\\\\\\\":{\\\\\\\"string\\"...
      *
      * ```
      *
      */
-    private function encodeArrayAsData(array $array): string
+    private function encodeArrayAsJson(array $array): string
     {
         foreach($array as $key => $value) {
             if(is_array($value)) {
