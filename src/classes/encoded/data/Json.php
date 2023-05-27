@@ -292,6 +292,33 @@ class Json extends Text implements JsonInterface
      * @example
      *
      * ```
+     * var_dump($array);
+     *
+     * // example output:
+     * array(1) {
+     *   'secondary_id' =>
+     *   class Darling\PHPTextTypes\classes\strings\Id#360 (2) {
+     *     private string $string =>
+     *     string(77) "Mz5QlEwix4F56fMRzwDHOJtmBWdNhLN2Ax5XEQ7LBuq8NAKPlmsnwJ1K7l3gPn2ZUwQCIJYFKcckj"
+     *     private Darling\PHPTextTypes\interfaces\strings\Text $text =>
+     *     class Darling\PHPTextTypes\classes\strings\AlphanumericText#357 (2) {
+     *       private string $string =>
+     *       string(77) "Mz5QlEwix4F56fMRzwDHOJtmBWdNhLN2Ax5XEQ7LBuq8NAKPlmsnwJ1K7l3gPn2ZUwQCIJYFKcckj"
+     *       private Darling\PHPTextTypes\interfaces\strings\Text $text =>
+     *       class Darling\PHPTextTypes\classes\strings\Text#358 (1) {
+     *         ...
+     *       }
+     *     }
+     *   }
+     * }
+     *
+     * var_dump($this->encodeObjectsInArrayAsJson($array));
+     *
+     * // example output:
+     * array(1) {
+     *   'secondary_id' =>
+     *   string(595) "{"__class__":"Darling\\PHPTextTypes\\classes\\strings\\Id","__data__":{"text":"{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\AlphanumericText\",\"__data__\":{\"text\":\"{\\\"__class__\\\":\\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\Text\\\",\\\"__data__\\\":{\\\"string\\\":\\\"Mz5QlEwix4F56fMRzwDHOJtmBWdNhLN2Ax5XEQ7LBuq8NAKPlmsnwJ1K7l3gPn2ZUwQCIJYFKcckj\\\"}}\",\"string\":\"Mz5QlEwix4F56fMRzwDHOJtmBWdNhLN2Ax5XEQ7LBuq8NAKPlmsnwJ1K7l3gPn2ZUwQCIJYFKcckj\"}}","string"...
+     * }
      *
      * ```
      *
@@ -311,6 +338,40 @@ class Json extends Text implements JsonInterface
         return $array;
     }
 
+    /**
+     * Encode an object as json.
+     *
+     * @return string
+     *
+     * @example
+     *
+     * ```
+     * var_dump($object);
+     *
+     * // example output:
+     * class Darling\PHPTextTypes\classes\strings\Id#355 (2) {
+     *   private string $string =>
+     *   string(64) "1D7uY4fXgU5DM7I9dJ6gqN0FOM9CzImq8K00EAk3zmaLRw9ihCb3Jzsx1yY8oVnB"
+     *   private Darling\PHPTextTypes\interfaces\strings\Text $text =>
+     *   class Darling\PHPTextTypes\classes\strings\AlphanumericText#356 (2) {
+     *     private string $string =>
+     *     string(64) "1D7uY4fXgU5DM7I9dJ6gqN0FOM9CzImq8K00EAk3zmaLRw9ihCb3Jzsx1yY8oVnB"
+     *     private Darling\PHPTextTypes\interfaces\strings\Text $text =>
+     *     class Darling\PHPTextTypes\classes\strings\Text#354 (1) {
+     *       private string $string =>
+     *       string(64) "1D7uY4fXgU5DM7I9dJ6gqN0FOM9CzImq8K00EAk3zmaLRw9ihCb3Jzsx1yY8oVnB"
+     *     }
+     *   }
+     * }
+     *
+     * var_dump($this->encodeObjectAsJson($object));
+     *
+     * // example output:
+     * string(556) "{"__class__":"Darling\\PHPTextTypes\\classes\\strings\\Id","__data__":{"text":"{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\AlphanumericText\",\"__data__\":{\"text\":\"{\\\"__class__\\\":\\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\Text\\\",\\\"__data__\\\":{\\\"string\\\":\\\"1D7uY4fXgU5DM7I9dJ6gqN0FOM9CzImq8K00EAk3zmaLRw9ihCb3Jzsx1yY8oVnB\\\"}}\",\"string\":\"1D7uY4fXgU5DM7I9dJ6gqN0FOM9CzImq8K00EAk3zmaLRw9ihCb3Jzsx1yY8oVnB\"}}","string":"1D7uY4fXgU5DM7I9dJ6gqN0"...
+     *
+     * ```
+     *
+     */
     private function encodeObjectAsJson(object $object): string
     {
         $data = [];
@@ -338,6 +399,31 @@ class Json extends Text implements JsonInterface
         );
     }
 
+    /**
+     * Return an instance of of an ObjectReflection that reflects
+     * the specified $object.
+     *
+     * @return ObjectReflection
+     *
+     * @example
+     *
+     * ```
+     * class Darling\PHPReflectionUtilities\classes\utilities\ObjectReflection#63 (2) {
+     *   private Darling\PHPTextTypes\classes\strings\ClassString $classString =>
+     *   class Darling\PHPTextTypes\classes\strings\ClassString#299 (1) {
+     *     private string $string =>
+     *     string(41) "Darling\PHPTextTypes\classes\strings\Text"
+     *   }
+     *   private object $object =>
+     *   class Darling\PHPTextTypes\classes\strings\Text#352 (1) {
+     *     private string $string =>
+     *     string(80) "RoLqEdBZfi8N0lTI6RQHwk5dF6MuMBnTWSJlCm3D6XnVwY8pc2YaEGPx1hjzWTJGSrg9WAd2IAw3iFHZ"
+     *   }
+     * }
+     *
+     * ```
+     *
+     */
     private function objectReflection(
         object $object
     ): ObjectReflection
