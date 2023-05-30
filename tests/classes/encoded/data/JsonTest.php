@@ -5,13 +5,6 @@ namespace Darling\PHPJsonUtilities\tests\classes\encoded\data;
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPJsonUtilities\tests\PHPJsonUtilitiesTest;
 use \Darling\PHPJsonUtilities\tests\interfaces\encoded\data\JsonTestTrait;
-use \Darling\PHPReflectionUtilities\classes\utilities\ObjectReflection;
-use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
-use \Darling\PHPTextTypes\classes\strings\ClassString;
-use \Darling\PHPTextTypes\classes\strings\Id;
-use \Darling\PHPTextTypes\classes\strings\Text;
-use \Directory;
-use \ReflectionClass;
 
 class JsonTest extends PHPJsonUtilitiesTest
 {

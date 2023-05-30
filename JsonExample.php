@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * This file provides examples that demonstrate how to use a Json
+ * instance to encode values as json.
+ */
+
 require_once(
     __DIR__ .
     DIRECTORY_SEPARATOR .
@@ -13,9 +18,8 @@ use \Darling\PHPTextTypes\classes\strings\Id;
 use \Darling\PHPTextTypes\classes\strings\Text;
 
 /**
- * Example of encoding an object instance:
+ * Example of encoding an object:
  */
-
 $objectInstance = new Id();
 
 $jsonEncodedObject = new Json($objectInstance);
