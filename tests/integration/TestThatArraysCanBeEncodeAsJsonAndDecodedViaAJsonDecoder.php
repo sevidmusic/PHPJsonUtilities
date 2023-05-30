@@ -3,8 +3,9 @@
 /**
  * Purpose of this integration test:
  *
- * Test that objects can be encoded as json via a Json instance, and
- * that a Json instance can be decoded back to it's original value.
+ * Test that arrays can be encoded as json via a Json instance, and
+ * that a Json instance used to encode an array can be decoded back
+ * to it's original value.
  */
 include(
     str_replace(
@@ -27,33 +28,44 @@ use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestClassA;
 use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestClassB;
 use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestIterator;
 
-$originalObjects = [
-    new TestClassA(new Id(), new Name(new Text('Name'))),
-    new TestIterator(),
+$array = [
+    [
+        'TestClassAInstance' => new TestClassA(new Id(), new Name(new Text('Name'))),
+        'TestIteratorInstance' => new TestIterator(),
+    ],
     new TestClassB(),
     new AlphanumericText(new Text('AlphanumericText')),
-    new Id(),
+    'id' => new Id(),
     new Name(new Text('Name')),
     new SafeText(new Text('SafeText')),
     new Text('Text'),
     new UnknownClass(),
     new PrivateMethods(),
+    [1, 2, 3],
+    true,
+    [false, null],
+    [
+        new UnknownClass(),
+        new PrivateMethods(),
+        [1, 2, 3],
+        true,
+        # function(): void {}, # fails
+    ],
+    # function(): void {}, # fails
 ];
 
-$originalObject = $originalObjects[array_rand($originalObjects)];
-$testJson = new Json($originalObject);
+$testJson = new Json($array);
 $jsonDecoder = new JsonDecoder();
-$decodedObject = $jsonDecoder->decode($testJson);
+$decodedArray = $jsonDecoder->decode($testJson);
 
-if(is_object($decodedObject) && ($decodedObject == $originalObject)) {
-    echo PHP_EOL . 'Test Passed: Objects can be encoded as Json and decoded from Json.' . PHP_EOL;
+if($array == $decodedArray) {
+    echo PHP_EOL . 'Test Passed: Arrays can be encoded as Json and decoded from Json.' . PHP_EOL;
     file_put_contents(
         '/tmp/darlingTestJson.json',
         PHP_EOL . $testJson
     );
 } else {
-    echo PHP_EOL . 'Test Failed' . PHP_EOL;
-    die('The following integration test failed: ' . PHP_EOL . __DIR__ . DIRECTORY_SEPARATOR . __FILE__);
+    die('The following integration test failed: ' . PHP_EOL . __FILE__ . PHP_EOL);
 }
 
 

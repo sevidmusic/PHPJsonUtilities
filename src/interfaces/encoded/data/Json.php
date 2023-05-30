@@ -13,15 +13,25 @@ use \Darling\PHPTextTypes\interfaces\strings\Text;
  * echo $json;
  *
  * // example output
- * ["Some data","encoded as json"]
+ * {"__class__":"Darling\\PHPTextTypes\\classes\\strings\\Text","__data__":{"string":"Foo"}}
  *
  * ```
  */
 interface Json extends Text
 {
 
+    /**
+     * @const CLASS_INDEX Expected to be used to identify the index
+     *                    of the json value that indicates an encoded
+     *                    object's type.
+     */
     public const CLASS_INDEX = '__class__';
 
+    /**
+     * @const DATA_INDEX Expected to be used to identify the index
+     *                   of the json value used to store an encoded
+     *                   object's data.
+     */
     public const DATA_INDEX = '__data__';
 
     /**

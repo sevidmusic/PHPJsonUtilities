@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * This file provides examples that demonstrate how to use a Json
+ * instance to encode values as json, and then decode them via a
+ * JsonDecoder:
+ */
+
 require_once(
     __DIR__ .
     DIRECTORY_SEPARATOR .
@@ -13,6 +19,10 @@ use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPTextTypes\classes\strings\Id;
 use \Darling\PHPTextTypes\classes\strings\Text;
 
+/**
+ * Example of encoding/decoding an object instance:
+ */
+
 $jsonDecoder = new JsonDecoder();
 
 $objectInstance = new Id();
@@ -25,6 +35,7 @@ var_dump($decodedObject);
 
 /**
  * example output:
+ *
  * class Darling\PHPTextTypes\classes\strings\Id#9 (2) {
  *   private string $string =>
  *   string(74) "Zz7SsSjwk1XAyOwIfaJpJkQ7tCWmRxBEql5P8WXFB1rKE9TqWYvgs6A5VbnZ8GioHNFAwhvjKd"
@@ -39,6 +50,11 @@ var_dump($decodedObject);
  *     }
  *   }
  * }
+ *
+ */
+
+/**
+ * Example of encoding/decoding an array:
  */
 
 $array = [
@@ -70,6 +86,7 @@ var_dump($decodedArray);
 
 /**
  * example output:
+ *
  * array(13) {
  *   [0] =>
  *   int(1)
@@ -159,5 +176,6 @@ var_dump($decodedArray);
  *     }
  *   }
  * }
+ *
  */
 

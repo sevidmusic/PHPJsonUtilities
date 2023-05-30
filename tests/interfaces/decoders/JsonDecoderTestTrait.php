@@ -5,8 +5,6 @@ namespace Darling\PHPJsonUtilities\tests\interfaces\decoders;
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json as JsonInstance;
 use \Darling\PHPJsonUtilities\interfaces\decoders\JsonDecoder;
 use \Darling\PHPJsonUtilities\interfaces\encoded\data\Json;
-use \Darling\PHPJsonUtilities\tests\PHPJsonUtilitiesTest;
-use \Darling\PHPJsonUtilities\tests\interfaces\encoded\data\JsonTestTrait;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockClassInstance;
 use \Darling\PHPReflectionUtilities\classes\utilities\ObjectReflection;
 use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;

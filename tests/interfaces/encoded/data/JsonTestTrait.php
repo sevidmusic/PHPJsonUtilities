@@ -3,18 +3,14 @@
 namespace Darling\PHPJsonUtilities\tests\interfaces\encoded\data;
 
 use Darling\PHPJsonUtilities\interfaces\encoded\data\Json;
-use \Closure;
-use \Darling\PHPJsonUtilities\tests\PHPJsonUtilitiesTest;
-use \Darling\PHPJsonUtilities\tests\interfaces\encoded\data\JsonTestTrait;
+use \Darling\PHPJsonUtilities\classes\encoded\data\Json as JsonInsance;
 use \Darling\PHPReflectionUtilities\classes\utilities\ObjectReflection;
 use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
-use \Darling\PHPReflectionUtilities\interfaces\utilities\Reflection as ReflectionInterface;
 use \Darling\PHPTextTypes\classes\strings\ClassString;
 use \Darling\PHPTextTypes\classes\strings\Id;
 use \Darling\PHPTextTypes\classes\strings\Text;
 use \Directory;
 use \ReflectionClass;
-use \RuntimeException;
 
 /**
  * The JsonTestTrait defines common tests for implementations of
@@ -59,7 +55,7 @@ trait JsonTestTrait
      *     $data = $values[array_rand($values)];
      *     $this->setExpectedJsonString($data);
      *     $this->setJsonTestInstance(
-     *         new Json($data)
+     *         new JsonInsance($data)
      *     );
      * }
      *
@@ -116,7 +112,7 @@ trait JsonTestTrait
 
     private function stringIsAJsonString(string $string): bool
     {
-        return false !== json_decode($string);
+        return (false !== json_decode($string)) && (json_last_error() === JSON_ERROR_NONE);
     }
 
     private function encodeStringAsJson(string $string): string
@@ -298,6 +294,42 @@ trait JsonTestTrait
                 'string __data__'
             )
         );
+    }
+
+    protected function randomData(): mixed
+    {
+        $values = [
+            new Id(),
+            new Text(new Id()),
+            new ClassString(Id::class),
+            $this->randomChars(),
+            $this->randomClassStringOrObjectInstance(),
+            $this->randomFloat(),
+            $this->randomObjectInstance(),
+            [1, true, false, null, 'string', [], new Text($this->randomChars()), 'baz' => ['secondary_id' => new Id()], 'foo' => 'bar', 'id' => new Id(),],
+            true,
+            false,
+            function (): void {},
+            1,
+            1.2,
+            0,
+            [],
+            null,
+            'foo',
+            function (): void {},
+            json_encode("Foo bar baz"),
+            json_encode($this->randomChars()),
+            json_encode(['foo', 'bar', 'baz']),
+            json_encode([1, 2, 3]),
+            json_encode([PHP_INT_MIN, PHP_INT_MAX]),
+            new Directory(),
+            new JsonInsance($this->randomClassStringOrObjectInstance()),
+            new JsonInsance(json_encode(['foo', 'bar', 'baz'])),
+            new Reflection(new ClassString(Id::class)),
+            new ReflectionClass($this),
+            new ObjectReflection(new Id()),
+        ];
+        return $values[array_rand($values)];
     }
 }
 
