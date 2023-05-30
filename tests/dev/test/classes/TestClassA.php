@@ -5,6 +5,12 @@ namespace Darling\PHPJsonUtilities\tests\dev\test\classes;
 use \Darling\PHPTextTypes\classes\strings\Id;
 use \Darling\PHPTextTypes\classes\strings\Name;
 
+/**
+ * This class is used by tests defined by the PHPJsonUtilities library.
+ *
+ * It should not be used in any other context.
+ *
+ */
 final class TestClassA
 {
 

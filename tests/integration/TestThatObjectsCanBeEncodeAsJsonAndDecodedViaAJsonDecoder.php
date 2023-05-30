@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Purpose of this integration test:
+ *
+ * Test that objects can be encoded as json via a Json instance, and
+ * that a Json instance can be decoded back to it's original value.
+ */
 include(
     str_replace(
         'tests' . DIRECTORY_SEPARATOR . 'integration',
@@ -11,7 +17,6 @@ include(
 use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPTextTypes\classes\strings\AlphanumericText;
-use \Darling\PHPTextTypes\classes\strings\ClassString;
 use \Darling\PHPTextTypes\classes\strings\Id;
 use \Darling\PHPTextTypes\classes\strings\Name;
 use \Darling\PHPTextTypes\classes\strings\SafeText;
@@ -40,18 +45,15 @@ $testJson = new Json($originalObject);
 $jsonDecoder = new JsonDecoder();
 $decodedObject = $jsonDecoder->decode($testJson);
 
-if(is_object($decodedObject)) {
-    echo 'Type of original object: ' . $originalObject::class . PHP_EOL;
-    echo 'Type of decoded object: ' . $decodedObject::class . PHP_EOL;
-    echo 'Decoded object matches original object:' . PHP_EOL;
-    echo ($decodedObject == $originalObject ? 'true' : 'false') . PHP_EOL;
+if(is_object($decodedObject) && ($decodedObject == $originalObject)) {
+    echo PHP_EOL . 'Test Passed: Objects can be encoded as Json and decoded from Json.' . PHP_EOL;
     file_put_contents(
         '/tmp/darlingTestJson.json',
         PHP_EOL . $testJson
     );
 } else {
-    echo 'Failed to decode the following json:' . PHP_EOL;
+    echo PHP_EOL . 'Test Failed' . PHP_EOL;
+    die('The following integration test failed: ' . PHP_EOL . __DIR__ . DIRECTORY_SEPARATOR . __FILE__);
 }
 
-echo $testJson . PHP_EOL;
 

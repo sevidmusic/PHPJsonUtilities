@@ -3,6 +3,14 @@
 namespace Darling\PHPJsonUtilities\tests\dev\test\classes;
 
 use \Iterator;
+
+/**
+ * This class is used by tests defined by the PHPJsonUtilities library.
+ *
+ * It should not be used in any other context.
+ *
+ */
+
 /**
  * @template T
  * @implements Iterator<string>
