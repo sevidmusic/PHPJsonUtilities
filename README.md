@@ -129,6 +129,13 @@ A `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder` can
 be used to decode values that were encoded as `JSON` via a
 `\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance.
 
+```
+Note: An object instance that defines readonly properties can be
+encoded as `json` via a `Json` instance, but cannot be decoded
+from `json` via `JsonDecoder->decode()`!
+
+```
+
 Example:
 
 ```
