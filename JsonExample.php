@@ -70,7 +70,9 @@ echo $jsonEncodedArray . PHP_EOL;
 
 /**
  * Example of encoding an valid json string:
- * (if a string is a valid json string no further encoding will occur)
+ *
+ * If a string is a valid json string then no further
+ * encoding will occur.
  */
 $jsonString = json_encode([1, [true, false], 'foo' => 'bar']);
 
@@ -79,7 +81,9 @@ echo $jsonString . PHP_EOL;
 // exammple output:
 // {"0":1,"1":[true,false],"foo":"bar"}
 
-$json = new \Darling\PHPJsonUtilities\classes\encoded\data\Json($jsonString);
+$json = new \Darling\PHPJsonUtilities\classes\encoded\data\Json(
+    $jsonString
+);
 
 echo $json . PHP_EOL;
 
