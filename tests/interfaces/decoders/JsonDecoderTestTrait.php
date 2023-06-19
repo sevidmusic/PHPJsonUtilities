@@ -129,7 +129,7 @@ trait JsonDecoderTestTrait
             null,
             true,
             new ObjectReflection(new Id()),
-#            new ReflectionClass($this), // This causes an error: Reflection Exception
+#            new ReflectionClass($this), // This causes an error: Reflection Exception, error is caused by attempt to modify a readonly property value.
         ];
         return $data[array_rand($data)];
     }

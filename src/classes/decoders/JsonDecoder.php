@@ -28,6 +28,20 @@ class JsonDecoder implements JsonDecoderInterface
         return $decodedValue;
     }
 
+    /**
+     * Determine if the specified $json is a json encoded
+     * object instance.
+     *
+     * @return bool
+     *
+     * @example
+     *
+     * ```
+     * $this->isAJsonEncodedObjectInstance($json)
+     *
+     * ```
+     *
+     */
     private function isAJsonEncodedObjectInstance(Json $json): bool
     {
         $data = $this->decodeJsonToArray($json);
@@ -43,11 +57,18 @@ class JsonDecoder implements JsonDecoderInterface
             is_array($data[Json::DATA_INDEX]);
     }
 
-    private function decodeJsonEncodedValue(Json $json): mixed
-    {
-        return json_decode($json->__toString(), true);
-    }
-
+    /**
+     * Decode the specified $json and return the original object.
+     *
+     * @return object
+     *
+     * @example
+     *
+     * ```
+     *
+     * ```
+     *
+     */
     private function decodeJsonEncodedObject(Json $json): object
     {
         $reflection = $this->reflectJsonEncodedObject($json);
@@ -99,6 +120,25 @@ class JsonDecoder implements JsonDecoderInterface
             }
         }
         return $decodedObject;
+    }
+
+    /**
+     * Decode the specified $json and return the original value.
+     *
+     * @return mixed
+     *
+     * @example
+     *
+     * ```
+     * var_dump($this->decodeJsonEncodedValue(new Json('foo')));
+     *
+     * string(3) "foo"
+
+     * ```
+     */
+    private function decodeJsonEncodedValue(Json $json): mixed
+    {
+        return json_decode($json->__toString(), true);
     }
 
     /**
@@ -207,6 +247,45 @@ class JsonDecoder implements JsonDecoderInterface
         }
         return $array;
     }
+
+    /**
+     * Decode the specified Json to an array.
+     *
+     * If the Json cannot be decoded to an array, then an
+     * empty array will be returned.
+     *
+     * @return array<mixed>
+     *
+     * @example
+     *
+     * ```
+     * var_dump($json->__toString());
+     *
+     * // example output
+     * string(136) "{"__class__":"Darling\\PHPTextTypes\\classes\\strings\\ClassString","__data__":{"string":"Darling\\PHPTextTypes\\classes\\strings\\Id"}}"
+     *
+     * var_dump($this->decodeJsonToArray($json));
+     *
+     * // example output
+     * array(2) {
+     *   '__class__' =>
+     *   string(48) "Darling\PHPTextTypes\classes\strings\ClassString"
+     *   '__data__' =>
+     *   array(1) {
+     *     'string' =>
+     *     string(39) "Darling\PHPTextTypes\classes\strings\Id"
+     *   }
+     * }
+     *
+     * ```
+     *
+     */
+    private function decodeJsonToArray(Json $json): array
+    {
+        $data = $this->decodeJsonEncodedValue($json);
+        return (is_array($data) ? $data : []);
+    }
+
     /**
      * Instantiate a new Json instance for the specified value.
      *
@@ -245,44 +324,6 @@ class JsonDecoder implements JsonDecoderInterface
     {
         return is_string($value)
             && $this->stringContainsClassAndDataIndex($value);
-    }
-
-    /**
-     * Decode the specified Json to an array.
-     *
-     * If the Json cannot be decoded to an array, then an
-     * empty array will be returned.
-     *
-     * @return array<mixed>
-     *
-     * @example
-     *
-     * ```
-     * var_dump($json->__toString());
-     *
-     * // example output
-     * string(136) "{"__class__":"Darling\\PHPTextTypes\\classes\\strings\\ClassString","__data__":{"string":"Darling\\PHPTextTypes\\classes\\strings\\Id"}}"
-     *
-     * var_dump($this->decodeJsonToArray($json));
-     *
-     * // example output
-     * array(2) {
-     *   '__class__' =>
-     *   string(48) "Darling\PHPTextTypes\classes\strings\ClassString"
-     *   '__data__' =>
-     *   array(1) {
-     *     'string' =>
-     *     string(39) "Darling\PHPTextTypes\classes\strings\Id"
-     *   }
-     * }
-     *
-     * ```
-     *
-     */
-    private function decodeJsonToArray(Json $json): array
-    {
-        $data = $this->decodeJsonEncodedValue($json);
-        return (is_array($data) ? $data : []);
     }
 
     /**
