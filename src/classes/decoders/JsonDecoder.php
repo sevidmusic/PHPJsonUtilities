@@ -16,10 +16,8 @@ class JsonDecoder implements JsonDecoderInterface
 
     public function decode(Json $json): mixed
     {
-        if(
-            $this->isAJsonEncodedObjectInstance($json)
-        ) {
-            return $this->decodeJsonEncodeObject($json);
+        if($this->isAJsonEncodedObjectInstance($json)) {
+            return $this->decodeJsonEncodedObject($json);
         };
         $decodedValue = $this->decodeJsonEncodedValue($json);
         if(is_array($decodedValue)) {
@@ -28,6 +26,79 @@ class JsonDecoder implements JsonDecoderInterface
             );
         }
         return $decodedValue;
+    }
+
+    private function isAJsonEncodedObjectInstance(Json $json): bool
+    {
+        $data = $this->decodeJsonToArray($json);
+        return
+            isset($data[Json::CLASS_INDEX])
+            &&
+            is_string($data[Json::CLASS_INDEX])
+            &&
+            class_exists($data[Json::CLASS_INDEX])
+            &&
+            isset($data[Json::DATA_INDEX])
+            &&
+            is_array($data[Json::DATA_INDEX]);
+    }
+
+    private function decodeJsonEncodedValue(Json $json): mixed
+    {
+        return json_decode($json->__toString(), true);
+    }
+
+    private function decodeJsonEncodedObject(Json $json): object
+    {
+        $reflection = $this->reflectJsonEncodedObject($json);
+        $decodedObject = $this->mockInstanceOfReflectedClass(
+            $reflection
+        );
+        $encodedData = $this->decodeJsonToArray($json);
+        $reflectionClass = $reflection->reflectionClass();
+        while ($reflectionClass) {
+            foreach (
+                $encodedData[Json::DATA_INDEX]
+                as
+                $propertyName => $propertyValue
+            ) {
+                if(
+                    $this->isAValidJsonString($propertyValue)
+                ) {
+                    if(
+                        $this->stringContainsClassAndDataIndex($propertyValue)
+                    ) {
+                        $propertyValue = $this->decode(
+                            $this->encodeValueAsJson($propertyValue)
+                        );
+                    }
+                }
+                if($reflectionClass->hasProperty($propertyName)) {
+                    if(!is_null($propertyValue)) {
+                        $acceptedTypes =
+                            $reflection->propertyTypes();
+                        $property =
+                            $reflectionClass->getProperty(
+                                $propertyName
+                            );
+                        $property->setAccessible(true);
+                        $property->setValue(
+                            $decodedObject,
+                            $propertyValue
+                        );
+                    }
+                }
+            }
+            $reflectionClass = $reflectionClass->getParentClass();
+            if($reflectionClass !== false) {
+                $reflection = new Reflection(
+                    new ClassString(
+                        $reflectionClass->getName()
+                    )
+                );
+            }
+        }
+        return $decodedObject;
     }
 
     /**
@@ -129,14 +200,13 @@ class JsonDecoder implements JsonDecoderInterface
                 $array[$key] = $this->decodeObjectsInArray($value);
                 continue;
             }
-            if($this->valueContainsJsonEncodedObjectData($value)) {
+            if($this->valueIsAJsonStringThatContainsJsonEncodedObjectData($value)) {
                 $jsonEncodedValue = $this->encodeValueAsJson($value);
                 $array[$key] = $this->decode($jsonEncodedValue);
             }
         }
         return $array;
     }
-
     /**
      * Instantiate a new Json instance for the specified value.
      *
@@ -156,25 +226,25 @@ class JsonDecoder implements JsonDecoderInterface
     }
 
     /**
-     * Determine if a $value contains Json encoded object data.
+     * Determine if a $value is a json string that contains Json encoded
+     * object data.
      *
      * @return bool
      *
      * @example
      *
      * ```
-     * $this->valueContainsJsonEncodedObjectData($value);
+     * $this->valueIsAJsonStringThatContainsJsonEncodedObjectData($value);
      *
      * ```
      *
      */
-    private function valueContainsJsonEncodedObjectData(
+    private function valueIsAJsonStringThatContainsJsonEncodedObjectData(
         mixed $value
     ): bool
     {
         return is_string($value)
-            && str_contains($value, Json::CLASS_INDEX)
-            && str_contains($value, Json::DATA_INDEX);
+            && $this->stringContainsClassAndDataIndex($value);
     }
 
     /**
@@ -213,27 +283,6 @@ class JsonDecoder implements JsonDecoderInterface
     {
         $data = $this->decodeJsonEncodedValue($json);
         return (is_array($data) ? $data : []);
-    }
-
-    private function decodeJsonEncodedValue(Json $json): mixed
-    {
-        return json_decode($json->__toString(), true);
-    }
-
-
-    private function isAJsonEncodedObjectInstance(Json $json): bool
-    {
-        $data = $this->decodeJsonToArray($json);
-        return
-            isset($data[Json::CLASS_INDEX])
-            &&
-            is_string($data[Json::CLASS_INDEX])
-            &&
-            class_exists($data[Json::CLASS_INDEX])
-            &&
-            isset($data[Json::DATA_INDEX])
-            &&
-            is_array($data[Json::DATA_INDEX]);
     }
 
     /**
@@ -281,64 +330,11 @@ class JsonDecoder implements JsonDecoderInterface
             && str_contains($string, Json::DATA_INDEX);
     }
 
-    private function isAJValidJsonString(mixed $value): bool
+    private function isAValidJsonString(mixed $value): bool
     {
         return is_string($value)
         &&
         (false !== json_decode($value));
-    }
-
-    private function decodeJsonEncodeObject(Json $json): object
-    {
-        $reflection = $this->reflectJsonEncodedObject($json);
-        $decodedObject = $this->mockInstanceOfReflectedClass(
-            $reflection
-        );
-        $encodedData = $this->decodeJsonToArray($json);
-        $reflectionClass = $reflection->reflectionClass();
-        while ($reflectionClass) {
-            foreach (
-                $encodedData[Json::DATA_INDEX]
-                as
-                $propertyName => $propertyValue
-            ) {
-                if(
-                    $this->isAJValidJsonString($propertyValue)
-                ) {
-                    if(
-                        $this->stringContainsClassAndDataIndex($propertyValue)
-                    ) {
-                        $propertyValue = $this->decode(
-                            $this->encodeValueAsJson($propertyValue)
-                        );
-                    }
-                }
-                if($reflectionClass->hasProperty($propertyName)) {
-                    if(!is_null($propertyValue)) {
-                        $acceptedTypes =
-                            $reflection->propertyTypes();
-                        $property =
-                            $reflectionClass->getProperty(
-                                $propertyName
-                            );
-                        $property->setAccessible(true);
-                        $property->setValue(
-                            $decodedObject,
-                            $propertyValue
-                        );
-                    }
-                }
-            }
-            $reflectionClass = $reflectionClass->getParentClass();
-            if($reflectionClass !== false) {
-                $reflection = new Reflection(
-                    new ClassString(
-                        $reflectionClass->getName()
-                    )
-                );
-            }
-        }
-        return $decodedObject;
     }
 }
 
