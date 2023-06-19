@@ -29,15 +29,39 @@ class JsonDecoder implements JsonDecoderInterface
     }
 
     /**
-     * Determine if the specified $json is a json encoded
-     * object instance.
+     * Determine if the specified $json is a json encoded object
+     * instance.
      *
      * @return bool
      *
      * @example
      *
      * ```
-     * $this->isAJsonEncodedObjectInstance($json)
+     * var_dump($jsonEncodedString);
+     *
+     * // example output:
+     * class Darling\PHPJsonUtilities\classes\encoded\data\Json#3 (1) {
+     *   private string $string =>
+     *   string(5) ""foo""
+     * }
+     *
+     * var_dump($this->isAJsonEncodedObjectInstance($jsonEncodedString));
+     *
+     * // example output:
+     * bool(false)
+     *
+     * var_dump($jsonEncodedObjectInstance);
+     *
+     * // example output:
+     * class Darling\PHPJsonUtilities\classes\encoded\data\Json#2 (1) {
+     *   private string $string =>
+     *   string(574) "{"__class__":"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\Id","__data__":{"text":"{\\"__class__\\":\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\AlphanumericText\\",\\"__data__\\":{\\"text\\":\\"{\\\\\\"__class__\\\\\\":\\\\\\"Darling\\\\\\\\\\\\\\\\PHPTextTypes\\\\\\\\\\\\\\\\classes\\\\\\\\\\\\\\\\strings\\\\\\\\\\\\\\\\Text\\\\\\",\\\\\\"__data__\\\\\\":{\\\\\\"string\\\\\\":\\\\\\"PrMi9mQ5mBn0Tc3JJafsxbWTIKi7mLujs6afzzGZ1DktMbpH2V5tE4BxoOAB2RqXwCh7gS\\\\\\"}}\\",\\"string\\":\"...
+     * }
+     *
+     * var_dump($this->isAJsonEncodedObjectInstance($jsonEncodedObjectInstance));
+     *
+     * // example output:
+     * bool(true)
      *
      * ```
      *
@@ -60,11 +84,42 @@ class JsonDecoder implements JsonDecoderInterface
     /**
      * Decode the specified $json and return the original object.
      *
+     * Note: If the specified $json is not a json encoded object,
+     * or if the json enocded object can't be decoded, then an
+     * instance of an UnknownClass will be returned.
+     *
      * @return object
      *
      * @example
      *
      * ```
+     * php > var_dump($json);
+     *
+     * // example output:
+     * class Darling\PHPJsonUtilities\classes\encoded\data\Json#3 (1) {
+     *   private string $string =>
+     *   string(586) "{"__class__":"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\Id","__data__":{"text":"{\\"__class__\\":\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\AlphanumericText\\",\\"__data__\\":{\\"text\\":\\"{\\\\\\"__class__\\\\\\":\\\\\\"Darling\\\\\\\\\\\\\\\\PHPTextTypes\\\\\\\\\\\\\\\\classes\\\\\\\\\\\\\\\\strings\\\\\\\\\\\\\\\\Text\\\\\\",\\\\\\"__data__\\\\\\":{\\\\\\"string\\\\\\":\\\\\\"vYPoXMWAL8sSw5TkIfnx4G5M4jhScZgWwIQPQyC2aVJRco0Esigi1WU6tfr3Oa8DOyUD9VhD7H\\\\\\"}}\\",\\"string\"...
+     * }
+     *
+     * $jd = new \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder();
+     *
+     * var_dump($this->decodeJsonEncodedObject($json));
+     *
+     * // example output:
+     * class Darling\PHPTextTypes\classes\strings\Id#9 (2) {
+     *   private string $string =>
+     *   string(74) "VYPoXMWAL8sSw5TkIfnx4G5M4jhScZgWwIQPQyC2aVJRco0Esigi1WU6tfr3Oa8DOyUD9VhD7H"
+     *   private Darling\PHPTextTypes\interfaces\strings\Text $text =>
+     *   class Darling\PHPTextTypes\classes\strings\AlphanumericText#12 (2) {
+     *     private string $string =>
+     *     string(74) "VYPoXMWAL8sSw5TkIfnx4G5M4jhScZgWwIQPQyC2aVJRco0Esigi1WU6tfr3Oa8DOyUD9VhD7H"
+     *     private Darling\PHPTextTypes\interfaces\strings\Text $text =>
+     *     class Darling\PHPTextTypes\classes\strings\Text#18 (1) {
+     *       private string $string =>
+     *       string(74) "vYPoXMWAL8sSw5TkIfnx4G5M4jhScZgWwIQPQyC2aVJRco0Esigi1WU6tfr3Oa8DOyUD9VhD7H"
+     *     }
+     *   }
+     * }
      *
      * ```
      *
@@ -77,9 +132,9 @@ class JsonDecoder implements JsonDecoderInterface
         );
         $encodedData = $this->decodeJsonToArray($json);
         $reflectionClass = $reflection->reflectionClass();
-        while ($reflectionClass) {
+        while($reflectionClass) {
             foreach (
-                $encodedData[Json::DATA_INDEX]
+                $encodedData[Json::DATA_INDEX] ?? []
                 as
                 $propertyName => $propertyValue
             ) {
@@ -132,8 +187,9 @@ class JsonDecoder implements JsonDecoderInterface
      * ```
      * var_dump($this->decodeJsonEncodedValue(new Json('foo')));
      *
+     * // example output
      * string(3) "foo"
-
+     *
      * ```
      */
     private function decodeJsonEncodedValue(Json $json): mixed
@@ -294,7 +350,6 @@ class JsonDecoder implements JsonDecoderInterface
      * @example
      *
      * ```
-     * $this->encodeValueAsJson([1, 2, 3]);
      *
      * ```
      *
@@ -313,7 +368,6 @@ class JsonDecoder implements JsonDecoderInterface
      * @example
      *
      * ```
-     * $this->valueIsAJsonStringThatContainsJsonEncodedObjectData($value);
      *
      * ```
      *
@@ -327,7 +381,9 @@ class JsonDecoder implements JsonDecoderInterface
     }
 
     /**
-     * [Description]
+     * If the specified $json is a json encoded object, return an
+     * instance of a ClassString for the encoded object, otherwise
+     * return an instance of a ClassString for an UnknownClass.
      *
      * @param Json $json
      *
@@ -343,13 +399,28 @@ class JsonDecoder implements JsonDecoderInterface
     private function determineClass(Json $json): ClassString
     {
         $data = $this->decodeJsonToArray($json);
-        $class = $data[Json::CLASS_INDEX];
-        if(is_string($class) && class_exists($class)) {
+        $class = $data[Json::CLASS_INDEX] ?? '';
+        if(is_string($class)) {
             return new ClassString($class);
         }
         return new ClassString(UnknownClass::class);
     }
 
+    /**
+     * Mock an instance of the same type as the class reflected by the
+     * provided $reflection.
+     *
+     * @param Reflection $reflection
+     *
+     * @return object
+     *
+     * @example
+     *
+     * ```
+     *
+     * ```
+     *
+     */
     private function mockInstanceOfReflectedClass(
         Reflection $reflection
     ): object
@@ -358,11 +429,42 @@ class JsonDecoder implements JsonDecoderInterface
         return $mockClassInstance->mockInstance();
     }
 
+    /**
+     * Return an instance of a Reflection that reflects the type
+     * of object encoded in the specified $json.
+     *
+     * Note: An instance of a Reflection that reflects an UnknownClass
+     * will be returned if the provided $json is not a json encoded
+     * object, or if the original objects class cannot be determined
+     * from the provided $json.
+     *
+     * @return Reflection
+     *
+     * @example
+     *
+     * ```
+     *
+     * ```
+     *
+     */
     private function reflectJsonEncodedObject(Json $json): Reflection
     {
         return new Reflection($this->determineClass($json));
     }
 
+    /**
+     * Return true if a string contains the expected Json::CLASS_INDEX
+     * and Json::DATA_INDEX strings, false otherwise.
+     *
+     * @return bool
+     *
+     * @example
+     *
+     * ```
+     *
+     * ```
+     *
+     */
     private function stringContainsClassAndDataIndex(
         string $string
     ): bool
@@ -371,6 +473,19 @@ class JsonDecoder implements JsonDecoderInterface
             && str_contains($string, Json::DATA_INDEX);
     }
 
+    /**
+     * Determine if a value is a string that is a valid
+     * json string.
+     *
+     * @return bool
+     *
+     * @example
+     *
+     * ```
+     *
+     * ```
+     *
+     */
     private function isAValidJsonString(mixed $value): bool
     {
         return is_string($value)
