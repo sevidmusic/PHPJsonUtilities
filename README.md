@@ -13,7 +13,7 @@
 ```
 
 The PHPJsonUtilities library provides classes for working with
-`JSON` in php.
+`json` in php.
 
 The following classes are provided by this library:
 
@@ -22,7 +22,7 @@ The following classes are provided by this library:
 
 ```
 Which is a `\Stringable` type that can be used to encode values of
-various types as valid `JSON`.
+various types as valid `json`.
 
 ```
 \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder
@@ -30,7 +30,7 @@ various types as valid `JSON`.
 ```
 
 Which provides a `decode()` method that can be used
-to decode values that were encoded as `JSON` via a
+to decode values that were encoded as `json` via a
 `\Darling\PHPJsonUtilities\classes\encoded\data\Json`
 instance.
 
@@ -53,13 +53,13 @@ composer require darling/php-json-utilities
 ### `\Darling\PHPJsonUtilities\classes\encoded\data\Json`
 
 A `\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance can
-be used to encode values of various types as `JSON`.
+be used to encode values of various types as valid `json`.
 
-Any value that can be encoded as `JSON` via `json_encode()`
-can be encoded as `JSON` via a
+Any value that can be encoded as `json` via `json_encode()`
+can be encoded as `json` via a
 `\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance.
 
-However, unlike `json_encode()`, objects encoded as `JSON` via a
+However, unlike `json_encode()`, objects encoded as `json` via a
 `\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance
 will have their property values preserved.
 
@@ -80,6 +80,9 @@ use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPTextTypes\classes\strings\Id;
 use \Darling\PHPTextTypes\classes\strings\Text;
 
+/**
+ * Example of encoding an object:
+ */
 $objectInstance = new Id();
 
 $jsonEncodedObject = new Json($objectInstance);
@@ -88,9 +91,14 @@ echo $jsonEncodedObject . PHP_EOL;
 
 /**
  * example output:
+ *
  * {"__class__":"Darling\\PHPTextTypes\\classes\\strings\\Id","__data__":{"text":"{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\AlphanumericText\",\"__data__\":{\"text\":\"{\\\"__class__\\\":\\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\Text\\\",\\\"__data__\\\":{\\\"string\\\":\\\"QNL3uG13WFlqUzayeUMHAbvamhikpqHCR8dPDDAKv8E1SMi2xx6chWpSwCXclvQIDXKSLg7YuXtUjE\\\"}}\",\"string\":\"QNL3uG13WFlqUzayeUMHAbvamhikpqHCR8dPDDAKv8E1SMi2xx6chWpSwCXclvQIDXKSLg7YuXtUjE\"}}","string":"QNL3uG13WFlqUzayeUMHAbvamhikpqHCR8dPDDAKv8E1SMi2xx6chWpSwCXclvQIDXKSLg7YuXtUjE"}}
+ *
  */
 
+/**
+ * Example of encoding an array:
+ */
 $array = [
     1,
     1.2,
@@ -111,28 +119,52 @@ $array = [
         [[['id' => new Id()], [function(): void {}]], new stdClass()],
     ],
 ];
+
 $jsonEncodedArray = new Json($array);
 
 echo $jsonEncodedArray . PHP_EOL;
 
 /**
  * example output:
+ *
  * {"0":1,"1":1.2,"2":true,"3":false,"4":null,"5":"string","6":[],"7":"{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\Text\",\"__data__\":{\"string\":\"abdcefg\"}}","sub_array":{"secondary_id":"{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\Id\",\"__data__\":{\"text\":\"{\\\"__class__\\\":\\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\AlphanumericText\\\",\\\"__data__\\\":{\\\"text\\\":\\\"{\\\\\\\"__class__\\\\\\\":\\\\\\\"Darling\\\\\\\\\\\\\\\\PHPTextTypes\\\\\\\\\\\\\\\\classes\\\\\\\\\\\\\\\\strings\\\\\\\\\\\\\\\\Text\\\\\\\",\\\\\\\"__data__\\\\\\\":{\\\\\\\"string\\\\\\\":\\\\\\\"aSo6g3kyO3Blujb9o2RzeUgMvvoFzTq1ZSWrqUsG7f1Hnv9QN8pleCMfjWzZGKXMTXJSI81\\\\\\\"}}\\\",\\\"string\\\":\\\"ASo6g3kyO3Blujb9o2RzeUgMvvoFzTq1ZSWrqUsG7f1Hnv9QN8pleCMfjWzZGKXMTXJSI81\\\"}}\",\"string\":\"ASo6g3kyO3Blujb9o2RzeUgMvvoFzTq1ZSWrqUsG7f1Hnv9QN8pleCMfjWzZGKXMTXJSI81\"}}","sub_sub_array":["{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\Id\",\"__data__\":{\"text\":\"{\\\"__class__\\\":\\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\AlphanumericText\\\",\\\"__data__\\\":{\\\"text\\\":\\\"{\\\\\\\"__class__\\\\\\\":\\\\\\\"Darling\\\\\\\\\\\\\\\\PHPTextTypes\\\\\\\\\\\\\\\\classes\\\\\\\\\\\\\\\\strings\\\\\\\\\\\\\\\\Text\\\\\\\",\\\\\\\"__data__\\\\\\\":{\\\\\\\"string\\\\\\\":\\\\\\\"R8hVAJLGyIGApgIMShCCxK3U75nHVtO1XTy6ENtuwN9p8Tb3rxWzdXjRgkfImBzpgUfao5vRYBh9MQp2\\\\\\\"}}\\\",\\\"string\\\":\\\"R8hVAJLGyIGApgIMShCCxK3U75nHVtO1XTy6ENtuwN9p8Tb3rxWzdXjRgkfImBzpgUfao5vRYBh9MQp2\\\"}}\",\"string\":\"R8hVAJLGyIGApgIMShCCxK3U75nHVtO1XTy6ENtuwN9p8Tb3rxWzdXjRgkfImBzpgUfao5vRYBh9MQp2\"}}",[1,2,3,["{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\Id\",\"__data__\":{\"text\":\"{\\\"__class__\\\":\\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\AlphanumericText\\\",\\\"__data__\\\":{\\\"text\\\":\\\"{\\\\\\\"__class__\\\\\\\":\\\\\\\"Darling\\\\\\\\\\\\\\\\PHPTextTypes\\\\\\\\\\\\\\\\classes\\\\\\\\\\\\\\\\strings\\\\\\\\\\\\\\\\Text\\\\\\\",\\\\\\\"__data__\\\\\\\":{\\\\\\\"string\\\\\\\":\\\\\\\"7WjqHKvYxND6YNcEJhondeh5C3BM8k4aKksDf1R7n2JwyExbYh9br6HCCBtl3iPZ0AQbrrTuqgtBlOL\\\\\\\"}}\\\",\\\"string\\\":\\\"7WjqHKvYxND6YNcEJhondeh5C3BM8k4aKksDf1R7n2JwyExbYh9br6HCCBtl3iPZ0AQbrrTuqgtBlOL\\\"}}\",\"string\":\"7WjqHKvYxND6YNcEJhondeh5C3BM8k4aKksDf1R7n2JwyExbYh9br6HCCBtl3iPZ0AQbrrTuqgtBlOL\"}}"]],1.2,[]]},"foo":"bar","id":"{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\Id\",\"__data__\":{\"text\":\"{\\\"__class__\\\":\\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\AlphanumericText\\\",\\\"__data__\\\":{\\\"text\\\":\\\"{\\\\\\\"__class__\\\\\\\":\\\\\\\"Darling\\\\\\\\\\\\\\\\PHPTextTypes\\\\\\\\\\\\\\\\classes\\\\\\\\\\\\\\\\strings\\\\\\\\\\\\\\\\Text\\\\\\\",\\\\\\\"__data__\\\\\\\":{\\\\\\\"string\\\\\\\":\\\\\\\"bN3kvpxdR7DvOKvS6TMkqYltL7D0ORTjHaJsOKGJYWnVupuSiiOHXDolIs65UTvk\\\\\\\"}}\\\",\\\"string\\\":\\\"BN3kvpxdR7DvOKvS6TMkqYltL7D0ORTjHaJsOKGJYWnVupuSiiOHXDolIs65UTvk\\\"}}\",\"string\":\"BN3kvpxdR7DvOKvS6TMkqYltL7D0ORTjHaJsOKGJYWnVupuSiiOHXDolIs65UTvk\"}}","closure":"{\"__class__\":\"Closure\",\"__data__\":[]}","second_sub_array":[[[{"id":"{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\Id\",\"__data__\":{\"text\":\"{\\\"__class__\\\":\\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\AlphanumericText\\\",\\\"__data__\\\":{\\\"text\\\":\\\"{\\\\\\\"__class__\\\\\\\":\\\\\\\"Darling\\\\\\\\\\\\\\\\PHPTextTypes\\\\\\\\\\\\\\\\classes\\\\\\\\\\\\\\\\strings\\\\\\\\\\\\\\\\Text\\\\\\\",\\\\\\\"__data__\\\\\\\":{\\\\\\\"string\\\\\\\":\\\\\\\"X6ayWvfg6JhYtEoi4dfr0Rjmsjeg7c5eLVXaWrwKbK5HZEysW4bOIBGYywNCmRpTg\\\\\\\"}}\\\",\\\"string\\\":\\\"X6ayWvfg6JhYtEoi4dfr0Rjmsjeg7c5eLVXaWrwKbK5HZEysW4bOIBGYywNCmRpTg\\\"}}\",\"string\":\"X6ayWvfg6JhYtEoi4dfr0Rjmsjeg7c5eLVXaWrwKbK5HZEysW4bOIBGYywNCmRpTg\"}}"},["{\"__class__\":\"Closure\",\"__data__\":[]}"]],"{\"__class__\":\"stdClass\",\"__data__\":[]}"]]}
+ *
  */
 
+/**
+ * Example of encoding an valid json string:
+ *
+ * If a string is a valid json string then no further
+ * encoding will occur.
+ */
+$jsonString = json_encode([1, [true, false], 'foo' => 'bar']);
+
+echo $jsonString . PHP_EOL;
+
+// exammple output:
+// {"0":1,"1":[true,false],"foo":"bar"}
+
+$json = new \Darling\PHPJsonUtilities\classes\encoded\data\Json(
+    $jsonString
+);
+
+echo $json . PHP_EOL;
+
+// example output:
+// {"0":1,"1":[true,false],"foo":"bar"}
 
 ```
 
 ### `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder`
 
 A `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder` can
-be used to decode values that were encoded as `JSON` via a
+be used to decode values that were encoded as `json` via a
 `\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance.
 
 ```
 Note: An object instance that defines readonly properties can be
 encoded as `json` via a `Json` instance, but cannot be decoded
-from `json` via `JsonDecoder->decode()`!
+from `json` via a `JsonDecoder`!
 
 ```
 
@@ -154,6 +186,10 @@ use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPTextTypes\classes\strings\Id;
 use \Darling\PHPTextTypes\classes\strings\Text;
 
+/**
+ * Example of encoding/decoding an object instance:
+ */
+
 $jsonDecoder = new JsonDecoder();
 
 $objectInstance = new Id();
@@ -166,6 +202,7 @@ var_dump($decodedObject);
 
 /**
  * example output:
+ *
  * class Darling\PHPTextTypes\classes\strings\Id#9 (2) {
  *   private string $string =>
  *   string(74) "Zz7SsSjwk1XAyOwIfaJpJkQ7tCWmRxBEql5P8WXFB1rKE9TqWYvgs6A5VbnZ8GioHNFAwhvjKd"
@@ -180,6 +217,11 @@ var_dump($decodedObject);
  *     }
  *   }
  * }
+ *
+ */
+
+/**
+ * Example of encoding/decoding an array:
  */
 
 $array = [
@@ -211,6 +253,7 @@ var_dump($decodedArray);
 
 /**
  * example output:
+ *
  * array(13) {
  *   [0] =>
  *   int(1)
@@ -300,6 +343,7 @@ var_dump($decodedArray);
  *     }
  *   }
  * }
+ *
  */
 
 ```
