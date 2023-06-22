@@ -126,7 +126,6 @@ class JsonDecoder implements JsonDecoderInterface
      */
     private function decodeJsonEncodedObject(Json $json): object
     {
-        $encodedData = $this->decodeJsonToArray($json);
         $reflection = $this->reflectJsonEncodedObject($json);
         $decodedObject = $this->mockInstanceOfReflectedClass(
             $reflection
@@ -149,7 +148,7 @@ class JsonDecoder implements JsonDecoderInterface
                         $this->encodeValueAsJson($propertyValue)
                     );
                 }
-                $this->setPropertyValue(
+                $this->assignNewPropertyValue(
                     $propertyName,
                     $propertyValue,
                     $decodedObject,
@@ -202,7 +201,7 @@ class JsonDecoder implements JsonDecoderInterface
      * ```
      *
      */
-    private function setPropertyValue(
+    private function assignNewPropertyValue(
         string $propertyName,
         mixed $propertyValue,
         object $object,
