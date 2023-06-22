@@ -134,11 +134,13 @@ class JsonDecoder implements JsonDecoderInterface
         $reflectionClass = $reflection->reflectionClass();
         while($reflectionClass) {
             foreach (
-                $encodedData[Json::DATA_INDEX] ?? []
+                $this->propertyDataOrEmptyArray($json)
                 as
                 $propertyName => $propertyValue
             ) {
                 if(
+                    is_string($propertyValue)
+                    &&
                     $this->isAValidJsonString($propertyValue)
                     &&
                     $this->stringContainsClassAndDataIndex($propertyValue)
@@ -167,6 +169,27 @@ class JsonDecoder implements JsonDecoderInterface
         return $decodedObject;
     }
 
+    /**
+     * Decode the specified $json and return an array of property data
+     * if it exists, otherwise return an empty array.
+     *
+     * @return array<mixed>
+     *
+     * @example
+     *
+     * ```
+     *
+     * ```
+     *
+     */
+    private function propertyDataOrEmptyArray(Json $json): array
+    {
+        $encodedData = $this->decodeJsonToArray($json);
+        return match(is_array($encodedData[Json::DATA_INDEX])) {
+            true => $encodedData[Json::DATA_INDEX],
+            default => [],
+        };
+    }
     /**
      * Set the value of the specified property via reflection.
      *
@@ -512,11 +535,9 @@ class JsonDecoder implements JsonDecoderInterface
      * ```
      *
      */
-    private function isAValidJsonString(mixed $value): bool
+    private function isAValidJsonString(string $value): bool
     {
-        return is_string($value)
-        &&
-        (false !== json_decode($value));
+        return (false !== json_decode($value));
     }
 }
 
