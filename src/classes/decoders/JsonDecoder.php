@@ -84,10 +84,9 @@ class JsonDecoder implements JsonDecoderInterface
     }
 
     /**
-     * Decode the specified $json and return the original object.
-     *
-     * Note: An instance of an UnknownClass will be returned if the
-     * specified $json can't be decoded to an object instance.
+     * Decode the specified $json. If the decoded value is an
+     * object instance, return it, otherwise return an instance
+     * of an UnknownClass.
      *
      * @return object
      *
@@ -127,11 +126,11 @@ class JsonDecoder implements JsonDecoderInterface
      */
     private function decodeJsonEncodedObject(Json $json): object
     {
+        $encodedData = $this->decodeJsonToArray($json);
         $reflection = $this->reflectJsonEncodedObject($json);
         $decodedObject = $this->mockInstanceOfReflectedClass(
             $reflection
         );
-        $encodedData = $this->decodeJsonToArray($json);
         $reflectionClass = $reflection->reflectionClass();
         while($reflectionClass) {
             foreach (
@@ -141,30 +140,20 @@ class JsonDecoder implements JsonDecoderInterface
             ) {
                 if(
                     $this->isAValidJsonString($propertyValue)
+                    &&
+                    $this->stringContainsClassAndDataIndex($propertyValue)
                 ) {
-                    if(
-                        $this->stringContainsClassAndDataIndex($propertyValue)
-                    ) {
-                        $propertyValue = $this->decode(
-                            $this->encodeValueAsJson($propertyValue)
-                        );
-                    }
+                    $propertyValue = $this->decode(
+                        $this->encodeValueAsJson($propertyValue)
+                    );
                 }
-                if($reflectionClass->hasProperty($propertyName)) {
-                    if(!is_null($propertyValue)) {
-                        $acceptedTypes =
-                            $reflection->propertyTypes();
-                        $property =
-                            $reflectionClass->getProperty(
-                                $propertyName
-                            );
-                        $property->setAccessible(true);
-                        $property->setValue(
-                            $decodedObject,
-                            $propertyValue
-                        );
-                    }
-                }
+                $this->setPropertyValue(
+                    $propertyName,
+                    $propertyValue,
+                    $decodedObject,
+                    $reflection,
+                    $reflectionClass
+                );
             }
             $reflectionClass = $reflectionClass->getParentClass();
             if($reflectionClass !== false) {
@@ -178,6 +167,42 @@ class JsonDecoder implements JsonDecoderInterface
         return $decodedObject;
     }
 
+    /**
+     * Set the value of the specified property via reflection.
+     *
+     * @param ReflectionClass<object> $reflectionClass
+     *
+     * @example
+     *
+     * ```
+     *
+     * ```
+     *
+     */
+    private function setPropertyValue(
+        string $propertyName,
+        mixed $propertyValue,
+        object $object,
+        Reflection $reflection,
+        ReflectionClass $reflectionClass
+    ): void
+    {
+        if($reflectionClass->hasProperty($propertyName)) {
+            if(!is_null($propertyValue)) {
+                $acceptedTypes =
+                    $reflection->propertyTypes();
+                $property =
+                    $reflectionClass->getProperty(
+                        $propertyName
+                    );
+                $property->setAccessible(true);
+                $property->setValue(
+                    $object,
+                    $propertyValue
+                );
+            }
+        }
+    }
     /**
      * Decode the specified $json and return the original value.
      *
