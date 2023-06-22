@@ -29,8 +29,10 @@ class JsonDecoder implements JsonDecoderInterface
     }
 
     /**
-     * Determine if the specified $json is a json encoded object
+     * Determine if the specified Json is a json encoded object
      * instance.
+     *
+     * @param Json $json The Json instance to check.
      *
      * @return bool
      *
@@ -84,9 +86,8 @@ class JsonDecoder implements JsonDecoderInterface
     /**
      * Decode the specified $json and return the original object.
      *
-     * Note: If the specified $json is not a json encoded object,
-     * or if the json enocded object can't be decoded, then an
-     * instance of an UnknownClass will be returned.
+     * Note: An instance of an UnknownClass will be returned if the
+     * specified $json can't be decoded to an object instance.
      *
      * @return object
      *
