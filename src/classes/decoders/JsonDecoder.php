@@ -138,11 +138,9 @@ class JsonDecoder implements JsonDecoderInterface
                 $propertyName => $propertyValue
             ) {
                 if(
-                    is_string($propertyValue)
-                    &&
-                    $this->isAValidJsonString($propertyValue)
-                    &&
-                    $this->stringContainsClassAndDataIndex($propertyValue)
+                    $this->valueIsAJsonStringThatContainsJsonEncodedObjectData(
+                        $propertyValue
+                    )
                 ) {
                     $propertyValue = $this->decode(
                         $this->encodeValueAsJson($propertyValue)
@@ -425,6 +423,7 @@ class JsonDecoder implements JsonDecoderInterface
     ): bool
     {
         return is_string($value)
+            && $this->isAValidJsonString($value)
             && $this->stringContainsClassAndDataIndex($value);
     }
 
