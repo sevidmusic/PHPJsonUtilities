@@ -101,8 +101,6 @@ class JsonDecoder implements JsonDecoderInterface
      *   string(586) "{"__class__":"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\Id","__data__":{"text":"{\\"__class__\\":\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\AlphanumericText\\",\\"__data__\\":{\\"text\\":\\"{\\\\\\"__class__\\\\\\":\\\\\\"Darling\\\\\\\\\\\\\\\\PHPTextTypes\\\\\\\\\\\\\\\\classes\\\\\\\\\\\\\\\\strings\\\\\\\\\\\\\\\\Text\\\\\\",\\\\\\"__data__\\\\\\":{\\\\\\"string\\\\\\":\\\\\\"vYPoXMWAL8sSw5TkIfnx4G5M4jhScZgWwIQPQyC2aVJRco0Esigi1WU6tfr3Oa8DOyUD9VhD7H\\\\\\"}}\\",\\"string\"...
      * }
      *
-     * $jd = new \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder();
-     *
      * var_dump($this->decodeJsonEncodedObject($json));
      *
      * // example output:
@@ -521,8 +519,7 @@ class JsonDecoder implements JsonDecoderInterface
     }
 
     /**
-     * Determine if a value is a string that is a valid
-     * json string.
+     * Determine if a string is a valid json string.
      *
      * @return bool
      *
@@ -533,9 +530,9 @@ class JsonDecoder implements JsonDecoderInterface
      * ```
      *
      */
-    private function isAValidJsonString(string $value): bool
+    private function isAValidJsonString(string $string): bool
     {
-        return (false !== json_decode($value));
+        return (false !== json_decode($string));
     }
 }
 
