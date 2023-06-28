@@ -165,14 +165,32 @@ class JsonDecoder implements JsonDecoderInterface
     }
 
     /**
-     * Decode the specified $json and return an array of property data
-     * if it exists, otherwise return an empty array.
+     * If the specified $json is an json encoded object instance,
+     * return an array of the encoded objects property data,
+     * otherwise return an empty array.
      *
      * @return array<mixed>
      *
      * @example
      *
      * ```
+     * var_dump($json);
+     *
+     * // example output:
+     * class Darling\PHPJsonUtilities\classes\encoded\data\Json#22 (1) {
+     *   private string $string =>
+     *   string(580) "{"__class__":"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\Id","__data__":{"text":"{\\"__class__\\":\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\AlphanumericText\\",\\"__data__\\":{\\"text\\":\\"{\\\\\\"__class__\\\\\\":\\\\\\"Darling\\\\\\\\\\\\\\\\PHPTextTypes\\\\\\\\\\\\\\\\classes\\\\\\\\\\\\\\\\strings\\\\\\\\\\\\\\\\Text\\\\\\",\\\\\\"__data__\\\\\\":{\\\\\\"string\\\\\\":\\\\\\"01MF1AQQUnscsFqwUN5LcxRdt7C9v7yeT4Kt3O8lUbEdPaEIjhIpSfza7w8YQKEvuzqTReoC\\\\\\"}}\\",\\"string\\""...
+     * }
+     *
+     * var_dump($this->propertyDataOrEmptyArray($json);
+     *
+     * // example output:
+     * array(2) {
+     *   'text' =>
+     *   string(356) "{"__class__":"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\AlphanumericText","__data__":{"text":"{\\"__class__\\":\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\Text\\",\\"__data__\\":{\\"string\\":\\"01MF1AQQUnscsFqwUN5LcxRdt7C9v7yeT4Kt3O8lUbEdPaEIjhIpSfza7w8YQKEvuzqTReoC\\"}}","string":"01MF1AQQUnscsFqwUN5LcxRdt7C9v7yeT4Kt3O8lUbEdPaEIjhIpSfza7w8YQKEvuzqTReoC"}}"
+     *   'string' =>
+     *   string(72) "01MF1AQQUnscsFqwUN5LcxRdt7C9v7yeT4Kt3O8lUbEdPaEIjhIpSfza7w8YQKEvuzqTReoC"
+     * }
      *
      * ```
      *
@@ -185,6 +203,7 @@ class JsonDecoder implements JsonDecoderInterface
             default => [],
         };
     }
+
     /**
      * Set the value of the specified property via reflection.
      *
@@ -193,6 +212,46 @@ class JsonDecoder implements JsonDecoderInterface
      * @example
      *
      * ```
+     * var_dump($propertyName);
+     * string(6) "string"
+     *
+     * var_dump($propertyValue);
+     * string(4) "Text"
+     *
+     * var_dump($object); # pre assignment
+     * class Darling\PHPTextTypes\classes\strings\Text#29 (1) {
+     *   private string $string =>
+     *   string(49) "MockStringRjlR6jDtUdcieePwCk0G9zl8gYGkztCLKB5dHOf"
+     * }
+     *
+     * var_dump($reflection);
+     * class Darling\PHPReflectionUtilities\classes\utilities\Reflection#24 (1) {
+     *   private Darling\PHPTextTypes\classes\strings\ClassString $classString =>
+     *   class Darling\PHPTextTypes\classes\strings\ClassString#26 (1) {
+     *     private string $string =>
+     *     string(41) "Darling\PHPTextTypes\classes\strings\Text"
+     *   }
+     * }
+     *
+     * var_dump($reflectionClass);
+     * class ReflectionClass#25 (1) {
+     *   public string $name =>
+     *   string(41) "Darling\PHPTextTypes\classes\strings\Text"
+     * }
+     *
+     * $this->assignNewPropertyValue(
+     *     $propertyName,
+     *     $propertyValue,
+     *     $object,
+     *     $reflection,
+     *     $reflectionClass
+     * );
+     *
+     * var_dump($object); # post assignment
+     * class Darling\PHPTextTypes\classes\strings\Text#29 (1) {
+     *   private string $string =>
+     *   string(4) "Text"
+     * }
      *
      * ```
      *
@@ -221,6 +280,7 @@ class JsonDecoder implements JsonDecoderInterface
             }
         }
     }
+
     /**
      * Decode the specified $json and return the original value.
      *
