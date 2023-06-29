@@ -17,8 +17,8 @@ use \Directory;
 use \ReflectionClass;
 
 /**
- * The JsonDecoderTestTrait defines common tests for
- * implementations of the JsonDecoder interface.
+ * The JsonDecoderTestTrait defines common tests for implementations
+ * of the JsonDecoder interface.
  *
  * @see JsonDecoder
  *
@@ -27,18 +27,17 @@ trait JsonDecoderTestTrait
 {
 
     /**
-     * @var JsonDecoder $jsonDecoder
-     *                              An instance of a
-     *                              JsonDecoder
-     *                              implementation to test.
+     * @var JsonDecoder $jsonDecoder An instance of a JsonDecoder
+     *                               implementation to test.
      */
     protected JsonDecoder $jsonDecoder;
 
     /**
      * Set up an instance of a JsonDecoder implementation to test.
      *
-     * This method must also set the JsonDecoder implementation instance
-     * to be tested via the setJsonDecoderTestInstance() method.
+     * This method must also set the JsonDecoder implementation
+     * instance to be tested via the setJsonDecoderTestInstance()
+     * method.
      *
      * This method may also be used to perform any additional setup
      * required by the implementation being tested.
@@ -74,11 +73,10 @@ trait JsonDecoderTestTrait
     /**
      * Set the JsonDecoder implementation instance to test.
      *
-     * @param JsonDecoder $jsonDecoderTestInstance
-     *                              An instance of an
-     *                              implementation of
-     *                              the JsonDecoder
-     *                              interface to test.
+     * @param JsonDecoder $jsonDecoderTestInstance An instance of an
+     *                                             implementation of
+     *                                             the JsonDecoder
+     *                                             interface to test.
      *
      * @return void
      *
@@ -161,25 +159,12 @@ trait JsonDecoderTestTrait
                         $name => $originalValue
                     ) {
                         if(
-                            is_string($originalValue)
-                            &&
-                            (false !== json_decode($originalValue))
+                            $this->valueIsAJsonStringThatContainsJsonEncodedObjectData($originalValue)
                         ) {
-                            if(
-                                str_contains(
-                                    $originalValue,
-                                    Json::CLASS_INDEX
-                                )
-                                &&
-                                str_contains(
-                                    $originalValue,
-                                    Json::DATA_INDEX
-                                )
-                            ) {
-                                $originalValue = $this->decodeJson(
-                                    new JsonInstance($originalValue)
-                                );
-                            }
+
+                            $originalValue = $this->decodeJson(
+                                new JsonInstance($originalValue)
+                            );
                         }
                         if($reflectionClass->hasProperty($name)) {
                             if(!is_null($originalValue)) {
@@ -215,6 +200,30 @@ trait JsonDecoderTestTrait
             $decodedValue = $this->decodeObjectsInArray($decodedValue);
         }
         return $decodedValue;
+    }
+
+    /**
+     * Determine if a $value is a json string that contains Json encoded
+     * object data.
+     *
+     * @return bool
+     *
+     * @example
+     *
+     * ```
+     *
+     * ```
+     *
+     */
+    private function valueIsAJsonStringThatContainsJsonEncodedObjectData(mixed $originalValue): bool
+    {
+        return is_string($originalValue)
+            &&
+            (false !== json_decode($originalValue))
+            &&
+            str_contains($originalValue, Json::CLASS_INDEX)
+            &&
+            str_contains($originalValue, Json::DATA_INDEX);
     }
 
     /**
