@@ -9,8 +9,13 @@ use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
 use \Darling\PHPTextTypes\classes\strings\ClassString;
 use \Darling\PHPTextTypes\classes\strings\Id;
 use \Darling\PHPTextTypes\classes\strings\Text;
+use \Darling\PHPTextTypes\classes\strings\Name;
 use \Directory;
 use \ReflectionClass;
+use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestClassDefinesReadOnlyProperties;
+use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestClassA;
+use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestClassB;
+use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestIterator;
 
 /**
  * The JsonTestTrait defines common tests for implementations of
@@ -101,6 +106,10 @@ trait JsonTestTrait
     protected function encodeMixedValueAsJson(mixed $data): string
     {
         if(is_object($data)) {
+            if(in_array(Json::class, class_implements($data))) {
+                /** @var Json $data */
+                return $data->__toString();
+            }
             return $this->encodeObjectAsJson($data);
         }
         return match(gettype($data)) {
@@ -323,8 +332,12 @@ trait JsonTestTrait
             json_encode([1, 2, 3]),
             json_encode([PHP_INT_MIN, PHP_INT_MAX]),
             new Directory(),
-            new JsonInsance($this->randomClassStringOrObjectInstance()),
-            new JsonInsance(json_encode(['foo', 'bar', 'baz'])),
+            new TestClassA(new Id(), new Name(new Text('Foo'))),
+            new TestClassB(),
+            new TestIterator(),
+            new TestClassDefinesReadOnlyProperties('foo'),
+            new JsonInsance($this->randomClassStringOrObjectInstance()), // fails
+            new JsonInsance(json_encode(['foo', 'bar', 'baz'])), // fails
             new Reflection(new ClassString(Id::class)),
             new ReflectionClass($this),
             new ObjectReflection(new Id()),
