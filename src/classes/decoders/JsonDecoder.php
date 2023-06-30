@@ -10,6 +10,7 @@ use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
 use \Darling\PHPTextTypes\classes\strings\ClassString;
 use \Darling\PHPTextTypes\classes\strings\UnknownClass;
 use \ReflectionClass;
+use \ReflectionProperty;
 
 class JsonDecoder implements JsonDecoderInterface
 {
@@ -265,7 +266,14 @@ class JsonDecoder implements JsonDecoderInterface
     ): void
     {
         if($reflectionClass->hasProperty($propertyName)) {
-            if(!is_null($propertyValue)) {
+            if(
+                $this->propertyIsNotReadOnly(
+                    $propertyName,
+                    $reflectionClass
+                )
+                &&
+                !is_null($propertyValue)
+            ) {
                 $acceptedTypes =
                     $reflection->propertyTypes();
                 $property =
@@ -279,6 +287,42 @@ class JsonDecoder implements JsonDecoderInterface
                 );
             }
         }
+    }
+
+    /**
+     * Determine if a property is defined as readonly.
+     *
+     * If the property is defined by the class reflected by the
+     * specified $reflectionClass, and the property is not defined
+     * as readonly, true will be returned.
+     *
+     * If the property is defined by the class reflected by the
+     * specified $reflectionClass, and the property is defined
+     * as readonly, false will be returned.
+     *
+     * If the property is not defined by the class reflected by the
+     * specified $reflectionClass, null will be returned.
+     *
+     * @param $propertyName The name of the property to check.
+     *
+     * @param ReflectionClass<object> $reflectionClass
+     *
+     * @return bool
+     *
+     */
+    private function propertyIsNotReadOnly(
+        string $propertyName,
+        ReflectionClass $reflectionClass
+    ): ?bool
+    {
+        if($reflectionClass->hasProperty($propertyName)) {
+            $propertyReflection = new ReflectionProperty(
+                $reflectionClass->name,
+                $propertyName
+            );
+            return !$propertyReflection->isReadOnly();
+        }
+        return null;
     }
 
     /**
@@ -400,7 +444,9 @@ class JsonDecoder implements JsonDecoderInterface
                 $array[$key] = $this->decodeObjectsInArray($value);
                 continue;
             }
-            if($this->valueIsAJsonStringThatContainsJsonEncodedObjectData($value)) {
+            if($this->valueIsAJsonStringThatContainsJsonEncodedObjectData(
+                $value)
+            ) {
                 $jsonEncodedValue = $this->encodeValueAsJson($value);
                 $array[$key] = $this->decode($jsonEncodedValue);
             }
