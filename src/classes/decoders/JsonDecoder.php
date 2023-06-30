@@ -126,6 +126,21 @@ class JsonDecoder implements JsonDecoderInterface
     private function decodeJsonEncodedObject(Json $json): object
     {
         $reflection = $this->reflectJsonEncodedObject($json);
+        if($reflection->type()->__toString() === ReflectionClass::class) {
+            $data = $this->decodeJsonToArray($json);
+            $encodedNameProperty = (
+                is_array($data[Json::DATA_INDEX])
+                &&
+                isset($data[Json::DATA_INDEX]['name'])
+                &&
+                is_string($data[Json::DATA_INDEX]['name'])
+                &&
+                class_exists($data[Json::DATA_INDEX]['name'])
+                ? $data[Json::DATA_INDEX]['name']
+                : UnknownClass::class
+            );
+            return new ReflectionClass($encodedNameProperty);
+        }
         $decodedObject = $this->mockInstanceOfReflectedClass(
             $reflection
         );

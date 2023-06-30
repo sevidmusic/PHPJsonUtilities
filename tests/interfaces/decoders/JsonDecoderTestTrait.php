@@ -138,8 +138,8 @@ trait JsonDecoderTestTrait
             new TestClassA(new Id(), new Name(new Text('Foo'))),
             new TestClassB(),
             new TestIterator(),
-           new TestClassDefinesReadOnlyProperties('foo'),
-#            new ReflectionClass($this), // This causes an error: Reflection Exception, error is caused by attempt to modify a readonly property value.
+            new TestClassDefinesReadOnlyProperties('foo'),
+            new ReflectionClass($this), // This causes an error: Reflection Exception, error is caused by attempt to modify a readonly property value.
        ];
         return $data[array_rand($data)];
     }
@@ -161,6 +161,18 @@ trait JsonDecoderTestTrait
             $class = $data[Json::CLASS_INDEX];
             if(is_string($class) && class_exists($class)) {
                 $reflection = new Reflection(new ClassString($class));
+                if($reflection->type()->__toString() === ReflectionClass::class) {
+                    $encodedNameProperty = (
+                        isset($data[Json::DATA_INDEX]['name'])
+                        &&
+                        is_string($data[Json::DATA_INDEX]['name'])
+                        &&
+                        class_exists($data[Json::DATA_INDEX]['name'])
+                        ? $data[Json::DATA_INDEX]['name']
+                        : UnknownClass::class
+                    );
+                    return new ReflectionClass($encodedNameProperty);
+                }
                 $mockClassInstance = new MockClassInstance(
                     $reflection
                 );
