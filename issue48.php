@@ -8,12 +8,54 @@ require_once(
     'autoload.php'
 );
 
+use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
+use \Darling\PHPTextTypes\classes\strings\ClassString;
+
 class ClassWithReadOnlyProperties{
 
     public function __construct(private readonly string $foo) {}
 
     public function foo(): string { return $this->foo; }
 
+}
+
+/**
+ * Set the value of the specified property via reflection.
+ *
+ * @param ReflectionClass<object> $reflectionClass
+ *
+ *
+ */
+function assignNewPropertyValue(
+    string $propertyName,
+    mixed $propertyValue,
+    object $object,
+    Reflection $reflection,
+    ReflectionClass $reflectionClass
+): void
+{
+    if($reflectionClass->hasProperty($propertyName)) {
+        if(
+            propertyIsNotReadOnly(
+                $propertyName,
+                $reflectionClass
+            )
+            &&
+            !is_null($propertyValue)
+        ) {
+            $acceptedTypes =
+                $reflection->propertyTypes();
+            $property =
+                $reflectionClass->getProperty(
+                    $propertyName
+                );
+            $property->setAccessible(true);
+            $property->setValue(
+                $object,
+                $propertyValue
+            );
+        }
+    }
 }
 
 /**
@@ -38,14 +80,35 @@ function propertyIsNotReadOnly(
     return null;
 }
 
-$reflectionClass = new \ReflectionClass(
-    ClassWithReadOnlyProperties::class
-);
-
 $propertyName = 'foo';
+$originalPropertyValue = 'bar';
+$newPropertyValue = 'baz';
+$instance = new ClassWithReadOnlyProperties($originalPropertyValue);
+$reflection = new Reflection(new ClassString($instance));
 
-var_dump(
-    "The $propertyName property is not read only: ",
-    propertyIsNotReadOnly($propertyName, $reflectionClass)
+assignNewPropertyValue(
+    $propertyName,
+    $newPropertyValue,
+    $instance,
+    $reflection,
+    $reflection->reflectionClass(),
 );
+
+var_dump($instance->foo());
+
+$propertyName = 'name';
+$originalPropertyValue = Reflection::class;
+$newPropertyValue = ClassWithReadOnlyProperties::class;
+$instance = new ReflectionClass($originalPropertyValue);
+$reflection = new Reflection(new ClassString($instance));
+
+assignNewPropertyValue(
+    $propertyName,
+    $newPropertyValue,
+    $instance,
+    $reflection,
+    $reflection->reflectionClass(),
+);
+
+var_dump($instance->name);
 
