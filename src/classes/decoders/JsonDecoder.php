@@ -10,6 +10,7 @@ use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
 use \Darling\PHPTextTypes\classes\strings\ClassString;
 use \Darling\PHPTextTypes\classes\strings\UnknownClass;
 use \ReflectionClass;
+use \ReflectionProperty;
 
 class JsonDecoder implements JsonDecoderInterface
 {
@@ -101,8 +102,6 @@ class JsonDecoder implements JsonDecoderInterface
      *   string(586) "{"__class__":"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\Id","__data__":{"text":"{\\"__class__\\":\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\AlphanumericText\\",\\"__data__\\":{\\"text\\":\\"{\\\\\\"__class__\\\\\\":\\\\\\"Darling\\\\\\\\\\\\\\\\PHPTextTypes\\\\\\\\\\\\\\\\classes\\\\\\\\\\\\\\\\strings\\\\\\\\\\\\\\\\Text\\\\\\",\\\\\\"__data__\\\\\\":{\\\\\\"string\\\\\\":\\\\\\"vYPoXMWAL8sSw5TkIfnx4G5M4jhScZgWwIQPQyC2aVJRco0Esigi1WU6tfr3Oa8DOyUD9VhD7H\\\\\\"}}\\",\\"string\"...
      * }
      *
-     * $jd = new \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder();
-     *
      * var_dump($this->decodeJsonEncodedObject($json));
      *
      * // example output:
@@ -127,6 +126,21 @@ class JsonDecoder implements JsonDecoderInterface
     private function decodeJsonEncodedObject(Json $json): object
     {
         $reflection = $this->reflectJsonEncodedObject($json);
+        if($reflection->type()->__toString() === ReflectionClass::class) {
+            $data = $this->decodeJsonToArray($json);
+            $encodedNameProperty = (
+                is_array($data[Json::DATA_INDEX])
+                &&
+                isset($data[Json::DATA_INDEX]['name'])
+                &&
+                is_string($data[Json::DATA_INDEX]['name'])
+                &&
+                class_exists($data[Json::DATA_INDEX]['name'])
+                ? $data[Json::DATA_INDEX]['name']
+                : UnknownClass::class
+            );
+            return new ReflectionClass($encodedNameProperty);
+        }
         $decodedObject = $this->mockInstanceOfReflectedClass(
             $reflection
         );
@@ -167,14 +181,32 @@ class JsonDecoder implements JsonDecoderInterface
     }
 
     /**
-     * Decode the specified $json and return an array of property data
-     * if it exists, otherwise return an empty array.
+     * If the specified $json is an json encoded object instance,
+     * return an array of the encoded objects property data,
+     * otherwise return an empty array.
      *
      * @return array<mixed>
      *
      * @example
      *
      * ```
+     * var_dump($json);
+     *
+     * // example output:
+     * class Darling\PHPJsonUtilities\classes\encoded\data\Json#22 (1) {
+     *   private string $string =>
+     *   string(580) "{"__class__":"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\Id","__data__":{"text":"{\\"__class__\\":\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\AlphanumericText\\",\\"__data__\\":{\\"text\\":\\"{\\\\\\"__class__\\\\\\":\\\\\\"Darling\\\\\\\\\\\\\\\\PHPTextTypes\\\\\\\\\\\\\\\\classes\\\\\\\\\\\\\\\\strings\\\\\\\\\\\\\\\\Text\\\\\\",\\\\\\"__data__\\\\\\":{\\\\\\"string\\\\\\":\\\\\\"01MF1AQQUnscsFqwUN5LcxRdt7C9v7yeT4Kt3O8lUbEdPaEIjhIpSfza7w8YQKEvuzqTReoC\\\\\\"}}\\",\\"string\\""...
+     * }
+     *
+     * var_dump($this->propertyDataOrEmptyArray($json);
+     *
+     * // example output:
+     * array(2) {
+     *   'text' =>
+     *   string(356) "{"__class__":"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\AlphanumericText","__data__":{"text":"{\\"__class__\\":\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\Text\\",\\"__data__\\":{\\"string\\":\\"01MF1AQQUnscsFqwUN5LcxRdt7C9v7yeT4Kt3O8lUbEdPaEIjhIpSfza7w8YQKEvuzqTReoC\\"}}","string":"01MF1AQQUnscsFqwUN5LcxRdt7C9v7yeT4Kt3O8lUbEdPaEIjhIpSfza7w8YQKEvuzqTReoC"}}"
+     *   'string' =>
+     *   string(72) "01MF1AQQUnscsFqwUN5LcxRdt7C9v7yeT4Kt3O8lUbEdPaEIjhIpSfza7w8YQKEvuzqTReoC"
+     * }
      *
      * ```
      *
@@ -187,6 +219,7 @@ class JsonDecoder implements JsonDecoderInterface
             default => [],
         };
     }
+
     /**
      * Set the value of the specified property via reflection.
      *
@@ -195,6 +228,46 @@ class JsonDecoder implements JsonDecoderInterface
      * @example
      *
      * ```
+     * var_dump($propertyName);
+     * string(6) "string"
+     *
+     * var_dump($propertyValue);
+     * string(4) "Text"
+     *
+     * var_dump($object); # pre assignment
+     * class Darling\PHPTextTypes\classes\strings\Text#29 (1) {
+     *   private string $string =>
+     *   string(49) "MockStringRjlR6jDtUdcieePwCk0G9zl8gYGkztCLKB5dHOf"
+     * }
+     *
+     * var_dump($reflection);
+     * class Darling\PHPReflectionUtilities\classes\utilities\Reflection#24 (1) {
+     *   private Darling\PHPTextTypes\classes\strings\ClassString $classString =>
+     *   class Darling\PHPTextTypes\classes\strings\ClassString#26 (1) {
+     *     private string $string =>
+     *     string(41) "Darling\PHPTextTypes\classes\strings\Text"
+     *   }
+     * }
+     *
+     * var_dump($reflectionClass);
+     * class ReflectionClass#25 (1) {
+     *   public string $name =>
+     *   string(41) "Darling\PHPTextTypes\classes\strings\Text"
+     * }
+     *
+     * $this->assignNewPropertyValue(
+     *     $propertyName,
+     *     $propertyValue,
+     *     $object,
+     *     $reflection,
+     *     $reflectionClass
+     * );
+     *
+     * var_dump($object); # post assignment
+     * class Darling\PHPTextTypes\classes\strings\Text#29 (1) {
+     *   private string $string =>
+     *   string(4) "Text"
+     * }
      *
      * ```
      *
@@ -208,7 +281,14 @@ class JsonDecoder implements JsonDecoderInterface
     ): void
     {
         if($reflectionClass->hasProperty($propertyName)) {
-            if(!is_null($propertyValue)) {
+            if(
+                $this->propertyIsNotReadOnly(
+                    $propertyName,
+                    $reflectionClass
+                )
+                &&
+                !is_null($propertyValue)
+            ) {
                 $acceptedTypes =
                     $reflection->propertyTypes();
                 $property =
@@ -223,6 +303,43 @@ class JsonDecoder implements JsonDecoderInterface
             }
         }
     }
+
+    /**
+     * Determine if a property is defined as readonly.
+     *
+     * If the property is defined by the class reflected by the
+     * specified $reflectionClass, and the property is not defined
+     * as readonly, true will be returned.
+     *
+     * If the property is defined by the class reflected by the
+     * specified $reflectionClass, and the property is defined
+     * as readonly, false will be returned.
+     *
+     * If the property is not defined by the class reflected by the
+     * specified $reflectionClass, null will be returned.
+     *
+     * @param $propertyName The name of the property to check.
+     *
+     * @param ReflectionClass<object> $reflectionClass
+     *
+     * @return bool
+     *
+     */
+    private function propertyIsNotReadOnly(
+        string $propertyName,
+        ReflectionClass $reflectionClass
+    ): ?bool
+    {
+        if($reflectionClass->hasProperty($propertyName)) {
+            $propertyReflection = new ReflectionProperty(
+                $reflectionClass->name,
+                $propertyName
+            );
+            return !$propertyReflection->isReadOnly();
+        }
+        return null;
+    }
+
     /**
      * Decode the specified $json and return the original value.
      *
@@ -342,7 +459,9 @@ class JsonDecoder implements JsonDecoderInterface
                 $array[$key] = $this->decodeObjectsInArray($value);
                 continue;
             }
-            if($this->valueIsAJsonStringThatContainsJsonEncodedObjectData($value)) {
+            if($this->valueIsAJsonStringThatContainsJsonEncodedObjectData(
+                $value)
+            ) {
                 $jsonEncodedValue = $this->encodeValueAsJson($value);
                 $array[$key] = $this->decode($jsonEncodedValue);
             }
@@ -521,8 +640,7 @@ class JsonDecoder implements JsonDecoderInterface
     }
 
     /**
-     * Determine if a value is a string that is a valid
-     * json string.
+     * Determine if a string is a valid json string.
      *
      * @return bool
      *
@@ -533,9 +651,9 @@ class JsonDecoder implements JsonDecoderInterface
      * ```
      *
      */
-    private function isAValidJsonString(string $value): bool
+    private function isAValidJsonString(string $string): bool
     {
-        return (false !== json_decode($value));
+        return (false !== json_decode($string));
     }
 }
 

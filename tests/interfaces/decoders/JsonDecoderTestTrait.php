@@ -10,15 +10,21 @@ use \Darling\PHPReflectionUtilities\classes\utilities\ObjectReflection;
 use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
 use \Darling\PHPTextTypes\classes\strings\ClassString;
 use \Darling\PHPTextTypes\classes\strings\Id;
+use \Darling\PHPTextTypes\classes\strings\Name;
 use \Darling\PHPTextTypes\classes\strings\Text;
 use \Darling\PHPTextTypes\classes\strings\UnknownClass;
 use \Darling\PHPUnitTestUtilities\Tests\dev\mock\classes\PrivateStaticProperties;
 use \Directory;
 use \ReflectionClass;
+use \ReflectionProperty;
+use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestClassDefinesReadOnlyProperties;
+use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestClassA;
+use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestClassB;
+use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestIterator;
 
 /**
- * The JsonDecoderTestTrait defines common tests for
- * implementations of the JsonDecoder interface.
+ * The JsonDecoderTestTrait defines common tests for implementations
+ * of the JsonDecoder interface.
  *
  * @see JsonDecoder
  *
@@ -27,18 +33,19 @@ trait JsonDecoderTestTrait
 {
 
     /**
-     * @var JsonDecoder $jsonDecoder
-     *                              An instance of a
-     *                              JsonDecoder
-     *                              implementation to test.
+     * @var JsonDecoder $jsonDecoder An instance of a JsonDecoder
+     *                               implementation to test.
      */
     protected JsonDecoder $jsonDecoder;
+
+    private bool $classDefinesReadOnlyProperties = false;
 
     /**
      * Set up an instance of a JsonDecoder implementation to test.
      *
-     * This method must also set the JsonDecoder implementation instance
-     * to be tested via the setJsonDecoderTestInstance() method.
+     * This method must also set the JsonDecoder implementation
+     * instance to be tested via the setJsonDecoderTestInstance()
+     * method.
      *
      * This method may also be used to perform any additional setup
      * required by the implementation being tested.
@@ -74,11 +81,10 @@ trait JsonDecoderTestTrait
     /**
      * Set the JsonDecoder implementation instance to test.
      *
-     * @param JsonDecoder $jsonDecoderTestInstance
-     *                              An instance of an
-     *                              implementation of
-     *                              the JsonDecoder
-     *                              interface to test.
+     * @param JsonDecoder $jsonDecoderTestInstance An instance of an
+     *                                             implementation of
+     *                                             the JsonDecoder
+     *                                             interface to test.
      *
      * @return void
      *
@@ -129,8 +135,12 @@ trait JsonDecoderTestTrait
             null,
             true,
             new ObjectReflection(new Id()),
-#            new ReflectionClass($this), // This causes an error: Reflection Exception, error is caused by attempt to modify a readonly property value.
-        ];
+            new TestClassA(new Id(), new Name(new Text('Foo'))),
+            new TestClassB(),
+            new TestIterator(),
+            new TestClassDefinesReadOnlyProperties('foo'),
+            new ReflectionClass($this), // This causes an error: Reflection Exception, error is caused by attempt to modify a readonly property value.
+       ];
         return $data[array_rand($data)];
     }
 
@@ -151,7 +161,21 @@ trait JsonDecoderTestTrait
             $class = $data[Json::CLASS_INDEX];
             if(is_string($class) && class_exists($class)) {
                 $reflection = new Reflection(new ClassString($class));
-                $mockClassInstance = new MockClassInstance($reflection);
+                if($reflection->type()->__toString() === ReflectionClass::class) {
+                    $encodedNameProperty = (
+                        isset($data[Json::DATA_INDEX]['name'])
+                        &&
+                        is_string($data[Json::DATA_INDEX]['name'])
+                        &&
+                        class_exists($data[Json::DATA_INDEX]['name'])
+                        ? $data[Json::DATA_INDEX]['name']
+                        : UnknownClass::class
+                    );
+                    return new ReflectionClass($encodedNameProperty);
+                }
+                $mockClassInstance = new MockClassInstance(
+                    $reflection
+                );
                 $object = $mockClassInstance->mockInstance();
                 $reflectionClass = new ReflectionClass($object);
                 while ($reflectionClass) {
@@ -161,28 +185,24 @@ trait JsonDecoderTestTrait
                         $name => $originalValue
                     ) {
                         if(
-                            is_string($originalValue)
-                            &&
-                            (false !== json_decode($originalValue))
+                            $this->valueIsAJsonStringThatContainsJsonEncodedObjectData(
+                                $originalValue
+                            )
                         ) {
-                            if(
-                                str_contains(
-                                    $originalValue,
-                                    Json::CLASS_INDEX
-                                )
-                                &&
-                                str_contains(
-                                    $originalValue,
-                                    Json::DATA_INDEX
-                                )
-                            ) {
-                                $originalValue = $this->decodeJson(
-                                    new JsonInstance($originalValue)
-                                );
-                            }
+
+                            $originalValue = $this->decodeJson(
+                                new JsonInstance($originalValue)
+                            );
                         }
                         if($reflectionClass->hasProperty($name)) {
-                            if(!is_null($originalValue)) {
+                            if(
+                                $this->propertyIsNotReadOnly(
+                                    $name,
+                                    $reflectionClass
+                                )
+                                &&
+                                !is_null($originalValue)
+                            ) {
                                 $acceptedTypes =
                                     $reflection->propertyTypes();
                                 $property =
@@ -194,6 +214,12 @@ trait JsonDecoderTestTrait
                                     $object,
                                     $originalValue
                                 );
+                            } else {
+                                $this->classDefinesReadOnlyProperties
+                                    = match(!is_null($originalValue)) {
+                                        true => true,
+                                        default => false,
+                                    };
                             }
                         }
                     }
@@ -201,7 +227,8 @@ trait JsonDecoderTestTrait
                         $reflectionClass->getParentClass();
                     if($reflectionClass !== false) {
                         $reflection = new Reflection(
-                            new ClassString($reflectionClass->getName()
+                            new ClassString(
+                                $reflectionClass->getName()
                             )
                         );
                     }
@@ -212,9 +239,73 @@ trait JsonDecoderTestTrait
         };
         $decodedValue = json_decode($json->__toString(), true);
         if(is_array($decodedValue)) {
-            $decodedValue = $this->decodeObjectsInArray($decodedValue);
+            $decodedValue = $this->decodeObjectsInArray(
+                $decodedValue
+            );
         }
         return $decodedValue;
+    }
+
+    /**
+     * Determine if a property is defined as readonly.
+     *
+     * If the property is defined by the class reflected by the
+     * specified $reflectionClass, and the property is not defined
+     * as readonly, true will be returned.
+     *
+     * If the property is defined by the class reflected by the
+     * specified $reflectionClass, and the property is defined
+     * as readonly, false will be returned.
+     *
+     * If the property is not defined by the class reflected by the
+     * specified $reflectionClass, null will be returned.
+     *
+     * @param $propertyName The name of the property to check.
+     *
+     * @param ReflectionClass<object> $reflectionClass
+     *
+     * @return bool
+     *
+     */
+    private function propertyIsNotReadOnly(
+        string $propertyName,
+        ReflectionClass $reflectionClass
+    ): ?bool
+    {
+        if($reflectionClass->hasProperty($propertyName)) {
+            $propertyReflection = new ReflectionProperty(
+                $reflectionClass->name,
+                $propertyName
+            );
+            return !$propertyReflection->isReadOnly();
+        }
+        return null;
+    }
+
+    /**
+     * Determine if a $value is a json string that contains Json encoded
+     * object data.
+     *
+     * @return bool
+     *
+     * @example
+     *
+     * ```
+     *
+     * ```
+     *
+     */
+    private function valueIsAJsonStringThatContainsJsonEncodedObjectData(
+        mixed $originalValue
+    ): bool
+    {
+        return is_string($originalValue)
+            &&
+            (false !== json_decode($originalValue))
+            &&
+            str_contains($originalValue, Json::CLASS_INDEX)
+            &&
+            str_contains($originalValue, Json::DATA_INDEX);
     }
 
     /**
@@ -239,7 +330,13 @@ trait JsonDecoderTestTrait
                 continue;
             }
 
-            if(is_string($value) && str_contains($value, Json::CLASS_INDEX) && str_contains($value, Json::DATA_INDEX)) {
+            if(
+                is_string($value)
+                &&
+                str_contains($value, Json::CLASS_INDEX)
+                &&
+                str_contains($value, Json::DATA_INDEX)
+            ) {
                 $jsonEncodedValue = new JsonInstance($value);
                 $array[$key] = $this->decodeJson($jsonEncodedValue);
             }
@@ -276,15 +373,56 @@ trait JsonDecoderTestTrait
     {
         $data = $this->randomData();
         $json = $this->JsonInstance($data);
-        $this->assertEquals(
-            $this->decodeJson($json),
-            $this->jsonDecoderTestInstance()->decode($json),
-            $this->testFailedMessage(
-                $this->jsonDecoderTestInstance(),
-                'decode',
-                'return the original data'
-            ),
-        );
+        $expectedData = $this->decodeJson($json);
+        $decodedData = $this->jsonDecoderTestInstance()->decode($json);
+        match(
+            is_object($data)
+            &&
+            is_object($decodedData)
+            &&
+            $this->classDefinesReadOnlyProperties
+        ) {
+            true =>
+                $this->assertEquals(
+                    $this->determineClass($data),
+                    $this->determineClass($decodedData),
+                    $this->testFailedMessage(
+                        $this->jsonDecoderTestInstance(),
+                        'decode',
+                        'return an object of the same type ' .
+                        'as the original object if the original ' .
+                        'object is an instance of a class that ' .
+                        'defines readonly properties. ' .
+                        'If the original object is an instance ' .
+                        'of a class that defines readonly ' .
+                        'properties it may not be possible to ' .
+                        'decode it to it\'s original state.'
+                    ),
+                ),
+            default =>
+                $this->assertEquals(
+                    $expectedData,
+                    $decodedData,
+                    $this->testFailedMessage(
+                        $this->jsonDecoderTestInstance(),
+                        'decode',
+                        'return the original data'
+                    ),
+                )
+        };
+    }
+
+    private function objectOrUnknownClass(mixed $value): object
+    {
+        return match(is_object($value)) {
+            true => $value,
+            default => new UnknownClass(),
+        };
+    }
+
+    private function determineClass(mixed $value): ClassString
+    {
+        return new ClassString($this->objectOrUnknownClass($value));
     }
 }
 
