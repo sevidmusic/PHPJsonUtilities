@@ -45,6 +45,8 @@ instance.
     7. [Encoding an array](#encodinganarray)
     8. [Encoding an Iterable](#encodinganiterable)
     9. [Encoding a Closure](#encodingaclosure)
+    10. [Encoding a valid json string](#encodingavalidjsonstring)
+    11. [Encoding a \Darling\PHPJsonUtilities\classes\encoded\data\Json instance](#encodingadarlingphpjsonutilitiesclassesencodeddatajsoninstance)
 - [JsonDecoder](#darlingphpjsonutilitiesclassesdecodersjsondecoder)
     1. [Encoding and decoding an Object instance](#encodingaobjectinstance)
     2. [Encoding and decoding an Object instance that defines readonly properties](#encodingaobjectinstancethatdefinesreadonlyproperties)
@@ -55,6 +57,8 @@ instance.
     7. [Encoding and decoding an array](#encodinganarray)
     8. [Encoding and decoding an Iterable](#encodinganiterable)
     9. [Encoding and decoding a Closure](#encodingaclosure)
+    10. [Encoding and decoding a valid json string](#encodinganddecodingavalidjsonstring)
+    11. [Encoding and decoding a \Darling\PHPJsonUtilities\classes\encoded\data\Json instance](#encodinganddecodingadarlingphpjsonutilitiesclassesencodeddatajsoninstance)
 
 # Installation
 
