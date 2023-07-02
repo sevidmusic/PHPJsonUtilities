@@ -26,7 +26,6 @@ various types as valid `json`.
 
 ```
 \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder
-
 ```
 
 Which provides a `decode()` method that can be used
@@ -45,7 +44,6 @@ instance.
 
 ```
 composer require darling/php-json-utilities
-
 ```
 
 # Examples
