@@ -19,7 +19,6 @@ The following classes are provided by this library:
 
 ```
 \Darling\PHPJsonUtilities\classes\encoded\data\Json
-
 ```
 Which is a `\Stringable` type that can be used to encode values of
 various types as valid `json`.
