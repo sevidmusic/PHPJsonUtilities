@@ -36,29 +36,29 @@ instance.
 
 - [Installation](#installation)
 - [Json](#darlingphpjsonutilitiesclassesencodeddatajson)
-    1. [Encoding an Object instance](#encodinganobjectinstance)
-    2. [Encoding an Object instance that defines readonly properties](#encodinganobjectinstancethatdefinesreadonlyproperties)
-    3. [Encoding a string](#encodingastring)
-    4. [Encoding an int](#encodinganint)
-    5. [Encoding a float](#encodingafloat)
-    6. [Encoding a bool](#encodingabool)
-    7. [Encoding an array](#encodinganarray)
-    8. [Encoding an Iterable](#encodinganiterable)
-    9. [Encoding a Closure](#encodingaclosure)
-    10. [Encoding a valid json string](#encodingavalidjsonstring)
-    11. [Encoding a \Darling\PHPJsonUtilities\classes\encoded\data\Json instance](#encodinga\Darling\PHPJsonUtilities\classes\encoded\data\Jsoninstance)
+    1. [Encoding an Object instance](#encoding-an-object-instance)
+    2. [Encoding an Object instance that defines readonly properties](#encoding-an-object-instance-that-defines-readonly-properties)
+    3. [Encoding a string](#encoding-a-string)
+    4. [Encoding an int](#encoding-an-int)
+    5. [Encoding a float](#encoding-a-float)
+    6. [Encoding a bool](#encoding-a-bool)
+    7. [Encoding an array](#encoding-an-array)
+    8. [Encoding an Iterable](#encoding-an-iterable)
+    9. [Encoding a Closure](#encoding-a-closure)
+    10. [Encoding a valid json string](#encoding-a-valid-json-string)
+    11. [Encoding a \Darling\PHPJsonUtilities\classes\encoded\data\Json instance](#encoding-a-\darling\phpjsonutilities\classes\encoded\data\json-instance)(#--[jsondecoder]jsondecoder)
 - [JsonDecoder](#darlingphpjsonutilitiesclassesdecodersjsondecoder)
-    1. [Encoding and decoding an Object instance](#encodinganddecodinganobjectinstance)
-    2. [Encoding and decoding an Object instance that defines readonly properties](#encodinganddecodinganobjectinstancethatdefinesreadonlyproperties)
-    3. [Encoding and decoding a string](#encodinganddecodingastring)
-    4. [Encoding and decoding an int](#encodinganddecodinganint)
-    5. [Encoding and decoding a float](#encodinganddecodingafloat)
-    6. [Encoding and decoding a bool](#encodinganddecodingabool)
-    7. [Encoding and decoding an array](#encodinganddecodinganarray)
-    8. [Encoding and decoding an Iterable](#encodinganddecodinganiterable)
-    9. [Encoding and decoding a Closure](#encodinganddecodingaclosure)
-    10. [Encoding and decoding a valid json string](#encodinganddecodingavalidjsonstring)
-    11. [Encoding and decoding a \Darling\PHPJsonUtilities\classes\encoded\data\Json instance](#encodinganddecodinga\Darling\PHPJsonUtilities\classes\encoded\data\Jsoninstance)
+    1. [Encoding and decoding an Object instance](#encoding-and-decoding-an-object-instance)
+    2. [Encoding and decoding an Object instance that defines readonly properties](#encoding-and-decoding-an-object-instance-that-defines-readonly-properties)
+    3. [Encoding and decoding a string](#encoding-and-decoding-a-string)
+    4. [Encoding and decoding an int](#encoding-and-decoding-an-int)
+    5. [Encoding and decoding a float](#encoding-and-decoding-a-float)
+    6. [Encoding and decoding a bool](#encoding-and-decoding-a-bool)
+    7. [Encoding and decoding an array](#encoding-and-decoding-an-array)
+    8. [Encoding and decoding an Iterable](#encoding-and-decoding-an-iterable)
+    9. [Encoding and decoding a Closure](#encoding-and-decoding-a-closure)
+    10. [Encoding and decoding a valid json string](#encoding-and-decoding-a-valid-json-string)
+    11. [Encoding and decoding a \Darling\PHPJsonUtilities\classes\encoded\data\Json instance](#encoding-and-decoding-a-\darling\phpjsonutilities\classes\encoded\data\json-instance)
 
 # Installation
 
@@ -80,62 +80,6 @@ However, unlike `json_encode()`, objects encoded as `json` via a
 will have their type and property values preserved.
 
 Examples:
-
-### Encoding an Object instance
-
-```
-```
-
-### Encoding an Object instance that defines readonly properties
-
-```
-```
-
-### Encoding a string
-
-```
-```
-
-### Encoding an int
-
-```
-```
-
-### Encoding a float
-
-```
-```
-
-### Encoding a bool
-
-```
-```
-
-### Encoding an array
-
-```
-```
-
-### Encoding an Iterable
-
-```
-```
-
-### Encoding a Closure
-
-```
-```
-
-### Encoding a valid json string
-
-```
-```
-
-### Encoding a \Darling\PHPJsonUtilities\classes\encoded\data\Json instance
-
-```
-```
-
 
 ### `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder`
 
