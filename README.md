@@ -35,17 +35,14 @@ instance.
 # Overview
 
 - [Installation](#installation)
-- [Examples](#examples)
-    1. [Json](#darlingphpjsonutilitiesclassesencodeddatajson)
-    2. [JsonDecoder](#darlingphpjsonutilitiesclassesdecodersjsondecoder)
+- [Json](#darlingphpjsonutilitiesclassesencodeddatajson)
+- [JsonDecoder](#darlingphpjsonutilitiesclassesdecodersjsondecoder)
 
 # Installation
 
 ```
 composer require darling/php-json-utilities
 ```
-
-# Examples
 
 ### `\Darling\PHPJsonUtilities\classes\encoded\data\Json`
 
