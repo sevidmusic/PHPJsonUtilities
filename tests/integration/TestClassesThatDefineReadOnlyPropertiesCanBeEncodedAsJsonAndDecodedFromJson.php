@@ -7,7 +7,7 @@ echo PHP_EOL  .
 /**
  * This test is disabled until issue #48 is resolved
  * @see https://github.com/sevidmusic/PHPJsonUtilities/issues/48
- *
+ */
 require(
     str_replace(
         'tests' . DIRECTORY_SEPARATOR . 'integration',
@@ -31,10 +31,11 @@ $testJson = new Json($originalObject);
 $jsonDecoder = new JsonDecoder();
 $decodedObject = $jsonDecoder->decode($testJson);
 
-if(is_object($decodedObject) && ($decodedObject == $originalObject)) {
+if(is_object($decodedObject) && ($decodedObject::class == $originalObject::class)) {
     echo PHP_EOL .
-        'Test Passed: Classes that define readonly properties ' .
-        'can be encoded as Json and decoded from Json.' . PHP_EOL;
+        'Test Passed: Instances of classes that define readonly ' .
+        'properties can be encoded as Json and decoded from Json ' .
+        'to an object instance of the same type.' . PHP_EOL;
     file_put_contents(
         '/tmp/darlingTestJson.json',
         PHP_EOL . $testJson
@@ -43,4 +44,3 @@ if(is_object($decodedObject) && ($decodedObject == $originalObject)) {
     echo PHP_EOL . 'Test Failed' . PHP_EOL;
     die('The following integration test failed: ' . PHP_EOL . __FILE__);
 }
- */
