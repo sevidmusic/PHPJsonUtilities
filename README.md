@@ -47,20 +47,9 @@ instance.
     8. [Encoding an Iterable](#encoding-an-iterable)
     9. [Encoding a Closure](#encoding-a-closure)
     10. [Encoding a valid json string](#encoding-a-valid-json-string)
-    11. [Encoding a \Darling\PHPJsonUtilities\classes\encoded\data\Json instance](#encoding-a-\darling\phpjsonutilities\classes\encoded\data\json-instance)(#--[jsondecoder]jsondecoder)
+    11. [Encoding a DarlingPHPJsonUtilitiesclassesencodeddataJson instance](#encodingadarlingphpjsonutilitiesclassesencodeddatajsoninstance)
 
 - [JsonDecoder](#darlingphpjsonutilitiesclassesdecodersjsondecoder)
-    1. [Encoding and decoding an Object instance](#encoding-and-decoding-an-object-instance)
-    2. [Encoding and decoding an Object instance that defines readonly properties](#encoding-and-decoding-an-object-instance-that-defines-readonly-properties)
-    3. [Encoding and decoding a string](#encoding-and-decoding-a-string)
-    4. [Encoding and decoding an int](#encoding-and-decoding-an-int)
-    5. [Encoding and decoding a float](#encoding-and-decoding-a-float)
-    6. [Encoding and decoding a bool](#encoding-and-decoding-a-bool)
-    7. [Encoding and decoding an array](#encoding-and-decoding-an-array)
-    8. [Encoding and decoding an Iterable](#encoding-and-decoding-an-iterable)
-    9. [Encoding and decoding a Closure](#encoding-and-decoding-a-closure)
-    10. [Encoding and decoding a valid json string](#encoding-and-decoding-a-valid-json-string)
-    11. [Encoding and decoding a \Darling\PHPJsonUtilities\classes\encoded\data\Json instance](#encoding-and-decoding-a-\darling\phpjsonutilities\classes\encoded\data\json-instance)
 
 # Installation
 
