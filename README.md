@@ -36,7 +36,25 @@ instance.
 
 - [Installation](#installation)
 - [Json](#darlingphpjsonutilitiesclassesencodeddatajson)
+    1.[Encoding an Object instance](#encodingaobjectinstance)
+    2.[Encoding an Object instance that defines readonly properties](#encodingaobjectinstancethatdefinesreadonlyproperties)
+    3.[Encoding a string](#encodingastring)
+    4.[Encoding an int](#encodingaint)
+    5.[Encoding a float](#encodingafloat)
+    6.[Encoding a bool](#encodingabool)
+    7.[Encoding an array](#encodinganarray)
+    8.[Encoding an Iterable](#encodinganiterable)
+    9.[Encoding a Closure](#encodingaclosure)
 - [JsonDecoder](#darlingphpjsonutilitiesclassesdecodersjsondecoder)
+    1.[Encoding and decoding an Object instance](#encodingaobjectinstance)
+    2.[Encoding and decoding an Object instance that defines readonly properties](#encodingaobjectinstancethatdefinesreadonlyproperties)
+    3.[Encoding and decoding a string](#encodingastring)
+    4.[Encoding and decoding an int](#encodingaint)
+    5.[Encoding and decoding a float](#encodingafloat)
+    6.[Encoding and decoding a bool](#encodingabool)
+    7.[Encoding and decoding an array](#encodinganarray)
+    8.[Encoding and decoding an Iterable](#encodinganiterable)
+    9.[Encoding and decoding a Closure](#encodingaclosure)
 
 # Installation
 
@@ -55,13 +73,10 @@ can be encoded as `json` via a
 
 However, unlike `json_encode()`, objects encoded as `json` via a
 `\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance
-will have their property values preserved.
+will have their type and property values preserved.
 
 Examples:
 
-```
-
-```
 
 ### `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder`
 
