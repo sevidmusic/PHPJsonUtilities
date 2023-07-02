@@ -83,6 +83,61 @@ will have their type and property values preserved.
 
 Examples:
 
+### Encoding an Object instance
+
+```
+```
+
+### Encoding an Object instance that defines readonly properties
+
+```
+```
+
+### Encoding a string
+
+```
+```
+
+### Encoding an int
+
+```
+```
+
+### Encoding a float
+
+```
+```
+
+### Encoding a bool
+
+```
+```
+
+### Encoding an array
+
+```
+```
+
+### Encoding an Iterable
+
+```
+```
+
+### Encoding a Closure
+
+```
+```
+
+### Encoding a valid json string
+
+```
+```
+
+### Encoding a \Darling\PHPJsonUtilities\classes\encoded\data\Json instance
+
+```
+```
+
 ### `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder`
 
 A `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder` can
