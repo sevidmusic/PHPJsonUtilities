@@ -2,7 +2,8 @@
 
 /**
  * This file demonstrates how to use a Json instance to encode
- * a valid json string.
+ * a valid json string as json, and decode it via a JsonDecoder
+ * instance.
  *
  * Note:
  *

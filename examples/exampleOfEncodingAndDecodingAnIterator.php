@@ -2,7 +2,7 @@
 
 /**
  * This file demonstrates how to use a Json instance to encode
- * an iterator as json.
+ * an iterator as json, and decode it via a JsonDecoder instance.
  *
  * This example should be run from this library's examples directory.
  *

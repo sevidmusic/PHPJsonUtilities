@@ -2,7 +2,7 @@
 
 /**
  * This file demonstrates how to use a Json instance to encode
- * an array as json.
+ * an array as json, and decode it via a JsonDecoder instance.
  *
  * This example should be run from this library's examples directory.
  *
