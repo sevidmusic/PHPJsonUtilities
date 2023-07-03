@@ -1499,14 +1499,14 @@ var_dump($jsonDecoder->decode($jsonEncodedIterator));
 
 /**
  * This file demonstrates how to use a Json instance to encode
- * an iterator as json, and decode it via a JsonDecoder instance.
+ * a closure as json, and decode it via a JsonDecoder instance.
  *
  * This example should be run from this library's examples directory.
  *
  * For example:
  *
  * ```
- * php ./examples/exampleOfEncodingAnIterator.php
+ * php ./examples/exampleOfEncodingAClosure.php
  *
  * ```
  *
@@ -1522,112 +1522,43 @@ require_once(
 
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
-
-/** @implements Iterator<int> */
-class exampleIterator implements Iterator {
-    private int $position = 0;
-
-    /** @var array<int> $ints */
-    private array $ints = [];
-
-    public function __construct(int ...$ints) {
-        foreach($ints as $id) {
-            $this->ints[] = $id;
-        }
-    }
-
-    public function rewind(): void {
-        $this->position = 0;
-    }
-
-    public function current(): int {
-        return $this->ints[$this->position];
-    }
-
-    public function key(): int {
-        return $this->position;
-    }
-
-    public function next(): void {
-        if($this->position < (count($this->ints) - 1)) {
-            ++$this->position;
-        } else {
-            $this->position = 0;
-        }
-    }
-
-    public function previous(): void {
-        if($this->position > 0) {
-            --$this->position;
-        } else {
-            $this->position = count($this->ints) - 1;
-        }
-    }
-
-    public function valid(): bool {
-        return isset($this->array[$this->position]);
-    }
-}
+use \Darling\PHPMockingUtilities\classes\mock\values\MockClosure;
 
 /**
- * Example of encoding an iterator:
+ * Example of encoding an closure:
  */
-$iterator = new exampleIterator(1, 2, 3, 4, 5);
-$iterator->previous();
-$iterator->previous();
-$iterator->previous();
-$iterator->next();
+$closure = new MockClosure();
 
-$jsonEncodedIterator = new Json($iterator);
+$jsonEncodedClosure = new Json($closure->value());
 
 $jsonDecoder = new JsonDecoder();
 
-echo 'original iterator' . PHP_EOL;
-var_dump($iterator);
+echo 'original closure' . PHP_EOL;
+var_dump($closure->value());
 
-echo 'decoded iterator' . PHP_EOL;
-var_dump($jsonDecoder->decode($jsonEncodedIterator));
+echo 'decoded closure' . PHP_EOL;
+var_dump($jsonDecoder->decode($jsonEncodedClosure));
 
 /**
  * example output:
  *
  * ```
- * original iterator
- * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAnIterator.php:89:
- * class exampleIterator#3 (2) {
- *   private int $position =>
- *   int(3)
- *   private array $ints =>
- *   array(5) {
- *     [0] =>
- *     int(1)
- *     [1] =>
- *     int(2)
- *     [2] =>
- *     int(3)
- *     [3] =>
- *     int(4)
- *     [4] =>
- *     int(5)
+ * original closure
+ * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAClosure.php:40:
+ * class Closure#5 (1) {
+ *   virtual $closure =>
+ *   "$this->Darling\PHPMockingUtilities\classes\mock\values\{closure}"
+ *   public $this =>
+ *   class Darling\PHPMockingUtilities\classes\mock\values\MockClosure#3 (0) {
  *   }
  * }
- * decoded iterator
- * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAnIterator.php:92:
- * class exampleIterator#10 (2) {
- *   private int $position =>
- *   int(3)
- *   private array $ints =>
- *   array(5) {
- *     [0] =>
- *     int(1)
- *     [1] =>
- *     int(2)
- *     [2] =>
- *     int(3)
- *     [3] =>
- *     int(4)
- *     [4] =>
- *     int(5)
+ * decoded closure
+ * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAClosure.php:43:
+ * class Closure#9 (1) {
+ *   virtual $closure =>
+ *   "$this->Darling\PHPMockingUtilities\classes\mock\values\{closure}"
+ *   public $this =>
+ *   class Darling\PHPMockingUtilities\classes\mock\values\MockClosure#8 (0) {
  *   }
  * }
  *
