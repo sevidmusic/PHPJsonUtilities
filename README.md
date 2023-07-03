@@ -746,6 +746,8 @@ their original values! This only applies to readonly properites,
 all other properites will be still be decoded to their original
 value.
 
+```
+
 Examples:
 
 ### Encoding and decoding an Object instance
