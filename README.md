@@ -44,7 +44,7 @@ instance.
     5. [Encoding a float](#encoding-a-float)
     6. [Encoding a bool](#encoding-a-bool)
     7. [Encoding an array](#encoding-an-array)
-    8. [Encoding an Iterable](#encoding-an-iterable)
+    8. [Encoding an Iterable](#encoding-an-iterator)
     9. [Encoding a Closure](#encoding-a-closure)
     10. [Encoding a valid json string](#encoding-a-valid-json-string)
     11. [Encoding a DarlingPHPJsonUtilitiesclassesencodeddataJson instance](#encoding-a-darlingphpjsonutilitiesclassesencodeddatajson-instance)
