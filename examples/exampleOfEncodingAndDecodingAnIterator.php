@@ -83,15 +83,11 @@ $iterator->next();
 
 $jsonEncodedIterator = new Json($iterator);
 
-echo $jsonEncodedIterator . PHP_EOL;
-
-/**
- * example output:
- *
- * {"__class__":"exampleIterator","__data__":{"position":3,"ints":[1,2,3,4,5]}}
- *
- */
-
-//decoder
 $jsonDecoder = new JsonDecoder();
+
+echo 'original iterator' . PHP_EOL;
+var_dump($iterator);
+
+echo 'decoded iterator' . PHP_EOL;
+var_dump($jsonDecoder->decode($jsonEncodedIterator));
 

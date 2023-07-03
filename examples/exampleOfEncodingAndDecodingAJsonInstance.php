@@ -41,17 +41,11 @@ $jsonInstance = new Json(new Id());
 
 $jsonEncodedJsonInstance = new Json($jsonInstance);
 
-echo $jsonInstance . PHP_EOL;
-echo $jsonEncodedJsonInstance . PHP_EOL;
-
-/**
- * example output:
- *
- * {"__class__":"Darling\\PHPTextTypes\\classes\\strings\\Id","__data__":{"text":"{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\AlphanumericText\",\"__data__\":{\"text\":\"{\\\"__class__\\\":\\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\Text\\\",\\\"__data__\\\":{\\\"string\\\":\\\"2h6YHSSUpZp5T1Q3iaYgqxthm8n3FWGeycV8AsEr9UhzuvYvD3JWyBkbsDzT0f\\\"}}\",\"string\":\"2h6YHSSUpZp5T1Q3iaYgqxthm8n3FWGeycV8AsEr9UhzuvYvD3JWyBkbsDzT0f\"}}","string":"2h6YHSSUpZp5T1Q3iaYgqxthm8n3FWGeycV8AsEr9UhzuvYvD3JWyBkbsDzT0f"}}
- * {"__class__":"Darling\\PHPTextTypes\\classes\\strings\\Id","__data__":{"text":"{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\AlphanumericText\",\"__data__\":{\"text\":\"{\\\"__class__\\\":\\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\Text\\\",\\\"__data__\\\":{\\\"string\\\":\\\"2h6YHSSUpZp5T1Q3iaYgqxthm8n3FWGeycV8AsEr9UhzuvYvD3JWyBkbsDzT0f\\\"}}\",\"string\":\"2h6YHSSUpZp5T1Q3iaYgqxthm8n3FWGeycV8AsEr9UhzuvYvD3JWyBkbsDzT0f\"}}","string":"2h6YHSSUpZp5T1Q3iaYgqxthm8n3FWGeycV8AsEr9UhzuvYvD3JWyBkbsDzT0f"}}
- *
- */
-
-//decoder
 $jsonDecoder = new JsonDecoder();
+
+echo 'original json string' . PHP_EOL;
+var_dump($jsonInstance);
+
+echo 'decoded json string' . PHP_EOL;
+var_dump($jsonDecoder->decode($jsonEncodedJsonInstance));
 

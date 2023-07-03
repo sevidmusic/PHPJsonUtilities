@@ -41,17 +41,11 @@ $validJsonString = json_encode([1, 2, 3, 'foo' => ['bar', 'baz']]);
 
 $jsonEncodedValidJsonString = new Json($validJsonString);
 
-echo $validJsonString . PHP_EOL;
-echo $jsonEncodedValidJsonString . PHP_EOL;
-
-/**
- * example output:
- *
- * {"0":1,"1":2,"2":3,"foo":["bar","baz"]}
- * {"0":1,"1":2,"2":3,"foo":["bar","baz"]}
- *
- */
-
-//decoder
 $jsonDecoder = new JsonDecoder();
+
+echo 'original json string' . PHP_EOL;
+var_dump($validJsonString);
+
+echo 'decoded json string' . PHP_EOL;
+var_dump($jsonDecoder->decode($jsonEncodedValidJsonString));
 
