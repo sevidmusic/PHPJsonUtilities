@@ -6,7 +6,7 @@
  */
 
 require_once(
-    __DIR__ .
+    str_replace('examples' , '', __DIR__) .
     DIRECTORY_SEPARATOR .
     'vendor' .
     DIRECTORY_SEPARATOR .
