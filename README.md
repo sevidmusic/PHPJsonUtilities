@@ -44,7 +44,7 @@ instance.
     5. [Encoding a float](#encoding-a-float)
     6. [Encoding a bool](#encoding-a-bool)
     7. [Encoding an array](#encoding-an-array)
-    8. [Encoding an Iterable](#encoding-an-iterator)
+    8. [Encoding an Iterator](#encoding-an-iterator)
     9. [Encoding a Closure](#encoding-a-closure)
     10. [Encoding a valid json string](#encoding-a-valid-json-string)
     11. [Encoding a Darling\PHPJsonUtilities\classes\encoded\data\Json instance](#encoding-a-darlingphpjsonutilitiesclassesencodeddatajson-instance)
@@ -57,7 +57,7 @@ instance.
     5. [Encoding and decoding a float](#encoding-and-decoding-a-float)
     6. [Encoding and decoding a bool](#encoding-and-decoding-a-bool)
     7. [Encoding and decoding an array](#encoding-and-decoding-an-array)
-    8. [Encoding and decoding an Iterable](#encoding-and-decoding-an-iterator)
+    8. [Encoding and decoding an Iterator](#encoding-and-decoding-an-iterator)
     9. [Encoding and decoding a Closure](#encoding-and-decoding-a-closure)
     10. [Encoding and decoding a valid json string](#encoding-and-decoding-a-valid-json-string)
     11. [Encoding and decoding a Darling\PHPJsonUtilities\classes\encoded\data\Json instance](#encoding-and-decoding-a-darlingphpjsonutilitiesclassesencodeddatajson-instance)
@@ -785,7 +785,7 @@ Examples:
 ```
 ```
 
-### Encoding and decoding an Iterable
+### Encoding and decoding an Iterator
 
 ```
 ```
