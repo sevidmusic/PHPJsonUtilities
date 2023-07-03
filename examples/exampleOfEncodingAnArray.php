@@ -2,7 +2,7 @@
 
 /**
  * This file demonstrates how to use a Json instance to encode
- * a array as json.
+ * an array as json.
  *
  * This example should be run from this library's examples directory.
  *

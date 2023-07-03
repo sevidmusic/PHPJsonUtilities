@@ -124,31 +124,333 @@ echo $jsonEncodedObject . PHP_EOL;
 ### Encoding an Object instance that defines readonly properties
 
 ```
+<?php
+
+/**
+ * This file demonstrates how to use a Json instance to encode an
+ * object instance that defines readonly properties as json.
+ *
+ * This example should be run from this library's examples directory.
+ *
+ * For example:
+ *
+ * ```
+ * php ./examples/exampleOfEncodingAnObjectInstanceThatDefinesReadonlyProperties.php
+ *
+ * ```
+ *
+ */
+
+require_once(
+    str_replace('examples' , '', __DIR__) .
+    DIRECTORY_SEPARATOR .
+    'vendor' .
+    DIRECTORY_SEPARATOR .
+    'autoload.php'
+);
+
+use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
+
+class DefinesReadonlyProperties
+{
+
+    public function __construct(private readonly int $int) {}
+
+    public function getInt(): int
+    {
+        return $this->int;
+    }
+}
+
+/**
+ * Example of encoding an object that defines readonly properties:
+ */
+$objectInstance = new DefinesReadonlyProperties(10);
+
+$jsonEncodedObject = new Json($objectInstance);
+
+echo $jsonEncodedObject . PHP_EOL;
+
+/**
+ * example output:
+ *
+ * {"__class__":"DefinesReadonlyProperties","__data__":{"int":10}}
+ *
+ */
+
 ```
 
 ### Encoding a string
 
 ```
+<?php
+
+/**
+ * This file demonstrates how to use a Json instance to encode
+ * a string as json.
+ *
+ * This example should be run from this library's examples directory.
+ *
+ * For example:
+ *
+ * ```
+ * php ./examples/exampleOfEncodingAString.php
+ *
+ * ```
+ *
+ */
+
+require_once(
+    str_replace('examples' , '', __DIR__) .
+    DIRECTORY_SEPARATOR .
+    'vendor' .
+    DIRECTORY_SEPARATOR .
+    'autoload.php'
+);
+
+use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
+use \Darling\PHPMockingUtilities\classes\mock\values\MockString;
+
+/**
+ * Example of encoding a string:
+ */
+$string = new MockString();
+
+$jsonEncodedString = new Json($string->value());
+
+echo $jsonEncodedString . PHP_EOL;
+
+/**
+ * example output:
+ *
+ * "MockString6SWnnT5kaibcMMIjjFsqasQ7vfjwyfKlpqiVNEJ"
+ *
+ */
+
 ```
 
 ### Encoding an int
 
 ```
+<?php
+
+/**
+ * This file demonstrates how to use a Json instance to encode
+ * a int as json.
+ *
+ * This example should be run from this library's examples directory.
+ *
+ * For example:
+ *
+ * ```
+ * php ./examples/exampleOfEncodingAnInt.php
+ *
+ * ```
+ *
+ */
+
+require_once(
+    str_replace('examples' , '', __DIR__) .
+    DIRECTORY_SEPARATOR .
+    'vendor' .
+    DIRECTORY_SEPARATOR .
+    'autoload.php'
+);
+
+use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
+use \Darling\PHPMockingUtilities\classes\mock\values\MockInt;
+
+/**
+ * Example of encoding an int:
+ */
+$int = new MockInt();
+
+$jsonEncodedInt = new Json($int->value());
+
+echo $jsonEncodedInt . PHP_EOL;
+
+/**
+ * example output:
+ *
+ * 2609743170528575717
+ *
+ */
+
 ```
 
 ### Encoding a float
 
 ```
+<?php
+
+/**
+ * This file demonstrates how to use a Json instance to encode
+ * a float as json.
+ *
+ * This example should be run from this library's examples directory.
+ *
+ * For example:
+ *
+ * ```
+ * php ./examples/exampleOfEncodingAFloat.php
+ *
+ * ```
+ *
+ */
+
+require_once(
+    str_replace('examples' , '', __DIR__) .
+    DIRECTORY_SEPARATOR .
+    'vendor' .
+    DIRECTORY_SEPARATOR .
+    'autoload.php'
+);
+
+use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
+use \Darling\PHPMockingUtilities\classes\mock\values\MockFloat;
+
+/**
+ * Example of encoding an float:
+ */
+$float = new MockFloat();
+
+$jsonEncodedFloat = new Json($float->value());
+
+echo $jsonEncodedFloat . PHP_EOL;
+
+/**
+ * example output:
+ *
+ * 2716017.3333333335
+ *
+ */
+
 ```
 
 ### Encoding a bool
 
 ```
+<?php
+
+/**
+ * This file demonstrates how to use a Json instance to encode
+ * a bool as json.
+ *
+ * This example should be run from this library's examples directory.
+ *
+ * For example:
+ *
+ * ```
+ * php ./examples/exampleOfEncodingABool.php
+ *
+ * ```
+ *
+ */
+
+require_once(
+    str_replace('examples' , '', __DIR__) .
+    DIRECTORY_SEPARATOR .
+    'vendor' .
+    DIRECTORY_SEPARATOR .
+    'autoload.php'
+);
+
+use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
+use \Darling\PHPMockingUtilities\classes\mock\values\MockBool;
+
+/**
+ * Example of encoding an bool:
+ */
+$bool = new MockBool();
+
+$jsonEncodedBool = new Json($bool->value());
+
+echo $jsonEncodedBool . PHP_EOL;
+
+/**
+ * example output:
+ *
+ * false
+ *
+ */
+
 ```
 
 ### Encoding an array
 
 ```
+<?php
+
+/**
+ * This file demonstrates how to use a Json instance to encode
+ * a array as json.
+ *
+ * This example should be run from this library's examples directory.
+ *
+ * For example:
+ *
+ * ```
+ * php ./examples/exampleOfEncodingAnArray.php
+ *
+ * ```
+ *
+ */
+
+require_once(
+    str_replace('examples' , '', __DIR__) .
+    DIRECTORY_SEPARATOR .
+    'vendor' .
+    DIRECTORY_SEPARATOR .
+    'autoload.php'
+);
+
+use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
+use \Darling\PHPMockingUtilities\classes\mock\values\MockBool;
+use \Darling\PHPMockingUtilities\classes\mock\values\MockClosure;
+use \Darling\PHPMockingUtilities\classes\mock\values\MockFloat;
+use \Darling\PHPMockingUtilities\classes\mock\values\MockInt;
+use \Darling\PHPMockingUtilities\classes\mock\values\MockMixedValue;
+use \Darling\PHPMockingUtilities\classes\mock\values\MockString;
+use \Darling\PHPTextTypes\classes\strings\Id;
+
+$bool = new MockBool();
+$closure = new MockClosure();
+$float = new MockFloat();
+$int = new MockInt();
+$mixed = new MockMixedValue();
+$string = new MockString();
+
+/**
+ * Example of encoding an array.
+ *
+ * Note: Nested objects and arrays will also be properly encoded.
+ *
+ */
+$array = [
+    $bool->value(),
+    $closure->value(),
+    $float->value(),
+    $int->value(),
+    $mixed->value(),
+    $string->value(),
+    'nested-array' => [
+        [
+            new Id(),
+            new Id(),
+            new Id(),
+        ]
+    ]
+];
+$jsonEncodedArray = new Json($array);
+
+echo $jsonEncodedArray . PHP_EOL;
+
+/**
+ * example output:
+ *
+ * {"0":false,"1":"{\"__class__\":\"Closure\",\"__data__\":[]}","2":549409.875,"3":-6064629463085977541,"4":true,"5":"MockStringLCQeRy6euDGKpPETYHCJzfzWZo3tCOAq4lkrtp7","nested-array":[["{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\Id\",\"__data__\":{\"text\":\"{\\\"__class__\\\":\\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\AlphanumericText\\\",\\\"__data__\\\":{\\\"text\\\":\\\"{\\\\\\\"__class__\\\\\\\":\\\\\\\"Darling\\\\\\\\\\\\\\\\PHPTextTypes\\\\\\\\\\\\\\\\classes\\\\\\\\\\\\\\\\strings\\\\\\\\\\\\\\\\Text\\\\\\\",\\\\\\\"__data__\\\\\\\":{\\\\\\\"string\\\\\\\":\\\\\\\"VEQ9qiC72OaZRAHtpZHCb2An7cdwQI8xi1331UmK3F1uYFV5NkDfv8jRSO8MIZMN6P6quYokyBmv\\\\\\\"}}\\\",\\\"string\\\":\\\"VEQ9qiC72OaZRAHtpZHCb2An7cdwQI8xi1331UmK3F1uYFV5NkDfv8jRSO8MIZMN6P6quYokyBmv\\\"}}\",\"string\":\"VEQ9qiC72OaZRAHtpZHCb2An7cdwQI8xi1331UmK3F1uYFV5NkDfv8jRSO8MIZMN6P6quYokyBmv\"}}","{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\Id\",\"__data__\":{\"text\":\"{\\\"__class__\\\":\\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\AlphanumericText\\\",\\\"__data__\\\":{\\\"text\\\":\\\"{\\\\\\\"__class__\\\\\\\":\\\\\\\"Darling\\\\\\\\\\\\\\\\PHPTextTypes\\\\\\\\\\\\\\\\classes\\\\\\\\\\\\\\\\strings\\\\\\\\\\\\\\\\Text\\\\\\\",\\\\\\\"__data__\\\\\\\":{\\\\\\\"string\\\\\\\":\\\\\\\"S7yzDlx4A4a9p1xY6LEPQeu3HO0wAkM6OtToFnFURjlFDaKIeuHsHbNIt6RsxuZqcg9ZBNmym2\\\\\\\"}}\\\",\\\"string\\\":\\\"S7yzDlx4A4a9p1xY6LEPQeu3HO0wAkM6OtToFnFURjlFDaKIeuHsHbNIt6RsxuZqcg9ZBNmym2\\\"}}\",\"string\":\"S7yzDlx4A4a9p1xY6LEPQeu3HO0wAkM6OtToFnFURjlFDaKIeuHsHbNIt6RsxuZqcg9ZBNmym2\"}}","{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\Id\",\"__data__\":{\"text\":\"{\\\"__class__\\\":\\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\AlphanumericText\\\",\\\"__data__\\\":{\\\"text\\\":\\\"{\\\\\\\"__class__\\\\\\\":\\\\\\\"Darling\\\\\\\\\\\\\\\\PHPTextTypes\\\\\\\\\\\\\\\\classes\\\\\\\\\\\\\\\\strings\\\\\\\\\\\\\\\\Text\\\\\\\",\\\\\\\"__data__\\\\\\\":{\\\\\\\"string\\\\\\\":\\\\\\\"JLiEO9SubUzhiFHgfkbzu2Ly1LNI9XCYyHMhl5eApcPwjzw88tP2TQp474Udm\\\\\\\"}}\\\",\\\"string\\\":\\\"JLiEO9SubUzhiFHgfkbzu2Ly1LNI9XCYyHMhl5eApcPwjzw88tP2TQp474Udm\\\"}}\",\"string\":\"JLiEO9SubUzhiFHgfkbzu2Ly1LNI9XCYyHMhl5eApcPwjzw88tP2TQp474Udm\"}}"]]}
+ */
+
 ```
 
 ### Encoding an Iterable

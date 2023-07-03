@@ -9,7 +9,7 @@
  * For example:
  *
  * ```
- * php ./examples/./examples/exampleOfEncodingABool.php
+ * php ./examples/exampleOfEncodingABool.php
  *
  * ```
  *
