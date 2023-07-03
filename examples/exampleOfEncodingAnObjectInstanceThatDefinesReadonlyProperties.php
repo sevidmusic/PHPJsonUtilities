@@ -1,8 +1,18 @@
 <?php
 
 /**
- * This file demonstrate how to use a Json instance to encode an
- * object instance as json.
+ * This file demonstrates how to use a Json instance to encode an
+ * object instance that defines readonly properties as json.
+ *
+ * This example should be run from this library's examples directory.
+ *
+ * For example:
+ *
+ * ```
+ * php ./examples/exampleOfEncodingAnObjectInstanceThatDefinesReadonlyProperties.php
+ *
+ * ```
+ *
  */
 
 require_once(
@@ -27,7 +37,7 @@ class DefinesReadonlyProperties
 }
 
 /**
- * Example of encoding an object:
+ * Example of encoding an object that defines readonly properties:
  */
 $objectInstance = new DefinesReadonlyProperties(10);
 
