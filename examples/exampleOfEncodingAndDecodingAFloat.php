@@ -34,15 +34,11 @@ $float = new MockFloat();
 
 $jsonEncodedFloat = new Json($float->value());
 
-echo $jsonEncodedFloat . PHP_EOL;
-
-/**
- * example output:
- *
- * 2716017.3333333335
- *
- */
-
-//decoder
 $jsonDecoder = new JsonDecoder();
+
+echo 'original float' . PHP_EOL;
+var_dump($float->value());
+
+echo 'decoded float' . PHP_EOL;
+var_dump($jsonDecoder->decode($jsonEncodedFloat));
 

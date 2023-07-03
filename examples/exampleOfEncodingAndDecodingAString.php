@@ -34,15 +34,11 @@ $string = new MockString();
 
 $jsonEncodedString = new Json($string->value());
 
-echo $jsonEncodedString . PHP_EOL;
-
-/**
- * example output:
- *
- * "MockString6SWnnT5kaibcMMIjjFsqasQ7vfjwyfKlpqiVNEJ"
- *
- */
-
-//decoder
 $jsonDecoder = new JsonDecoder();
+
+echo 'original string';
+var_dump($string->value());
+
+echo 'decoded string';
+var_dump($jsonDecoder->decode($jsonEncodedString));
 

@@ -34,15 +34,11 @@ $int = new MockInt();
 
 $jsonEncodedInt = new Json($int->value());
 
-echo $jsonEncodedInt . PHP_EOL;
-
-/**
- * example output:
- *
- * 2609743170528575717
- *
- */
-
-//decoder
 $jsonDecoder = new JsonDecoder();
+
+echo 'original int' . PHP_EOL;
+var_dump($int->value());
+
+echo 'decoded int' . PHP_EOL;
+var_dump($jsonDecoder->decode($jsonEncodedInt));
 

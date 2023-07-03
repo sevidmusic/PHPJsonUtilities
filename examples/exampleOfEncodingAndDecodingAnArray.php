@@ -41,7 +41,8 @@ $mixed = new MockMixedValue();
 $string = new MockString();
 
 /**
- * Example of encoding an array.
+ * Example of encoding an array as json via a Json instance. and
+ * decoding it via a JsonDecoder instance.
  *
  * Note: Nested objects and arrays will also be properly encoded.
  *
@@ -63,14 +64,11 @@ $array = [
 ];
 $jsonEncodedArray = new Json($array);
 
-echo $jsonEncodedArray . PHP_EOL;
-
-/**
- * example output:
- *
- * {"0":false,"1":"{\"__class__\":\"Closure\",\"__data__\":[]}","2":549409.875,"3":-6064629463085977541,"4":true,"5":"MockStringLCQeRy6euDGKpPETYHCJzfzWZo3tCOAq4lkrtp7","nested-array":[["{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\Id\",\"__data__\":{\"text\":\"{\\\"__class__\\\":\\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\AlphanumericText\\\",\\\"__data__\\\":{\\\"text\\\":\\\"{\\\\\\\"__class__\\\\\\\":\\\\\\\"Darling\\\\\\\\\\\\\\\\PHPTextTypes\\\\\\\\\\\\\\\\classes\\\\\\\\\\\\\\\\strings\\\\\\\\\\\\\\\\Text\\\\\\\",\\\\\\\"__data__\\\\\\\":{\\\\\\\"string\\\\\\\":\\\\\\\"VEQ9qiC72OaZRAHtpZHCb2An7cdwQI8xi1331UmK3F1uYFV5NkDfv8jRSO8MIZMN6P6quYokyBmv\\\\\\\"}}\\\",\\\"string\\\":\\\"VEQ9qiC72OaZRAHtpZHCb2An7cdwQI8xi1331UmK3F1uYFV5NkDfv8jRSO8MIZMN6P6quYokyBmv\\\"}}\",\"string\":\"VEQ9qiC72OaZRAHtpZHCb2An7cdwQI8xi1331UmK3F1uYFV5NkDfv8jRSO8MIZMN6P6quYokyBmv\"}}","{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\Id\",\"__data__\":{\"text\":\"{\\\"__class__\\\":\\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\AlphanumericText\\\",\\\"__data__\\\":{\\\"text\\\":\\\"{\\\\\\\"__class__\\\\\\\":\\\\\\\"Darling\\\\\\\\\\\\\\\\PHPTextTypes\\\\\\\\\\\\\\\\classes\\\\\\\\\\\\\\\\strings\\\\\\\\\\\\\\\\Text\\\\\\\",\\\\\\\"__data__\\\\\\\":{\\\\\\\"string\\\\\\\":\\\\\\\"S7yzDlx4A4a9p1xY6LEPQeu3HO0wAkM6OtToFnFURjlFDaKIeuHsHbNIt6RsxuZqcg9ZBNmym2\\\\\\\"}}\\\",\\\"string\\\":\\\"S7yzDlx4A4a9p1xY6LEPQeu3HO0wAkM6OtToFnFURjlFDaKIeuHsHbNIt6RsxuZqcg9ZBNmym2\\\"}}\",\"string\":\"S7yzDlx4A4a9p1xY6LEPQeu3HO0wAkM6OtToFnFURjlFDaKIeuHsHbNIt6RsxuZqcg9ZBNmym2\"}}","{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\Id\",\"__data__\":{\"text\":\"{\\\"__class__\\\":\\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\AlphanumericText\\\",\\\"__data__\\\":{\\\"text\\\":\\\"{\\\\\\\"__class__\\\\\\\":\\\\\\\"Darling\\\\\\\\\\\\\\\\PHPTextTypes\\\\\\\\\\\\\\\\classes\\\\\\\\\\\\\\\\strings\\\\\\\\\\\\\\\\Text\\\\\\\",\\\\\\\"__data__\\\\\\\":{\\\\\\\"string\\\\\\\":\\\\\\\"JLiEO9SubUzhiFHgfkbzu2Ly1LNI9XCYyHMhl5eApcPwjzw88tP2TQp474Udm\\\\\\\"}}\\\",\\\"string\\\":\\\"JLiEO9SubUzhiFHgfkbzu2Ly1LNI9XCYyHMhl5eApcPwjzw88tP2TQp474Udm\\\"}}\",\"string\":\"JLiEO9SubUzhiFHgfkbzu2Ly1LNI9XCYyHMhl5eApcPwjzw88tP2TQp474Udm\"}}"]]}
- */
-
-//decoder
 $jsonDecoder = new JsonDecoder();
+
+echo 'original array' . PHP_EOL;
+var_dump($array);
+
+echo 'decoded array' . PHP_EOL;
+var_dump($jsonDecoder->decode($jsonEncodedArray));
 

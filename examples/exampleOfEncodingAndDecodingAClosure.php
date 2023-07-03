@@ -34,15 +34,11 @@ $closure = new MockClosure();
 
 $jsonEncodedClosure = new Json($closure->value());
 
-echo $jsonEncodedClosure . PHP_EOL;
-
-/**
- * example output:
- *
- * {"__class__":"Closure","__data__":[]}
- *
- */
-
-//decoder
 $jsonDecoder = new JsonDecoder();
+
+echo 'original closure' . PHP_EOL;
+var_dump($closure->value());
+
+echo 'decoded closure' . PHP_EOL;
+var_dump($jsonDecoder->decode($jsonEncodedClosure));
 

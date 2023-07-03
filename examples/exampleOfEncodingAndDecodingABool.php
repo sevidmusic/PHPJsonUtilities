@@ -34,15 +34,11 @@ $bool = new MockBool();
 
 $jsonEncodedBool = new Json($bool->value());
 
-echo $jsonEncodedBool . PHP_EOL;
-
-/**
- * example output:
- *
- * false
- *
- */
-
-//decoder
 $jsonDecoder = new JsonDecoder();
+
+echo 'original bool' . PHP_EOL;
+var_dump($bool->value());
+
+echo 'decoded bool' . PHP_EOL;
+var_dump($jsonDecoder->decode($jsonEncodedBool));
 
