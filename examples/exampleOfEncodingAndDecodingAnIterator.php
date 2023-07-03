@@ -24,6 +24,7 @@ require_once(
 );
 
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
+use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
 
 /** @implements Iterator<int> */
 class exampleIterator implements Iterator {
@@ -92,3 +93,5 @@ echo $jsonEncodedIterator . PHP_EOL;
  */
 
 //decoder
+$jsonDecoder = new JsonDecoder();
+

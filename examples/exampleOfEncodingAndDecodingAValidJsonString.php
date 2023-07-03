@@ -31,6 +31,7 @@ require_once(
 );
 
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
+use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
 
 /**
  * Example of encoding an validJsonString:
@@ -51,3 +52,5 @@ echo $jsonEncodedValidJsonString . PHP_EOL;
  */
 
 //decoder
+$jsonDecoder = new JsonDecoder();
+

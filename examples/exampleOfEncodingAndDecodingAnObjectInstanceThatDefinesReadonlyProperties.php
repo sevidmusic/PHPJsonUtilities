@@ -24,6 +24,7 @@ require_once(
 );
 
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
+use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
 
 class DefinesReadonlyProperties
 {
@@ -53,3 +54,5 @@ echo $jsonEncodedObject . PHP_EOL;
  */
 
 //decoder
+$jsonDecoder = new JsonDecoder();
+

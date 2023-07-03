@@ -30,6 +30,7 @@ require_once(
 );
 
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
+use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
 use \Darling\PHPTextTypes\classes\strings\Id;
 
 
@@ -52,3 +53,5 @@ echo $jsonEncodedJsonInstance . PHP_EOL;
  */
 
 //decoder
+$jsonDecoder = new JsonDecoder();
+

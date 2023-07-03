@@ -24,6 +24,7 @@ require_once(
 );
 
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
+use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockInt;
 
 /**
@@ -43,3 +44,5 @@ echo $jsonEncodedInt . PHP_EOL;
  */
 
 //decoder
+$jsonDecoder = new JsonDecoder();
+

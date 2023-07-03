@@ -24,6 +24,7 @@ require_once(
 );
 
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
+use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockBool;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockClosure;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockFloat;
@@ -71,3 +72,5 @@ echo $jsonEncodedArray . PHP_EOL;
  */
 
 //decoder
+$jsonDecoder = new JsonDecoder();
+
