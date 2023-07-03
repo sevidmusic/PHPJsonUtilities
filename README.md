@@ -746,10 +746,60 @@ their original values! This only applies to readonly properites,
 all other properites will be still be decoded to their original
 value.
 
-```
-
 Examples:
 
-```
+### Encoding and decoding an Object instance
 
 ```
+```
+
+### Encoding and decoding an Object instance that defines readonly properties
+
+```
+```
+
+### Encoding and decoding a string
+
+```
+```
+
+### Encoding and decoding an int
+
+```
+```
+
+### Encoding and decoding a float
+
+```
+```
+
+### Encoding and decoding a bool
+
+```
+```
+
+### Encoding and decoding an array
+
+```
+```
+
+### Encoding and decoding an Iterable
+
+```
+```
+
+### Encoding and decoding a Closure
+
+```
+```
+
+### Encoding and decoding a valid json string
+
+```
+```
+
+### Encoding and decoding a Darling\PHPJsonUtilities\classes\encoded\data\Json instance
+
+```
+```
+
