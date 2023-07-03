@@ -42,20 +42,22 @@ echo 'decoded object' . PHP_EOL;
 var_dump($jsonDecoder->decode($jsonEncodedObject));
 
 /**
- * Example output:
+ * example output:
+ *
+ * ```
  * original object
  * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAnObjectInstance.php:40:
  * class Darling\PHPTextTypes\classes\strings\Id#3 (2) {
  *   private string $string =>
- *   string(63) "BE7rwPudk3awquVe0KjImsyyOhRHS9FloSLPtC8Ud0LG6BRn2VKI6Yaz8BE3JZg"
+ *   string(65) "F9o8cfwrnxxTENPmTCfdaJsgpXeZEseCM4cvyKNo0ii0EzBYmbHJbDHUVMIV345gn"
  *   private Darling\PHPTextTypes\interfaces\strings\Text $text =>
  *   class Darling\PHPTextTypes\classes\strings\AlphanumericText#2 (2) {
  *     private string $string =>
- *     string(63) "BE7rwPudk3awquVe0KjImsyyOhRHS9FloSLPtC8Ud0LG6BRn2VKI6Yaz8BE3JZg"
+ *     string(65) "F9o8cfwrnxxTENPmTCfdaJsgpXeZEseCM4cvyKNo0ii0EzBYmbHJbDHUVMIV345gn"
  *     private Darling\PHPTextTypes\interfaces\strings\Text $text =>
  *     class Darling\PHPTextTypes\classes\strings\Text#4 (1) {
  *       private string $string =>
- *       string(63) "bE7rwPudk3awquVe0KjImsyyOhRHS9FloSLPtC8Ud0LG6BRn2VKI6Yaz8BE3JZg"
+ *       string(65) "F9o8cfwrnxxTENPmTCfdaJsgpXeZEseCM4cvyKNo0ii0EzBYmbHJbDHUVMIV345gn"
  *     }
  *   }
  * }
@@ -63,17 +65,19 @@ var_dump($jsonDecoder->decode($jsonEncodedObject));
  * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAnObjectInstance.php:42:
  * class Darling\PHPTextTypes\classes\strings\Id#12 (2) {
  *   private string $string =>
- *   string(63) "BE7rwPudk3awquVe0KjImsyyOhRHS9FloSLPtC8Ud0LG6BRn2VKI6Yaz8BE3JZg"
+ *   string(65) "F9o8cfwrnxxTENPmTCfdaJsgpXeZEseCM4cvyKNo0ii0EzBYmbHJbDHUVMIV345gn"
  *   private Darling\PHPTextTypes\interfaces\strings\Text $text =>
  *   class Darling\PHPTextTypes\classes\strings\AlphanumericText#20 (2) {
  *     private string $string =>
- *     string(63) "BE7rwPudk3awquVe0KjImsyyOhRHS9FloSLPtC8Ud0LG6BRn2VKI6Yaz8BE3JZg"
+ *     string(65) "F9o8cfwrnxxTENPmTCfdaJsgpXeZEseCM4cvyKNo0ii0EzBYmbHJbDHUVMIV345gn"
  *     private Darling\PHPTextTypes\interfaces\strings\Text $text =>
  *     class Darling\PHPTextTypes\classes\strings\Text#15 (1) {
  *       private string $string =>
- *       string(63) "bE7rwPudk3awquVe0KjImsyyOhRHS9FloSLPtC8Ud0LG6BRn2VKI6Yaz8BE3JZg"
+ *       string(65) "F9o8cfwrnxxTENPmTCfdaJsgpXeZEseCM4cvyKNo0ii0EzBYmbHJbDHUVMIV345gn"
  *     }
  *   }
  * }
+ *
+ * ```
  *
  */

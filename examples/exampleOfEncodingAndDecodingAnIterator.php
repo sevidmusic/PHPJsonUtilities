@@ -91,3 +91,49 @@ var_dump($iterator);
 echo 'decoded iterator' . PHP_EOL;
 var_dump($jsonDecoder->decode($jsonEncodedIterator));
 
+/**
+ * example output:
+ *
+ * ```
+ * original iterator
+ * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAnIterator.php:89:
+ * class exampleIterator#3 (2) {
+ *   private int $position =>
+ *   int(3)
+ *   private array $ints =>
+ *   array(5) {
+ *     [0] =>
+ *     int(1)
+ *     [1] =>
+ *     int(2)
+ *     [2] =>
+ *     int(3)
+ *     [3] =>
+ *     int(4)
+ *     [4] =>
+ *     int(5)
+ *   }
+ * }
+ * decoded iterator
+ * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAnIterator.php:92:
+ * class exampleIterator#10 (2) {
+ *   private int $position =>
+ *   int(3)
+ *   private array $ints =>
+ *   array(5) {
+ *     [0] =>
+ *     int(1)
+ *     [1] =>
+ *     int(2)
+ *     [2] =>
+ *     int(3)
+ *     [3] =>
+ *     int(4)
+ *     [4] =>
+ *     int(5)
+ *   }
+ * }
+ *
+ * ```
+ *
+ */

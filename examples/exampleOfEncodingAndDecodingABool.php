@@ -42,3 +42,17 @@ var_dump($bool->value());
 echo 'decoded bool' . PHP_EOL;
 var_dump($jsonDecoder->decode($jsonEncodedBool));
 
+/**
+ * example output:
+ *
+ * ```
+ * original bool
+ * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingABool.php:40:
+ * bool(false)
+ * decoded bool
+ * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingABool.php:43:
+ * bool(false)
+ *
+ * ```
+ *
+ */

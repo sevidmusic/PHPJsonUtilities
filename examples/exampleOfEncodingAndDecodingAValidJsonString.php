@@ -49,3 +49,35 @@ var_dump($validJsonString);
 echo 'decoded json string' . PHP_EOL;
 var_dump($jsonDecoder->decode($jsonEncodedValidJsonString));
 
+/**
+ * Note:
+ *
+ * A JsonDecoder will always decode valid json.
+ *
+ * If the encoded value was a valid json string then it will
+ * be completely decoded by the JsonDecoder->decode() method.
+ *
+ * example output:
+ *
+ * original json string
+ * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAValidJsonString.php:47:
+ * string(39) "{"0":1,"1":2,"2":3,"foo":["bar","baz"]}"
+ * decoded json string
+ * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAValidJsonString.php:50:
+ * array(4) {
+ *   [0] =>
+ *   int(1)
+ *   [1] =>
+ *   int(2)
+ *   [2] =>
+ *   int(3)
+ *   'foo' =>
+ *   array(2) {
+ *     [0] =>
+ *     string(3) "bar"
+ *     [1] =>
+ *     string(3) "baz"
+ *   }
+ * }
+ *
+ */

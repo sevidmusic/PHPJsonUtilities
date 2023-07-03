@@ -43,9 +43,46 @@ $jsonEncodedJsonInstance = new Json($jsonInstance);
 
 $jsonDecoder = new JsonDecoder();
 
-echo 'original json string' . PHP_EOL;
+echo 'original json instance' . PHP_EOL;
 var_dump($jsonInstance);
 
-echo 'decoded json string' . PHP_EOL;
+echo 'decoded json instance' . PHP_EOL;
 var_dump($jsonDecoder->decode($jsonEncodedJsonInstance));
 
+/**
+ * Note:
+ *
+ * A JsonDecoder will always decode valid json.
+ *
+ * If the encoded value was a Json instance then it will
+ * be completely decoded by the JsonDecoder->decode() method.
+ *
+ * example output:
+ *
+ * ```
+ * original json instance
+ * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAJsonInstance.php:47:
+ * class Darling\PHPJsonUtilities\classes\encoded\data\Json#3 (1) {
+ *   private string $string =>
+ *   string(580) "{"__class__":"Darling\\PHPTextTypes\\classes\\strings\\Id","__data__":{"text":"{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\AlphanumericText\",\"__data__\":{\"text\":\"{\\\"__class__\\\":\\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\Text\\\",\\\"__data__\\\":{\\\"string\\\":\\\"ghnjyBzmZprwwvSKIKFRFd0ibaoVUZ9WACbBEcXUwEeLq1MHrfxXuI01Op41GQ8lWQe6Ylxh\\\"}}\",\"string\":\"GhnjyBzmZprwwvSKIKFRFd0ibaoVUZ9WACbBEcXUwEeLq1MHrfxXuI01Op41GQ8lWQe6Ylxh\"}}","string":"GhnjyBz"...
+ * }
+ * decoded json instance
+ * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAJsonInstance.php:50:
+ * class Darling\PHPTextTypes\classes\strings\Id#13 (2) {
+ *   private string $string =>
+ *   string(72) "GhnjyBzmZprwwvSKIKFRFd0ibaoVUZ9WACbBEcXUwEeLq1MHrfxXuI01Op41GQ8lWQe6Ylxh"
+ *   private Darling\PHPTextTypes\interfaces\strings\Text $text =>
+ *   class Darling\PHPTextTypes\classes\strings\AlphanumericText#18 (2) {
+ *     private string $string =>
+ *     string(72) "GhnjyBzmZprwwvSKIKFRFd0ibaoVUZ9WACbBEcXUwEeLq1MHrfxXuI01Op41GQ8lWQe6Ylxh"
+ *     private Darling\PHPTextTypes\interfaces\strings\Text $text =>
+ *     class Darling\PHPTextTypes\classes\strings\Text#10 (1) {
+ *       private string $string =>
+ *       string(72) "ghnjyBzmZprwwvSKIKFRFd0ibaoVUZ9WACbBEcXUwEeLq1MHrfxXuI01Op41GQ8lWQe6Ylxh"
+ *     }
+ *   }
+ * }
+ *
+ * ```
+ *
+ */

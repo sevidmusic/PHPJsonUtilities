@@ -42,3 +42,17 @@ var_dump($int->value());
 echo 'decoded int' . PHP_EOL;
 var_dump($jsonDecoder->decode($jsonEncodedInt));
 
+/**
+ * example output:
+ *
+ * ```
+ * original int
+ * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAnInt.php:40:
+ * int(2093209321154253834)
+ * decoded int
+ * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAnInt.php:43:
+ * int(2093209321154253834)
+ *
+ * ```
+ *
+ */

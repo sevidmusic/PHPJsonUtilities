@@ -42,3 +42,29 @@ var_dump($closure->value());
 echo 'decoded closure' . PHP_EOL;
 var_dump($jsonDecoder->decode($jsonEncodedClosure));
 
+/**
+ * example output:
+ *
+ * ```
+ * original closure
+ * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAClosure.php:40:
+ * class Closure#5 (1) {
+ *   virtual $closure =>
+ *   "$this->Darling\PHPMockingUtilities\classes\mock\values\{closure}"
+ *   public $this =>
+ *   class Darling\PHPMockingUtilities\classes\mock\values\MockClosure#3 (0) {
+ *   }
+ * }
+ * decoded closure
+ * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAClosure.php:43:
+ * class Closure#9 (1) {
+ *   virtual $closure =>
+ *   "$this->Darling\PHPMockingUtilities\classes\mock\values\{closure}"
+ *   public $this =>
+ *   class Darling\PHPMockingUtilities\classes\mock\values\MockClosure#8 (0) {
+ *   }
+ * }
+ *
+ * ```
+ *
+ */

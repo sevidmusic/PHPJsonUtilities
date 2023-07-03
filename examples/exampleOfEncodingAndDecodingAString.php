@@ -36,9 +36,23 @@ $jsonEncodedString = new Json($string->value());
 
 $jsonDecoder = new JsonDecoder();
 
-echo 'original string';
+echo 'original string' . PHP_EOL;
 var_dump($string->value());
 
-echo 'decoded string';
+echo 'decoded string' . PHP_EOL;
 var_dump($jsonDecoder->decode($jsonEncodedString));
 
+/**
+ * example output:
+ *
+ * ```
+ * original string
+ * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAString.php:40:
+ * string(49) "MockStringEJ8pnCBUL22Pgiau8vqJHa3XYoqRtvlVdeM1F5k"
+ * decoded string
+ * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAString.php:43:
+ * string(49) "MockStringEJ8pnCBUL22Pgiau8vqJHa3XYoqRtvlVdeM1F5k"
+ *
+ * ```
+ *
+ */

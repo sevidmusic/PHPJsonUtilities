@@ -42,3 +42,17 @@ var_dump($float->value());
 echo 'decoded float' . PHP_EOL;
 var_dump($jsonDecoder->decode($jsonEncodedFloat));
 
+/**
+ * example output:
+ *
+ * ```
+ * original float
+ * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAFloat.php:40:
+ * double(1512273.8)
+ * decoded float
+ * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAFloat.php:43:
+ * double(1512273.8)
+ *
+ * ```
+ *
+ */

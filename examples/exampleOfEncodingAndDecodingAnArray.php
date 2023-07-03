@@ -72,3 +72,91 @@ var_dump($array);
 echo 'decoded array' . PHP_EOL;
 var_dump($jsonDecoder->decode($jsonEncodedArray));
 
+/**
+ * example output:
+ *
+ * ```
+ * original array
+ * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAnArray.php:70:
+ * array(7) {
+ *   [0] =>
+ *   bool(false)
+ *   [1] =>
+ *   class Closure#8 (1) {
+ *       virtual $closure =>
+ *       "$this->Darling\PHPMockingUtilities\classes\mock\values\{closure}"
+ *     public $this =>
+ *     class Darling\PHPMockingUtilities\classes\mock\values\MockClosure#2 (0) {
+ *     }
+ *   }
+ *   [2] =>
+ *   double(665387.83333333)
+ *   [3] =>
+ *   int(3797309511412571283)
+ *   [4] =>
+ *   string(62) "q3vIwEMKpostgOCBFePmfdr6hyUXGN91AWaD8Qzj2VHZc5bTYiklL0uJx7nSR4"
+ *   [5] =>
+ *   string(49) "MockStringYkW2R9URVtUiTrlSNodhLmLSCBP3E5fD7fcyGDd"
+ *   'nested-array' =>
+ *   array(1) {
+ *     [0] =>
+ *     array(3) {
+ *       [0] =>
+ *       class Darling\PHPTextTypes\classes\strings\Id#7 (2) {
+ *         ...
+ *       }
+ *       [1] =>
+ *       class Darling\PHPTextTypes\classes\strings\Id#12 (2) {
+ *         ...
+ *       }
+ *       [2] =>
+ *       class Darling\PHPTextTypes\classes\strings\Id#15 (2) {
+ *         ...
+ *       }
+ *     }
+ *   }
+ * }
+ * decoded array
+ * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAnArray.php:73:
+ * array(7) {
+ *   [0] =>
+ *   bool(false)
+ *   [1] =>
+ *   class Closure#25 (1) {
+ *       virtual $closure =>
+ *       "$this->Darling\PHPMockingUtilities\classes\mock\values\{closure}"
+ *     public $this =>
+ *     class Darling\PHPMockingUtilities\classes\mock\values\MockClosure#21 (0) {
+ *     }
+ *   }
+ *   [2] =>
+ *   double(665387.83333333)
+ *   [3] =>
+ *   int(3797309511412571283)
+ *   [4] =>
+ *   string(62) "q3vIwEMKpostgOCBFePmfdr6hyUXGN91AWaD8Qzj2VHZc5bTYiklL0uJx7nSR4"
+ *   [5] =>
+ *   string(49) "MockStringYkW2R9URVtUiTrlSNodhLmLSCBP3E5fD7fcyGDd"
+ *   'nested-array' =>
+ *   array(1) {
+ *     [0] =>
+ *     array(3) {
+ *       [0] =>
+ *       class Darling\PHPTextTypes\classes\strings\Id#29 (2) {
+ *         ...
+ *       }
+ *       [1] =>
+ *       class Darling\PHPTextTypes\classes\strings\Id#43 (2) {
+ *         ...
+ *       }
+ *       [2] =>
+ *       class Darling\PHPTextTypes\classes\strings\Id#46 (2) {
+ *         ...
+ *       }
+ *     }
+ *   }
+ * }
+ *
+ * ```
+ *
+ */

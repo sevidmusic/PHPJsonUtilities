@@ -58,17 +58,21 @@ var_dump($jsonDecoder->decode($jsonEncodedObject));
  * This only applies to readonly properties.
  *
  * example output:
+ *
+ * ```
  * original object
- * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAnObjectInstanceThatDefinesReadonlyProperties.php:50:
+ * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAnObjectInstanceThatDefinesReadonlyProperties.php:51:
  * class DefinesReadonlyProperties#3 (1) {
  *   private readonly int $int =>
  *   int(10)
  * }
  * decoded object
- * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAnObjectInstanceThatDefinesReadonlyProperties.php:52:
+ * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAnObjectInstanceThatDefinesReadonlyProperties.php:53:
  * class DefinesReadonlyProperties#10 (1) {
  *   private readonly int $int =>
- *   int(7403326686579584685)
+ *   int(5681945402744091890)
  * }
+ *
+ * ```
+ *
  */
-
