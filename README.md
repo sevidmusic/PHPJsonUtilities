@@ -748,6 +748,22 @@ value.
 
 ```
 
+Note:
+
+```
+A JsonDecoder will always decode valid json.
+
+If the encoded value was a valid json string, or a Json instance,
+then it will be completely decoded by the JsonDecoder->decode()
+method to the orginal value represented by the valid json string
+or Json instance.
+
+In other words, the JsonDecoder->decode() method will never return
+an Json instance or a valid json string, it will always return the
+actual value that was encoded as json.
+
+```
+
 Examples:
 
 ### Encoding and decoding an Object instance
