@@ -47,7 +47,7 @@ instance.
     8. [Encoding an Iterable](#encoding-an-iterator)
     9. [Encoding a Closure](#encoding-a-closure)
     10. [Encoding a valid json string](#encoding-a-valid-json-string)
-    11. [Encoding a DarlingPHPJsonUtilitiesclassesencodeddataJson instance](#encoding-a-darlingphpjsonutilitiesclassesencodeddatajson-instance)
+    11. [Encoding a Darling\PHPJsonUtilities\classes\encoded\data\Json instance](#encoding-a-darlingphpjsonutilitiesclassesencodeddatajson-instance)
 
 - [JsonDecoder](#darlingphpjsonutilitiesclassesdecodersjsondecoder)
 
@@ -603,11 +603,116 @@ echo $jsonEncodedClosure . PHP_EOL;
 ### Encoding a valid json string
 
 ```
+<?php
+
+/**
+ * This file demonstrates how to use a Json instance to encode
+ * a valid json string.
+ *
+ * Note:
+ *
+ * When a valid json string is encoded via a Json instance no
+ * encoding actually occurs since the string is already valid
+ * json.
+ *
+ *
+ * This example should be run from this library's examples directory.
+ *
+ * For example:
+ *
+ * ```
+ * php ./examples/exampleOfEncodingAValidJsonString.php
+ *
+ * ```
+ *
+ */
+
+require_once(
+    str_replace('examples' , '', __DIR__) .
+    DIRECTORY_SEPARATOR .
+    'vendor' .
+    DIRECTORY_SEPARATOR .
+    'autoload.php'
+);
+
+use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
+
+/**
+ * Example of encoding an validJsonString:
+ */
+$validJsonString = json_encode([1, 2, 3, 'foo' => ['bar', 'baz']]);
+
+$jsonEncodedValidJsonString = new Json($validJsonString);
+
+echo $validJsonString . PHP_EOL;
+echo $jsonEncodedValidJsonString . PHP_EOL;
+
+/**
+ * example output:
+ *
+ * {"0":1,"1":2,"2":3,"foo":["bar","baz"]}
+ * {"0":1,"1":2,"2":3,"foo":["bar","baz"]}
+ *
+ */
+
 ```
 
 ### Encoding a \Darling\PHPJsonUtilities\classes\encoded\data\Json instance
 
 ```
+<?php
+
+/**
+ * This file demonstrates how to use a Json instance to encode
+ * a Json instance as json.
+ *
+ * Note:
+ *
+ * When a Json instance is used to encode another Json instance no
+ * encoding actually occurs, instead the Json instance performing
+ * the encoding becomes a clone of the Json instance being encoded.
+ *
+ * This example should be run from this library's examples directory.
+ *
+ * For example:
+ *
+ * ```
+ * php ./examples/exampleOfEncodingAJsonInstance.php
+ *
+ * ```
+ *
+ */
+
+require_once(
+    str_replace('examples' , '', __DIR__) .
+    DIRECTORY_SEPARATOR .
+    'vendor' .
+    DIRECTORY_SEPARATOR .
+    'autoload.php'
+);
+
+use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
+use \Darling\PHPTextTypes\classes\strings\Id;
+
+
+/**
+ * Example of encoding an jsonInstance:
+ */
+$jsonInstance = new Json(new Id());
+
+$jsonEncodedJsonInstance = new Json($jsonInstance);
+
+echo $jsonInstance . PHP_EOL;
+echo $jsonEncodedJsonInstance . PHP_EOL;
+
+/**
+ * example output:
+ *
+ * {"__class__":"Darling\\PHPTextTypes\\classes\\strings\\Id","__data__":{"text":"{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\AlphanumericText\",\"__data__\":{\"text\":\"{\\\"__class__\\\":\\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\Text\\\",\\\"__data__\\\":{\\\"string\\\":\\\"2h6YHSSUpZp5T1Q3iaYgqxthm8n3FWGeycV8AsEr9UhzuvYvD3JWyBkbsDzT0f\\\"}}\",\"string\":\"2h6YHSSUpZp5T1Q3iaYgqxthm8n3FWGeycV8AsEr9UhzuvYvD3JWyBkbsDzT0f\"}}","string":"2h6YHSSUpZp5T1Q3iaYgqxthm8n3FWGeycV8AsEr9UhzuvYvD3JWyBkbsDzT0f"}}
+ * {"__class__":"Darling\\PHPTextTypes\\classes\\strings\\Id","__data__":{"text":"{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\AlphanumericText\",\"__data__\":{\"text\":\"{\\\"__class__\\\":\\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\Text\\\",\\\"__data__\\\":{\\\"string\\\":\\\"2h6YHSSUpZp5T1Q3iaYgqxthm8n3FWGeycV8AsEr9UhzuvYvD3JWyBkbsDzT0f\\\"}}\",\"string\":\"2h6YHSSUpZp5T1Q3iaYgqxthm8n3FWGeycV8AsEr9UhzuvYvD3JWyBkbsDzT0f\"}}","string":"2h6YHSSUpZp5T1Q3iaYgqxthm8n3FWGeycV8AsEr9UhzuvYvD3JWyBkbsDzT0f"}}
+ *
+ */
+
 ```
 
 ### `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder`
