@@ -1,8 +1,18 @@
 <?php
 
 /**
- * This file demonstrate how to use a Json instance to encode an
+ * This file demonstrates how to use a Json instance to encode an
  * object instance as json.
+ *
+ * This example should be run from this library's examples directory.
+ *
+ * For example:
+ *
+ * ```
+ * php ./examples/exampleOfEncodingAnObjectInstance.php
+ *
+ * ```
+ *
  */
 
 require_once(
