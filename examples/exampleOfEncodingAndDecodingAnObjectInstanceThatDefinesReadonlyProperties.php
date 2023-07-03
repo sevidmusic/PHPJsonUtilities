@@ -2,14 +2,15 @@
 
 /**
  * This file demonstrates how to use a Json instance to encode an
- * object instance that defines readonly properties as json.
+ * object instance that defines readonly properties as json, and
+ * then decode it via a JsonDecoder.
  *
  * This example should be run from this library's examples directory.
  *
  * For example:
  *
  * ```
- * php ./examples/exampleOfEncodingAnObjectInstanceThatDefinesReadonlyProperties.php
+ * php ./examples/exampleOfEncodingAndDecodingAnObjectInstanceThatDefinesReadonlyProperties.php
  *
  * ```
  *
@@ -23,8 +24,8 @@ require_once(
     'autoload.php'
 );
 
-use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
+use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 
 class DefinesReadonlyProperties
 {
@@ -40,19 +41,34 @@ class DefinesReadonlyProperties
 /**
  * Example of encoding an object that defines readonly properties:
  */
-$objectInstance = new DefinesReadonlyProperties(10);
+$originalObjectInstance = new DefinesReadonlyProperties(10);
 
-$jsonEncodedObject = new Json($objectInstance);
+$jsonEncodedObject = new Json($originalObjectInstance);
 
-echo $jsonEncodedObject . PHP_EOL;
+$jsonDecoder = new JsonDecoder();
+
+echo 'original object' . PHP_EOL;
+var_dump($originalObjectInstance);
+echo 'decoded object' . PHP_EOL;
+var_dump($jsonDecoder->decode($jsonEncodedObject));
 
 /**
+ * Notice that properties that are defined as readonly are decoded to
+ * the correct type, but may not be decoded to their original value.
+ * This only applies to readonly properties.
+ *
  * example output:
- *
- * {"__class__":"DefinesReadonlyProperties","__data__":{"int":10}}
- *
+ * original object
+ * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAnObjectInstanceThatDefinesReadonlyProperties.php:50:
+ * class DefinesReadonlyProperties#3 (1) {
+ *   private readonly int $int =>
+ *   int(10)
+ * }
+ * decoded object
+ * /home/darling/Git/PHPJsonUtilities/examples/exampleOfEncodingAndDecodingAnObjectInstanceThatDefinesReadonlyProperties.php:52:
+ * class DefinesReadonlyProperties#10 (1) {
+ *   private readonly int $int =>
+ *   int(7403326686579584685)
+ * }
  */
-
-//decoder
-$jsonDecoder = new JsonDecoder();
 
