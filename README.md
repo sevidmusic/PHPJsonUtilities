@@ -1185,11 +1185,6 @@ $float = new MockFloat();
 $int = new MockInt();
 $mixed = new MockMixedValue();
 $string = new MockString();
-
- *
- * Note: Nested objects and arrays will also be properly encoded.
- *
- */
 $array = [
     $bool->value(),
     $closure->value(),
