@@ -20,6 +20,7 @@ The following classes are provided by this library:
 ```
 \Darling\PHPJsonUtilities\classes\encoded\data\Json
 ```
+
 Which is a `\Stringable` type that can be used to encode values of
 various types as valid `json`.
 
@@ -36,7 +37,7 @@ instance.
 
 - [Installation](#installation)
 
-- [Json](#darlingphpjsonutilitiesclassesencodeddatajson)
+- [Json](#json)
     1. [Encoding an Object instance](#encoding-an-object-instance)
     2. [Encoding an Object instance that defines readonly properties](#encoding-an-object-instance-that-defines-readonly-properties)
     3. [Encoding a string](#encoding-a-string)
@@ -49,7 +50,7 @@ instance.
     10. [Encoding a valid json string](#encoding-a-valid-json-string)
     11. [Encoding a Darling\PHPJsonUtilities\classes\encoded\data\Json instance](#encoding-a-darlingphpjsonutilitiesclassesencodeddatajson-instance)
 
-- [JsonDecoder](#darlingphpjsonutilitiesclassesdecodersjsondecoder)
+- [JsonDecoder](#jsondecoder)
     1. [Encoding and decoding an Object instance](#encoding-and-decoding-an-object-instance)
     2. [Encoding and decoding an Object instance that defines readonly properties](#encoding-and-decoding-an-object-instance-that-defines-readonly-properties)
     3. [Encoding and decoding a string](#encoding-and-decoding-a-string)
@@ -68,7 +69,7 @@ instance.
 composer require darling/php-json-utilities
 ```
 
-### `\Darling\PHPJsonUtilities\classes\encoded\data\Json`
+# Json
 
 A `\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance can
 be used to encode values of various types as valid `json`.
@@ -114,9 +115,6 @@ require_once(
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPTextTypes\classes\strings\Id;
 
-/**
- * Example of encoding an object:
- */
 $objectInstance = new Id();
 
 $jsonEncodedObject = new Json($objectInstance);
@@ -173,9 +171,6 @@ class DefinesReadonlyProperties
     }
 }
 
-/**
- * Example of encoding an object that defines readonly properties:
- */
 $objectInstance = new DefinesReadonlyProperties(10);
 
 $jsonEncodedObject = new Json($objectInstance);
@@ -222,9 +217,6 @@ require_once(
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockString;
 
-/**
- * Example of encoding a string:
- */
 $string = new MockString();
 
 $jsonEncodedString = new Json($string->value());
@@ -271,9 +263,6 @@ require_once(
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockInt;
 
-/**
- * Example of encoding an int:
- */
 $int = new MockInt();
 
 $jsonEncodedInt = new Json($int->value());
@@ -320,9 +309,6 @@ require_once(
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockFloat;
 
-/**
- * Example of encoding an float:
- */
 $float = new MockFloat();
 
 $jsonEncodedFloat = new Json($float->value());
@@ -369,9 +355,6 @@ require_once(
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockBool;
 
-/**
- * Example of encoding an bool:
- */
 $bool = new MockBool();
 
 $jsonEncodedBool = new Json($bool->value());
@@ -430,13 +413,6 @@ $float = new MockFloat();
 $int = new MockInt();
 $mixed = new MockMixedValue();
 $string = new MockString();
-
-/**
- * Example of encoding an array.
- *
- * Note: Nested objects and arrays will also be properly encoded.
- *
- */
 $array = [
     $bool->value(),
     $closure->value(),
@@ -540,9 +516,6 @@ class exampleIterator implements Iterator {
     }
 }
 
-/**
- * Example of encoding an iterator:
- */
 $iterator = new exampleIterator(1, 2, 3, 4, 5);
 $iterator->previous();
 $iterator->previous();
@@ -593,9 +566,6 @@ require_once(
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockClosure;
 
-/**
- * Example of encoding an closure:
- */
 $closure = new MockClosure();
 
 $jsonEncodedClosure = new Json($closure->value());
@@ -648,9 +618,6 @@ require_once(
 
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 
-/**
- * Example of encoding an validJsonString:
- */
 $validJsonString = json_encode([1, 2, 3, 'foo' => ['bar', 'baz']]);
 
 $jsonEncodedValidJsonString = new Json($validJsonString);
@@ -706,9 +673,6 @@ use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPTextTypes\classes\strings\Id;
 
 
-/**
- * Example of encoding an jsonInstance:
- */
 $jsonInstance = new Json(new Id());
 
 $jsonEncodedJsonInstance = new Json($jsonInstance);
@@ -726,7 +690,7 @@ echo $jsonEncodedJsonInstance . PHP_EOL;
 
 ```
 
-### `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder`
+# JsonDecoder
 
 A `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder` can
 be used to decode values that were encoded as `json` via a
@@ -798,9 +762,6 @@ use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPTextTypes\classes\strings\Id;
 
-/**
- * Example of encoding an object:
- */
 $originalObjectInstance = new Id();
 
 $jsonEncodedObject = new Json($originalObjectInstance);
@@ -898,9 +859,6 @@ class DefinesReadonlyProperties
     }
 }
 
-/**
- * Example of encoding an object that defines readonly properties:
- */
 $originalObjectInstance = new DefinesReadonlyProperties(10);
 
 $jsonEncodedObject = new Json($originalObjectInstance);
@@ -971,9 +929,6 @@ use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockString;
 
-/**
- * Example of encoding a string:
- */
 $string = new MockString();
 
 $jsonEncodedString = new Json($string->value());
@@ -1035,9 +990,6 @@ use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockInt;
 
-/**
- * Example of encoding an int:
- */
 $int = new MockInt();
 
 $jsonEncodedInt = new Json($int->value());
@@ -1099,9 +1051,6 @@ use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockFloat;
 
-/**
- * Example of encoding an float:
- */
 $float = new MockFloat();
 
 $jsonEncodedFloat = new Json($float->value());
@@ -1163,9 +1112,6 @@ use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockBool;
 
-/**
- * Example of encoding an bool:
- */
 $bool = new MockBool();
 
 $jsonEncodedBool = new Json($bool->value());
@@ -1239,14 +1185,6 @@ $float = new MockFloat();
 $int = new MockInt();
 $mixed = new MockMixedValue();
 $string = new MockString();
-
-/**
- * Example of encoding an array as json via a Json instance. and
- * decoding it via a JsonDecoder instance.
- *
- * Note: Nested objects and arrays will also be properly encoded.
- *
- */
 $array = [
     $bool->value(),
     $closure->value(),
@@ -1440,9 +1378,6 @@ class exampleIterator implements Iterator {
     }
 }
 
-/**
- * Example of encoding an iterator:
- */
 $iterator = new exampleIterator(1, 2, 3, 4, 5);
 $iterator->previous();
 $iterator->previous();
@@ -1540,9 +1475,6 @@ use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockClosure;
 
-/**
- * Example of encoding an closure:
- */
 $closure = new MockClosure();
 
 $jsonEncodedClosure = new Json($closure->value());
@@ -1623,9 +1555,6 @@ require_once(
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
 
-/**
- * Example of encoding an validJsonString:
- */
 $validJsonString = json_encode([1, 2, 3, 'foo' => ['bar', 'baz']]);
 
 $jsonEncodedValidJsonString = new Json($validJsonString);
@@ -1712,9 +1641,6 @@ use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
 use \Darling\PHPTextTypes\classes\strings\Id;
 
 
-/**
- * Example of encoding an jsonInstance:
- */
 $jsonInstance = new Json(new Id());
 
 $jsonEncodedJsonInstance = new Json($jsonInstance);
