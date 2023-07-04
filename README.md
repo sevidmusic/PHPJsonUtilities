@@ -20,6 +20,7 @@ The following classes are provided by this library:
 ```
 \Darling\PHPJsonUtilities\classes\encoded\data\Json
 ```
+
 Which is a `\Stringable` type that can be used to encode values of
 various types as valid `json`.
 
@@ -68,7 +69,7 @@ instance.
 composer require darling/php-json-utilities
 ```
 
-### `\Darling\PHPJsonUtilities\classes\encoded\data\Json`
+# `\Darling\PHPJsonUtilities\classes\encoded\data\Json`
 
 A `\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance can
 be used to encode values of various types as valid `json`.
@@ -726,7 +727,7 @@ echo $jsonEncodedJsonInstance . PHP_EOL;
 
 ```
 
-### `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder`
+# `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder`
 
 A `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder` can
 be used to decode values that were encoded as `json` via a
