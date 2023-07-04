@@ -37,7 +37,7 @@ instance.
 
 - [Installation](#installation)
 
-- [Json](#darlingphpjsonutilitiesclassesencodeddatajson)
+- [Json](#json)
     1. [Encoding an Object instance](#encoding-an-object-instance)
     2. [Encoding an Object instance that defines readonly properties](#encoding-an-object-instance-that-defines-readonly-properties)
     3. [Encoding a string](#encoding-a-string)
@@ -50,7 +50,7 @@ instance.
     10. [Encoding a valid json string](#encoding-a-valid-json-string)
     11. [Encoding a Darling\PHPJsonUtilities\classes\encoded\data\Json instance](#encoding-a-darlingphpjsonutilitiesclassesencodeddatajson-instance)
 
-- [JsonDecoder](#darlingphpjsonutilitiesclassesdecodersjsondecoder)
+- [JsonDecoder](#jsondecoder)
     1. [Encoding and decoding an Object instance](#encoding-and-decoding-an-object-instance)
     2. [Encoding and decoding an Object instance that defines readonly properties](#encoding-and-decoding-an-object-instance-that-defines-readonly-properties)
     3. [Encoding and decoding a string](#encoding-and-decoding-a-string)
@@ -69,7 +69,7 @@ instance.
 composer require darling/php-json-utilities
 ```
 
-# `\Darling\PHPJsonUtilities\classes\encoded\data\Json`
+# Json
 
 A `\Darling\PHPJsonUtilities\classes\encoded\data\Json` instance can
 be used to encode values of various types as valid `json`.
@@ -727,7 +727,7 @@ echo $jsonEncodedJsonInstance . PHP_EOL;
 
 ```
 
-# `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder`
+# JsonDecoder
 
 A `\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder` can
 be used to decode values that were encoded as `json` via a
