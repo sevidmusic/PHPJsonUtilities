@@ -214,10 +214,14 @@ class JsonDecoder implements JsonDecoderInterface
     private function propertyDataOrEmptyArray(Json $json): array
     {
         $encodedData = $this->decodeJsonToArray($json);
-        return match(is_array($encodedData[Json::DATA_INDEX])) {
-            true => $encodedData[Json::DATA_INDEX],
-            default => [],
-        };
+        if(
+            isset($encodedData[Json::DATA_INDEX])
+            &&
+            is_array($encodedData[Json::DATA_INDEX])
+        ) {
+            return $encodedData[Json::DATA_INDEX];
+        }
+        return [];
     }
 
     /**
