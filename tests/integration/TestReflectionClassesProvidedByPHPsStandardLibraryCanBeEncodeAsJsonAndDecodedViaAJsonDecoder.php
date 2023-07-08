@@ -87,17 +87,17 @@ $testJson = new Json($originalObject);
 $jsonDecoder = new JsonDecoder();
 $decodedObject = $jsonDecoder->decode($testJson);
 
-if(is_object($decodedObject) && ($decodedObject == $originalObject)) {
-    echo PHP_EOL .
-        'Test Passed: Instance of Reflection classes ' .
-        'provided by PHP\'s standard library can be encoded ' .
-        'as Json and decoded from Json.' . PHP_EOL;
+echo "\033[38;5;0m\033[48;5;111mRunning test" . __FILE__ . " \033[48;5;0m";
+
+if(
+    is_object($decodedObject) && ($decodedObject == $originalObject)
+) {
+    echo "\033[38;5;0m\033[48;5;84mPassed\033[48;5;0m";
     file_put_contents(
         '/tmp/darlingTestJson.json',
-        PHP_EOL . $testJson
+        $testJson
     );
 } else {
-    echo PHP_EOL . 'Test Failed' . PHP_EOL;
-    die('The following integration test failed: ' . PHP_EOL . __DIR__ . DIRECTORY_SEPARATOR . __FILE__);
+    echo "\033[38;5;0m\033[48;5;196mFailed\033[48;5;0m";
 }
 
