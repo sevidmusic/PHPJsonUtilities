@@ -18,15 +18,11 @@ require(
 
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
+use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestClassDefinesReadOnlyProperties;
 
-class ClassThatDefinesReadOnlyProperties
-{
-    public function __construct(
-        public readonly int $readOnlyProperty
-    ) {}
-}
-
-$originalObject = new ClassThatDefinesReadOnlyProperties(rand(0, 100));
+$originalObject = new TestClassDefinesReadOnlyProperties(
+    TestClassDefinesReadOnlyProperties::class
+);
 $testJson = new Json($originalObject);
 $jsonDecoder = new JsonDecoder();
 $decodedObject = $jsonDecoder->decode($testJson);

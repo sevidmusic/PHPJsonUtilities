@@ -189,10 +189,12 @@ trait JsonDecoderTestTrait
                                 $originalValue
                             )
                         ) {
-
                             $originalValue = $this->decodeJson(
                                 new JsonInstance($originalValue)
                             );
+                        }
+                        if(is_array($originalValue)) {
+                            $originalValue = $this->decodeObjectsInArray($originalValue);
                         }
                         if($reflectionClass->hasProperty($name)) {
                             if(

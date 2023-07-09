@@ -15,36 +15,12 @@ include(
 use \Darling\PHPTextTypes\classes\strings\Id;
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
-
-class ClassDefinePropertyThatAcceptsAnArrayOfObjects
-{
-
-    /** @var array<int, object> */
-    private array $objects = [];
-
-    public function __construct(object ...$objects) {
-        foreach($objects as $object) {
-            $this->objects[] = $object;
-        }
-    }
-
-    /**
-     * Return an numerically indexed array of objects.
-     *
-     * @return array<int, object>
-     *
-     */
-    public function objects(): array
-    {
-        return $this->objects;
-    }
-
-}
+use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestClassThatDefinesAPropertyThatAcceptsAnArrayOfObjects;
 
 $classDefinePropertyThatAcceptsAnArrayOfObjects =
-    new ClassDefinePropertyThatAcceptsAnArrayOfObjects(
+    new TestClassThatDefinesAPropertyThatAcceptsAnArrayOfObjects(
         new stdClass(),
-        new ClassDefinePropertyThatAcceptsAnArrayOfObjects(new stdClass()),
+        new TestClassThatDefinesAPropertyThatAcceptsAnArrayOfObjects(new stdClass()),
         new Id(),
 
     );
