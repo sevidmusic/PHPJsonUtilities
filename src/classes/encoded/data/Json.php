@@ -378,6 +378,9 @@ class Json extends Text implements JsonInterface
                 );
                continue;
             }
+            if(is_array($propertyValue)) {
+                $propertyValue = $this->encodeObjectsInArrayAsJson($propertyValue);
+            }
             $data[$propertyName] = $propertyValue;
 
         }

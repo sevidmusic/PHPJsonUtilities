@@ -160,6 +160,9 @@ class JsonDecoder implements JsonDecoderInterface
                         $this->encodeValueAsJson($propertyValue)
                     );
                 }
+                if(is_array($propertyValue)) {
+                    $propertyValue = $this->decodeObjectsInArray($propertyValue);
+                }
                 $this->assignNewPropertyValue(
                     $propertyName,
                     $propertyValue,
