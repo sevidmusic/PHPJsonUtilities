@@ -1,9 +1,5 @@
 <?php
 
-echo PHP_EOL  .
-'This test is disabled until issue ' .
-'#48 is resolved.' . PHP_EOL;
-
 /**
  * This test is disabled until issue #48 is resolved
  * @see https://github.com/sevidmusic/PHPJsonUtilities/issues/48
