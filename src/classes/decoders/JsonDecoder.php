@@ -15,6 +15,9 @@ use \ReflectionProperty;
 class JsonDecoder implements JsonDecoderInterface
 {
 
+    private const DATA_STRING_INDEX = 'string';
+    private const REFLECTION_CLASS_NAME_PROPERTY_NAME = 'name';
+
     public function decode(Json $json): mixed
     {
         if($this->isAJsonEncodedObjectInstance($json)) {
@@ -129,14 +132,16 @@ class JsonDecoder implements JsonDecoderInterface
         if($reflection->type()->__toString() === ReflectionClass::class) {
             $data = $this->decodeJsonToArray($json);
             $encodedNameProperty = (
+
+
                 is_array($data[Json::DATA_INDEX])
                 &&
-                isset($data[Json::DATA_INDEX]['name'])
+                isset($data[Json::DATA_INDEX][self::REFLECTION_CLASS_NAME_PROPERTY_NAME])
                 &&
-                is_string($data[Json::DATA_INDEX]['name'])
+                is_string($data[Json::DATA_INDEX][self::REFLECTION_CLASS_NAME_PROPERTY_NAME])
                 &&
-                class_exists($data[Json::DATA_INDEX]['name'])
-                ? $data[Json::DATA_INDEX]['name']
+                class_exists($data[Json::DATA_INDEX][self::REFLECTION_CLASS_NAME_PROPERTY_NAME])
+                ? $data[Json::DATA_INDEX][self::REFLECTION_CLASS_NAME_PROPERTY_NAME]
                 : UnknownClass::class
             );
             return new ReflectionClass($encodedNameProperty);
@@ -156,9 +161,34 @@ class JsonDecoder implements JsonDecoderInterface
                         $propertyValue
                     )
                 ) {
-                    $propertyValue = $this->decode(
-                        $this->encodeValueAsJson($propertyValue)
-                    );
+                    if(
+                        is_string($propertyValue)
+                        &&
+                        $this->jsonStringIsAnEncodedJsonInstance(
+                            $propertyValue
+                        )
+                    ) {
+                        $jsonDecodedValue = json_decode(
+                            $propertyValue,
+                            true
+                        );
+                        if(
+                            is_array($jsonDecodedValue)
+                            &&
+                            $this->arrayContainsJsonEncodedObjectData(
+                                $jsonDecodedValue
+                            )
+                        ) {
+                            $propertyValue = $this->encodeValueAsJson(
+                                $jsonDecodedValue[Json::DATA_INDEX][self::DATA_STRING_INDEX]
+                            );
+                        }
+
+                    } else {
+                        $propertyValue = $this->decode(
+                            $this->encodeValueAsJson($propertyValue)
+                        );
+                    }
                 }
                 if(is_array($propertyValue)) {
                     $propertyValue = $this->decodeObjectsInArray($propertyValue);
@@ -661,6 +691,26 @@ class JsonDecoder implements JsonDecoderInterface
     private function isAValidJsonString(string $string): bool
     {
         return (false !== json_decode($string));
+    }
+
+    private function jsonStringIsAnEncodedJsonInstance(string $vlaue): bool
+    {
+        return
+            str_contains(
+                $vlaue,
+                strval(json_encode(JsonInstance::class))
+            );
+    }
+
+    /** @param array<mixed> $array */
+    private function arrayContainsJsonEncodedObjectData(array $array): bool
+    {
+        return
+            is_array($array[Json::DATA_INDEX])
+            &&
+            isset($array[Json::DATA_INDEX][self::DATA_STRING_INDEX])
+            &&
+            is_string($array[Json::DATA_INDEX][self::DATA_STRING_INDEX]);
     }
 }
 
