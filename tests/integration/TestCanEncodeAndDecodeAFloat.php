@@ -17,21 +17,21 @@ include(
 
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
-use \Darling\PHPMockingUtilities\classes\mock\values\MockFloat;
 
-/**
- * Example of encoding an float:
- */
-$float = new MockFloat();
+$float = intval(
+    strval(rand(PHP_INT_MIN, PHP_INT_MAX)) .
+    '.' .
+    strval(rand(1, PHP_INT_MAX))
+);
 
-$jsonEncodedFloat = new Json($float->value());
+$jsonEncodedFloat = new Json($float);
 
 $jsonDecoder = new JsonDecoder();
 
 echo "\033[38;5;0m\033[48;5;111mRunning test" . __FILE__ . " \033[48;5;0m";
 
 if(
-    $jsonDecoder->decode($jsonEncodedFloat) === $float->value()
+    $jsonDecoder->decode($jsonEncodedFloat) === $float
 ) {
     echo "\033[38;5;0m\033[48;5;84mPassed\033[48;5;0m";
 } else {

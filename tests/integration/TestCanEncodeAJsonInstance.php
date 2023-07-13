@@ -25,8 +25,6 @@ $jsonEncodedJsonInstance = new Json($jsonInstance);
 
 $jsonDecoder = new JsonDecoder();
 
-
-
 echo "\033[38;5;0m\033[48;5;111mRunning test" . __FILE__ . " \033[48;5;0m";
 
 if(

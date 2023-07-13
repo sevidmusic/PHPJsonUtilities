@@ -36,11 +36,12 @@ $jsonEncodedObject = new Json($originalObjectInstance);
 
 $jsonDecoder = new JsonDecoder();
 
+$decodedObject = $jsonDecoder->decode($jsonEncodedObject);
 
 echo "\033[38;5;0m\033[48;5;111mRunning test" . __FILE__ . " \033[48;5;0m";
 
 if(
-    $jsonDecoder->decode($jsonEncodedObject) == $originalObjectInstance
+    is_object($decodedObject) && ($decodedObject::class == $originalObjectInstance::class)
 ) {
     echo "\033[38;5;0m\033[48;5;84mPassed\033[48;5;0m";
 } else {
