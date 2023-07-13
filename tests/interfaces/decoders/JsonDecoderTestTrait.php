@@ -105,49 +105,6 @@ trait JsonDecoderTestTrait
         return new JsonInstance($data);
     }
 
-    private function randomData(): mixed
-    {
-        $data = [
-            $this->randomChars(),
-            $this->randomClassStringOrObjectInstance(),
-            $this->randomFloat(),
-            $this->randomObjectInstance(),
-            'foo',
-            0,
-            1,
-            1.2,
-            [1, true, false, null, 'string', [], new Text($this->randomChars()), 'baz' => ['secondary_id' => new Id()], 'foo' => 'bar', 'id' => new Id(),],
-            [],
-            false,
-            function (): void {},
-            function(): void {},
-            json_encode("Foo bar baz"),
-            json_encode($this->randomChars()),
-            json_encode(['foo', 'bar', 'baz']),
-            json_encode([1, 2, 3]),
-            json_encode([PHP_INT_MIN, PHP_INT_MAX]),
-            new ClassString(Id::class),
-            new Directory(),
-            new Id(),
-            new JsonInstance($this->randomClassStringOrObjectInstance()),
-            new JsonInstance(json_encode(['foo', 'bar', 'baz'])),
-            new ObjectReflection(new Id()),
-            new PrivateStaticProperties(),
-            new Reflection(new ClassString(Id::class)),
-            new ReflectionClass($this),
-            new TestClassA(new Id(), new Name(new Text('Foo'))),
-            new TestClassB(),
-            new TestClassDefinesReadOnlyProperties('foo'),
-            new TestClassThatDefinesAPropertyThatAcceptsAJsonInstance( new JsonInstance(new Id()), new Id(), new Id()),
-            new TestIterator(),
-            new Text(new Id()),
-            new \Darling\PHPUnitTestUtilities\Tests\dev\mock\classes\ReflectedBaseClass(),
-            new \Directory(),
-            null,
-            true,
-       ];
-        return $data[array_rand($data)];
-    }
 
     private function decodeJson(Json $json): mixed
     {

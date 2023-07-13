@@ -501,44 +501,5 @@ trait JsonTestTrait
         );
     }
 
-    protected function randomData(): mixed
-    {
-        $values = [
-            new Id(),
-            new Text(new Id()),
-            new ClassString(Id::class),
-            $this->randomChars(),
-            $this->randomClassStringOrObjectInstance(),
-            $this->randomFloat(),
-            $this->randomObjectInstance(),
-            [1, true, false, null, 'string', [], new Text($this->randomChars()), 'baz' => ['secondary_id' => new Id()], 'foo' => 'bar', 'id' => new Id(),],
-            true,
-            false,
-            function (): void {},
-            1,
-            1.2,
-            0,
-            [],
-            null,
-            'foo',
-            function (): void {},
-            json_encode("Foo bar baz"),
-            json_encode($this->randomChars()),
-            json_encode(['foo', 'bar', 'baz']),
-            json_encode([1, 2, 3]),
-            json_encode([PHP_INT_MIN, PHP_INT_MAX]),
-            new Directory(),
-            new TestClassA(new Id(), new Name(new Text('Foo'))),
-            new TestClassB(),
-            new TestIterator(),
-            new TestClassDefinesReadOnlyProperties('foo'),
-            new JsonInsance($this->randomClassStringOrObjectInstance()), // fails
-            new JsonInsance(json_encode(['foo', 'bar', 'baz'])), // fails
-            new Reflection(new ClassString(Id::class)),
-            new ReflectionClass($this),
-            new ObjectReflection(new Id()),
-        ];
-        return $values[array_rand($values)];
-    }
 }
 
