@@ -6,9 +6,6 @@
  * Test that valid json strings can be encoded as json via a Json
  * instance.
  *
- * In this context, the Json instances __toString() method should
- * return the original json string.
- *
  */
 include(
     str_replace(
@@ -27,7 +24,7 @@ $jsonEncodedValidJsonString = new Json($validJsonString);
 echo "\033[38;5;0m\033[48;5;111mRunning test" . __FILE__ . " \033[48;5;0m";
 
 if(
-   $jsonEncodedValidJsonString->__toString() === $validJsonString
+   $jsonEncodedValidJsonString->__toString() === json_encode($validJsonString)
 ) {
     echo "\033[38;5;0m\033[48;5;84mPassed\033[48;5;0m";
 } else {
