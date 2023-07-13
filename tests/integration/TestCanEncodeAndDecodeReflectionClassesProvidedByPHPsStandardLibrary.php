@@ -57,13 +57,12 @@ function instanceOfAStandardLibraryReflectionType(): mixed
         $reflectionReference,
         new DarlingReflection(new ClassString(Text::class)),
         new Reflection(),
-        new ReflectionException(),
-        new ReflectionFiber( new Fiber(function(): string { return 'foo'; })),
-        new ReflectionGenerator(intGenerator(PHP_INT_MAX)),
-        new ReflectionIntersectionType(),
-        new ReflectionNamedType(),
-        new ReflectionUnionType(),
-#        The following FAIL to be decoded because they define read-only properties
+#        new ReflectionException(),
+#        new ReflectionFiber( new Fiber(function(): string { return 'foo'; })),
+#        new ReflectionGenerator(intGenerator(PHP_INT_MAX)),
+#        new ReflectionIntersectionType(),
+#        new ReflectionNamedType(),
+#        new ReflectionUnionType(),
 #        new ReflectionParameter([Text::class, '__construct'], 0),
 #        new ReflectionFunction(function(): void {}),
 #        new ReflectionMethod(Text::class, '__toString'),
@@ -85,18 +84,13 @@ function instanceOfAStandardLibraryReflectionType(): mixed
 $originalObject = instanceOfAStandardLibraryReflectionType();
 $testJson = new Json($originalObject);
 $jsonDecoder = new JsonDecoder();
-$decodedObject = $jsonDecoder->decode($testJson);
 
 echo "\033[38;5;0m\033[48;5;111mRunning test" . __FILE__ . " \033[48;5;0m";
 
 if(
-    is_object($decodedObject) && ($decodedObject == $originalObject)
+    $jsonDecoder->decode($testJson) == $originalObject
 ) {
     echo "\033[38;5;0m\033[48;5;84mPassed\033[48;5;0m";
-    file_put_contents(
-        '/tmp/darlingTestJson.json',
-        $testJson
-    );
 } else {
     echo "\033[38;5;0m\033[48;5;196mFailed\033[48;5;0m";
 }

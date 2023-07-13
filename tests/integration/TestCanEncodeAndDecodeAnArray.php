@@ -56,12 +56,11 @@ $array = [
 
 $testJson = new Json($array);
 $jsonDecoder = new JsonDecoder();
-$decodedArray = $jsonDecoder->decode($testJson);
 
 echo "\033[38;5;0m\033[48;5;111mRunning test" . __FILE__ . " \033[48;5;0m";
 
 if(
-    $array == $decodedArray
+    $jsonDecoder->decode($testJson) == $array
 ) {
     echo "\033[38;5;0m\033[48;5;84mPassed\033[48;5;0m";
 } else {
