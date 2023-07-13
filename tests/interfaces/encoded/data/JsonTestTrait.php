@@ -106,10 +106,10 @@ trait JsonTestTrait
     protected function encodeMixedValueAsJson(mixed $data): string
     {
         if(is_object($data)) {
-            if(in_array(Json::class, class_implements($data))) {
-                /** @var Json $data */
-                return $data->__toString();
-            }
+#            if(in_array(Json::class, class_implements($data))) {
+#                /** @var Json $data */
+#                return $data->__toString();
+#            }
             return $this->encodeObjectAsJson($data);
         }
         return match(gettype($data)) {
