@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Purpose of this integration test:
  *
@@ -20,19 +19,18 @@ use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockClosure;
 
-/**
- * Example of encoding an closure:
- */
 $closure = new MockClosure();
 
 $jsonEncodedClosure = new Json($closure->value());
 
 $jsonDecoder = new JsonDecoder();
 
+$decodedClosure = $jsonDecoder->decode($jsonEncodedClosure);
+
 echo "\033[38;5;0m\033[48;5;111mRunning test" . __FILE__ . " \033[48;5;0m";
 
 if(
-    $jsonDecoder->decode($jsonEncodedClosure) == $closure->value()
+    is_object($decodedClosure) && $decodedClosure::class == $closure->value()::class
 ) {
     echo "\033[38;5;0m\033[48;5;84mPassed\033[48;5;0m";
 } else {
