@@ -5,8 +5,10 @@
  *
  * Test that strings can be encoded as json via a Json instance, and
  * that a Json instance used to encode an string can be decoded back
- * to it's original value.
+ * to it's original value via a JsonDecoder.
+ *
  */
+
 include(
     str_replace(
         'tests' . DIRECTORY_SEPARATOR . 'integration',
@@ -15,13 +17,10 @@ include(
     ) .'vendor/autoload.php'
 );
 
-use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
+use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockString;
 
-/**
- * Example of encoding a string:
- */
 $string = new MockString();
 
 $jsonEncodedString = new Json($string->value());

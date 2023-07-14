@@ -3,11 +3,12 @@
 /**
  * Purpose of this integration test:
  *
- * Test that valid json strings can be encoded as json via a Json
- * instance and decoded to their original value via a JsonDecoder
- * instance.
+ * Test that floats can be encoded as json via a Json instance, and
+ * that a Json instance used to encode an float can be decoded back
+ * to it's original value via a JsonDecoder.
  *
  */
+
 include(
     str_replace(
         'tests' . DIRECTORY_SEPARATOR . 'integration',
@@ -16,8 +17,8 @@ include(
     ) .'vendor/autoload.php'
 );
 
-use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
+use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 
 $validJsonString = json_encode([1, 2, 3, 'foo' => ['bar', 'baz']]);
 

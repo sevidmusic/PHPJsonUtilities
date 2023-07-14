@@ -3,9 +3,12 @@
 /**
  * Purpose of this integration test:
  *
- * Test that a Json instances can be encoded as json via a Json
- * instance.
+ * Test that Json instances can be encoded as json via a Json instance, and
+ * that a Json instance used to encode an Json instance can be decoded back
+ * to it's original value via a JsonDecoder.
+ *
  */
+
 include(
     str_replace(
         'tests' . DIRECTORY_SEPARATOR . 'integration',
@@ -14,8 +17,8 @@ include(
     ) .'vendor/autoload.php'
 );
 
-use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
+use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPTextTypes\classes\strings\Id;
 
 $jsonInstance = new Json(new Id());

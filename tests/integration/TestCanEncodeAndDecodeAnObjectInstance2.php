@@ -3,9 +3,12 @@
 /**
  * Purpose of this integration test:
  *
- * Test that objects can be encoded as json via a Json instance, and
- * that a Json instance can be decoded back to it's original value.
+ * Test that object instances can be encoded as json via a Json
+ * instance, and that a Json instance used to encode an object
+ * instance can be decoded back to it's original value via a
+ * JsonDecoder.
  */
+
 include(
     str_replace(
         'tests' . DIRECTORY_SEPARATOR . 'integration',
@@ -16,6 +19,9 @@ include(
 
 use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
+use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestClassA;
+use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestClassB;
+use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestIterator;
 use \Darling\PHPTextTypes\classes\strings\AlphanumericText;
 use \Darling\PHPTextTypes\classes\strings\Id;
 use \Darling\PHPTextTypes\classes\strings\Name;
@@ -23,9 +29,6 @@ use \Darling\PHPTextTypes\classes\strings\SafeText;
 use \Darling\PHPTextTypes\classes\strings\Text;
 use \Darling\PHPTextTypes\classes\strings\UnknownClass;
 use \Darling\PHPUnitTestUtilities\Tests\dev\mock\classes\PrivateMethods;
-use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestClassA;
-use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestClassB;
-use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestIterator;
 
 $originalObjects = [
     new TestClassA(new Id(), new Name(new Text('Name'))),

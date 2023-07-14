@@ -3,10 +3,12 @@
 /**
  * Purpose of this integration test:
  *
- * Test that arrays can be encoded as json via a Json instance, and
- * that a Json instance used to encode an array can be decoded back
- * to it's original value.
+ * Test that Iterators can be encoded as json via a Json instance, and
+ * that a Json instance used to encode an Iterator can be decoded back
+ * to it's original value via a JsonDecoder.
+ *
  */
+
 include(
     str_replace(
         'tests' . DIRECTORY_SEPARATOR . 'integration',
@@ -15,8 +17,8 @@ include(
     ) .'vendor/autoload.php'
 );
 
-use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
+use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 
 /** @implements Iterator<int> */
 class exampleIterator implements Iterator {
@@ -64,9 +66,6 @@ class exampleIterator implements Iterator {
     }
 }
 
-/**
- * Example of encoding an iterator:
- */
 $iterator = new exampleIterator(1, 2, 3, 4, 5);
 $iterator->previous();
 $iterator->previous();

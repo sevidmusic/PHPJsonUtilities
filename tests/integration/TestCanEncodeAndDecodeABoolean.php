@@ -3,10 +3,12 @@
 /**
  * Purpose of this integration test:
  *
- * Test that bools can be encoded as json via a Json instance, and
- * that a Json instance used to encode an bool can be decoded back
- * to it's original value.
+ * Test that booleans can be encoded as json via a Json instance, and
+ * that a Json instance used to encode an boolean can be decoded back
+ * to it's original value via a JsonDecoder.
+ *
  */
+
 include(
     str_replace(
         'tests' . DIRECTORY_SEPARATOR . 'integration',
@@ -18,9 +20,6 @@ include(
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
 
-/**
- * Example of encoding an bool:
- */
 $bool = boolval(rand(0, 1));
 
 $jsonEncodedBool = new Json($bool);

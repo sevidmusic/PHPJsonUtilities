@@ -3,10 +3,12 @@
 /**
  * Purpose of this integration test:
  *
- * Test that valid json strings can be encoded as json via a Json
- * instance.
+ * Test that valid json strings can be encoded as json via a Json instance, and
+ * that a Json instance used to encode an valid json string can be decoded back
+ * to it's original value via a JsonDecoder.
  *
  */
+
 include(
     str_replace(
         'tests' . DIRECTORY_SEPARATOR . 'integration',

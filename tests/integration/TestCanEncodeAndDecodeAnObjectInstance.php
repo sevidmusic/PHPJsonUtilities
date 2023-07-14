@@ -3,10 +3,12 @@
 /**
  * Purpose of this integration test:
  *
- * Test that arrays can be encoded as json via a Json instance, and
- * that a Json instance used to encode an array can be decoded back
- * to it's original value.
+ * Test that object instances can be encoded as json via a Json
+ * instance, and that a Json instance used to encode an object
+ * instance can be decoded back to it's original value via a
+ * JsonDecoder.
  */
+
 include(
     str_replace(
         'tests' . DIRECTORY_SEPARATOR . 'integration',
@@ -19,9 +21,6 @@ use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPTextTypes\classes\strings\Id;
 
-/**
- * Example of encoding an object:
- */
 $originalObjectInstance = new Id();
 
 $jsonEncodedObject = new Json($originalObjectInstance);

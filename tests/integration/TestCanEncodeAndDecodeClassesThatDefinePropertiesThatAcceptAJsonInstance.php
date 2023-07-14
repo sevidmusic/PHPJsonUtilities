@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * Purpose of this integration test:
+ *
+ * Test that instances of classes that define properties that accept
+ * a json instance can be encoded as json via a Json instance, and
+ * that a Json instance used to encode an instance of classes that
+ * define properties that accept a json instance can be decoded back
+ * to it's original value via a JsonDecoder.
+ */
+
 include(
     str_replace(
         'tests' . DIRECTORY_SEPARATOR . 'integration',
@@ -13,20 +23,22 @@ include(
 );
 
 
-use \Darling\PHPTextTypes\classes\strings\ClassString;
-use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
 use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockClassInstance;
+use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
+use \Darling\PHPTextTypes\classes\strings\ClassString;
 use \Darling\PHPTextTypes\classes\strings\Id;
 use \Darling\PHPTextTypes\classes\strings\Name;
 
 class Bar {
+
     /** @var array<Id> */
     private array $ids;
+
     public function __construct(
-        private \Darling\PHPJsonUtilities\classes\encoded\data\Json $json,
-        \Darling\PHPTextTypes\classes\strings\Id ...$ids
+        private Json $json,
+        Id ...$ids
     ) {
         foreach($ids as $id) {
             $this->ids[] = $id;
@@ -49,7 +61,7 @@ class Bar {
 $mn = new MockClassInstance(
     new Reflection(
         new ClassString(
-            \Darling\PHPTextTypes\classes\strings\Name::class
+            Name::class
         )
     )
 );
@@ -57,7 +69,7 @@ $mn = new MockClassInstance(
 $mi = new MockClassInstance(
     new Reflection(
         new ClassString(
-            \Darling\PHPTextTypes\classes\strings\Id::class
+            Id::class
         )
     )
 );

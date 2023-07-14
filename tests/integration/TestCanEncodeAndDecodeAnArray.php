@@ -5,8 +5,10 @@
  *
  * Test that arrays can be encoded as json via a Json instance, and
  * that a Json instance used to encode an array can be decoded back
- * to it's original value.
+ * to it's original value via a JsonDecoder.
+ *
  */
+
 include(
     str_replace(
         'tests' . DIRECTORY_SEPARATOR . 'integration',
