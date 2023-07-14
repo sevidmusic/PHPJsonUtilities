@@ -3,11 +3,14 @@
 /**
  * Purpose of this integration test:
  *
- * Test that Class's that define readonly properties can be encoded
- * as json via a Json instance, and that a Json instance used to
- * encode a Class that define readonly properties can be decoded
- * back to it's original value.
+ * Test that instances of a class that defines readonly
+ * propertiess can be encoded as json via a Json instance, and
+ * that a Json instance used to encode an instance of a class
+ * that defines readonly properties can be decoded back to it's
+ * original value via a JsonDecoder.
+ *
  */
+
 include(
     str_replace(
         'tests' . DIRECTORY_SEPARATOR . 'integration',

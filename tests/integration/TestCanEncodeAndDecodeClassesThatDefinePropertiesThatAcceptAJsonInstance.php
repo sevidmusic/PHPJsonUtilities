@@ -8,6 +8,7 @@
  * that a Json instance used to encode an instance of classes that
  * define properties that accept a json instance can be decoded back
  * to it's original value via a JsonDecoder.
+ *
  */
 
 include(

@@ -7,6 +7,7 @@
  * a Json instance, and that a Json instance used to encode an
  * associatively indexed array can be decoded back to it's original
  * value via a JsonDecoder.
+ *
  */
 
 include(

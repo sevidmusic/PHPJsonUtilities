@@ -9,6 +9,7 @@
  * encode an instance of classe that define properties that accept
  * a json instance which encodes other Json instances can be decoded
  * back to it's original value via a JsonDecoder.
+ *
  */
 
 include(
