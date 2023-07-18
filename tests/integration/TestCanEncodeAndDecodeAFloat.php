@@ -34,7 +34,7 @@ echo "\033[38;5;0m\033[48;5;111mRunning test" . __FILE__ . " \033[48;5;0m";
 if(
     (is_int($decodedFloat) || is_float($decodedFloat))
     &&
-    floatval($decodedFloat) === $float->value()
+    $decodedFloat === $float->value()
 ) {
     echo "\033[38;5;0m\033[48;5;84mPassed\033[48;5;0m";
 } else {
