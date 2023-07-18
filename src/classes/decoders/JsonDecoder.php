@@ -20,16 +20,7 @@ class JsonDecoder implements JsonDecoderInterface
 
     public function decode(Json $json): mixed
     {
-        if($this->isAJsonEncodedObjectInstance($json)) {
-            return $this->decodeJsonEncodedObject($json);
-        };
-        $decodedValue = $this->decodeJsonEncodedValue($json);
-        if(is_array($decodedValue)) {
-            $decodedValue = $this->decodeObjectsInArray(
-                $decodedValue
-            );
-        }
-        return $decodedValue;
+        return json_decode($json->__toString(), true, 2147483647, JSON_PRESERVE_ZERO_FRACTION);
     }
 
     /**
@@ -39,37 +30,6 @@ class JsonDecoder implements JsonDecoderInterface
      * @param Json $json The Json instance to check.
      *
      * @return bool
-     *
-     * @example
-     *
-     * ```
-     * var_dump($jsonEncodedString);
-     *
-     * // example output:
-     * class Darling\PHPJsonUtilities\classes\encoded\data\Json#3 (1) {
-     *   private string $string =>
-     *   string(5) ""foo""
-     * }
-     *
-     * var_dump($this->isAJsonEncodedObjectInstance($jsonEncodedString));
-     *
-     * // example output:
-     * bool(false)
-     *
-     * var_dump($jsonEncodedObjectInstance);
-     *
-     * // example output:
-     * class Darling\PHPJsonUtilities\classes\encoded\data\Json#2 (1) {
-     *   private string $string =>
-     *   string(574) "{"__class__":"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\Id","__data__":{"text":"{\\"__class__\\":\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\AlphanumericText\\",\\"__data__\\":{\\"text\\":\\"{\\\\\\"__class__\\\\\\":\\\\\\"Darling\\\\\\\\\\\\\\\\PHPTextTypes\\\\\\\\\\\\\\\\classes\\\\\\\\\\\\\\\\strings\\\\\\\\\\\\\\\\Text\\\\\\",\\\\\\"__data__\\\\\\":{\\\\\\"string\\\\\\":\\\\\\"PrMi9mQ5mBn0Tc3JJafsxbWTIKi7mLujs6afzzGZ1DktMbpH2V5tE4BxoOAB2RqXwCh7gS\\\\\\"}}\\",\\"string\\":\"...
-     * }
-     *
-     * var_dump($this->isAJsonEncodedObjectInstance($jsonEncodedObjectInstance));
-     *
-     * // example output:
-     * bool(true)
-     *
-     * ```
      *
      */
     private function isAJsonEncodedObjectInstance(Json $json): bool
@@ -93,37 +53,6 @@ class JsonDecoder implements JsonDecoderInterface
      * of an UnknownClass.
      *
      * @return object
-     *
-     * @example
-     *
-     * ```
-     * php > var_dump($json);
-     *
-     * // example output:
-     * class Darling\PHPJsonUtilities\classes\encoded\data\Json#3 (1) {
-     *   private string $string =>
-     *   string(586) "{"__class__":"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\Id","__data__":{"text":"{\\"__class__\\":\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\AlphanumericText\\",\\"__data__\\":{\\"text\\":\\"{\\\\\\"__class__\\\\\\":\\\\\\"Darling\\\\\\\\\\\\\\\\PHPTextTypes\\\\\\\\\\\\\\\\classes\\\\\\\\\\\\\\\\strings\\\\\\\\\\\\\\\\Text\\\\\\",\\\\\\"__data__\\\\\\":{\\\\\\"string\\\\\\":\\\\\\"vYPoXMWAL8sSw5TkIfnx4G5M4jhScZgWwIQPQyC2aVJRco0Esigi1WU6tfr3Oa8DOyUD9VhD7H\\\\\\"}}\\",\\"string\"...
-     * }
-     *
-     * var_dump($this->decodeJsonEncodedObject($json));
-     *
-     * // example output:
-     * class Darling\PHPTextTypes\classes\strings\Id#9 (2) {
-     *   private string $string =>
-     *   string(74) "VYPoXMWAL8sSw5TkIfnx4G5M4jhScZgWwIQPQyC2aVJRco0Esigi1WU6tfr3Oa8DOyUD9VhD7H"
-     *   private Darling\PHPTextTypes\interfaces\strings\Text $text =>
-     *   class Darling\PHPTextTypes\classes\strings\AlphanumericText#12 (2) {
-     *     private string $string =>
-     *     string(74) "VYPoXMWAL8sSw5TkIfnx4G5M4jhScZgWwIQPQyC2aVJRco0Esigi1WU6tfr3Oa8DOyUD9VhD7H"
-     *     private Darling\PHPTextTypes\interfaces\strings\Text $text =>
-     *     class Darling\PHPTextTypes\classes\strings\Text#18 (1) {
-     *       private string $string =>
-     *       string(74) "vYPoXMWAL8sSw5TkIfnx4G5M4jhScZgWwIQPQyC2aVJRco0Esigi1WU6tfr3Oa8DOyUD9VhD7H"
-     *     }
-     *   }
-     * }
-     *
-     * ```
      *
      */
     private function decodeJsonEncodedObject(Json $json): object
@@ -218,29 +147,6 @@ class JsonDecoder implements JsonDecoderInterface
      *
      * @return array<mixed>
      *
-     * @example
-     *
-     * ```
-     * var_dump($json);
-     *
-     * // example output:
-     * class Darling\PHPJsonUtilities\classes\encoded\data\Json#22 (1) {
-     *   private string $string =>
-     *   string(580) "{"__class__":"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\Id","__data__":{"text":"{\\"__class__\\":\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\AlphanumericText\\",\\"__data__\\":{\\"text\\":\\"{\\\\\\"__class__\\\\\\":\\\\\\"Darling\\\\\\\\\\\\\\\\PHPTextTypes\\\\\\\\\\\\\\\\classes\\\\\\\\\\\\\\\\strings\\\\\\\\\\\\\\\\Text\\\\\\",\\\\\\"__data__\\\\\\":{\\\\\\"string\\\\\\":\\\\\\"01MF1AQQUnscsFqwUN5LcxRdt7C9v7yeT4Kt3O8lUbEdPaEIjhIpSfza7w8YQKEvuzqTReoC\\\\\\"}}\\",\\"string\\""...
-     * }
-     *
-     * var_dump($this->propertyDataOrEmptyArray($json);
-     *
-     * // example output:
-     * array(2) {
-     *   'text' =>
-     *   string(356) "{"__class__":"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\AlphanumericText","__data__":{"text":"{\\"__class__\\":\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\Text\\",\\"__data__\\":{\\"string\\":\\"01MF1AQQUnscsFqwUN5LcxRdt7C9v7yeT4Kt3O8lUbEdPaEIjhIpSfza7w8YQKEvuzqTReoC\\"}}","string":"01MF1AQQUnscsFqwUN5LcxRdt7C9v7yeT4Kt3O8lUbEdPaEIjhIpSfza7w8YQKEvuzqTReoC"}}"
-     *   'string' =>
-     *   string(72) "01MF1AQQUnscsFqwUN5LcxRdt7C9v7yeT4Kt3O8lUbEdPaEIjhIpSfza7w8YQKEvuzqTReoC"
-     * }
-     *
-     * ```
-     *
      */
     private function propertyDataOrEmptyArray(Json $json): array
     {
@@ -259,52 +165,6 @@ class JsonDecoder implements JsonDecoderInterface
      * Set the value of the specified property via reflection.
      *
      * @param ReflectionClass<object> $reflectionClass
-     *
-     * @example
-     *
-     * ```
-     * var_dump($propertyName);
-     * string(6) "string"
-     *
-     * var_dump($propertyValue);
-     * string(4) "Text"
-     *
-     * var_dump($object); # pre assignment
-     * class Darling\PHPTextTypes\classes\strings\Text#29 (1) {
-     *   private string $string =>
-     *   string(49) "MockStringRjlR6jDtUdcieePwCk0G9zl8gYGkztCLKB5dHOf"
-     * }
-     *
-     * var_dump($reflection);
-     * class Darling\PHPReflectionUtilities\classes\utilities\Reflection#24 (1) {
-     *   private Darling\PHPTextTypes\classes\strings\ClassString $classString =>
-     *   class Darling\PHPTextTypes\classes\strings\ClassString#26 (1) {
-     *     private string $string =>
-     *     string(41) "Darling\PHPTextTypes\classes\strings\Text"
-     *   }
-     * }
-     *
-     * var_dump($reflectionClass);
-     * class ReflectionClass#25 (1) {
-     *   public string $name =>
-     *   string(41) "Darling\PHPTextTypes\classes\strings\Text"
-     * }
-     *
-     * $this->assignNewPropertyValue(
-     *     $propertyName,
-     *     $propertyValue,
-     *     $object,
-     *     $reflection,
-     *     $reflectionClass
-     * );
-     *
-     * var_dump($object); # post assignment
-     * class Darling\PHPTextTypes\classes\strings\Text#29 (1) {
-     *   private string $string =>
-     *   string(4) "Text"
-     * }
-     *
-     * ```
      *
      */
     private function assignNewPropertyValue(
@@ -380,15 +240,6 @@ class JsonDecoder implements JsonDecoderInterface
      *
      * @return mixed
      *
-     * @example
-     *
-     * ```
-     * var_dump($this->decodeJsonEncodedValue(new Json('foo')));
-     *
-     * // example output
-     * string(3) "foo"
-     *
-     * ```
      */
     private function decodeJsonEncodedValue(Json $json): mixed
     {
@@ -401,90 +252,6 @@ class JsonDecoder implements JsonDecoderInterface
      * @param array<mixed> $array The array.
      *
      * @return array<mixed>
-     *
-     * @example
-     *
-     * ```
-     * var_dump($array);
-     *
-     * // example output
-     * array(10) {
-     *   [0] =>
-     *   int(1)
-     *   [1] =>
-     *   bool(true)
-     *   [2] =>
-     *   bool(false)
-     *   [3] =>
-     *   NULL
-     *   [4] =>
-     *   string(6) "string"
-     *   [5] =>
-     *   array(0) {
-     *   }
-     *   [6] =>
-     *   string(0) ""
-     *   'baz' =>
-     *   array(1) {
-     *     'secondary_id' =>
-     *     string(577) "{"__class__":"Darling\\PHPTextTypes\\classes\\strings\\Id","__data__":{"text":"{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\AlphanumericText\",\"__data__\":{\"text\":\"{\\\"__class__\\\":\\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\Text\\\",\\\"__data__\\\":{\\\"string\\\":\\\"OyndS4bdpKqBJFwtm6HzF4CT1DEFL1Ir6ncvpvOtJPYxgMzIeqZkfTUSOG1b3j7Wh6j1Rrr\\\"}}\",\"string\":\"OyndS4bdpKqBJFwtm6HzF4CT1DEFL1Ir6ncvpvOtJPYxgMzIeqZkfTUSOG1b3j7Wh6j1Rrr\"}}","string":"OyndS4bdp"...
-     *   }
-     *   'foo' =>
-     *   string(3) "bar"
-     *   'id' =>
-     *   string(559) "{"__class__":"Darling\\PHPTextTypes\\classes\\strings\\Id","__data__":{"text":"{\"__class__\":\"Darling\\\\PHPTextTypes\\\\classes\\\\strings\\\\AlphanumericText\",\"__data__\":{\"text\":\"{\\\"__class__\\\":\\\"Darling\\\\\\\\PHPTextTypes\\\\\\\\classes\\\\\\\\strings\\\\\\\\Text\\\",\\\"__data__\\\":{\\\"string\\\":\\\"72Kc6xsMT8aLRqOIimMV1cE3yAbSGpNPW5dsKgc1B4OrTDf9XRaHqmDYzuX36F5W2\\\"}}\",\"string\":\"72Kc6xsMT8aLRqOIimMV1cE3yAbSGpNPW5dsKgc1B4OrTDf9XRaHqmDYzuX36F5W2\"}}","string":"72Kc6xsMT8aLRqOIimMV1"...
-     * }
-     *
-     * var_dump($this->decodeObjectsInArray($array));
-     *
-     * // example output
-     * array(10) {
-     *   [0] =>
-     *   int(1)
-     *   [1] =>
-     *   bool(true)
-     *   [2] =>
-     *   bool(false)
-     *   [3] =>
-     *   NULL
-     *   [4] =>
-     *   string(6) "string"
-     *   [5] =>
-     *   array(0) {
-     *   }
-     *   [6] =>
-     *   string(0) ""
-     *   'baz' =>
-     *   array(1) {
-     *     'secondary_id' =>
-     *     class Darling\PHPTextTypes\classes\strings\Id#262 (2) {
-     *       private string $string =>
-     *       string(71) "OyndS4bdpKqBJFwtm6HzF4CT1DEFL1Ir6ncvpvOtJPYxgMzIeqZkfTUSOG1b3j7Wh6j1Rrr"
-     *       private Darling\PHPTextTypes\interfaces\strings\Text $text =>
-     *       class Darling\PHPTextTypes\classes\strings\AlphanumericText#257 (2) {
-     *         ...
-     *       }
-     *     }
-     *   }
-     *   'foo' =>
-     *   string(3) "bar"
-     *   'id' =>
-     *   class Darling\PHPTextTypes\classes\strings\Id#276 (2) {
-     *     private string $string =>
-     *     string(65) "72Kc6xsMT8aLRqOIimMV1cE3yAbSGpNPW5dsKgc1B4OrTDf9XRaHqmDYzuX36F5W2"
-     *     private Darling\PHPTextTypes\interfaces\strings\Text $text =>
-     *     class Darling\PHPTextTypes\classes\strings\AlphanumericText#254 (2) {
-     *       private string $string =>
-     *       string(65) "72Kc6xsMT8aLRqOIimMV1cE3yAbSGpNPW5dsKgc1B4OrTDf9XRaHqmDYzuX36F5W2"
-     *       private Darling\PHPTextTypes\interfaces\strings\Text $text =>
-     *       class Darling\PHPTextTypes\classes\strings\Text#271 (1) {
-     *         ...
-     *       }
-     *     }
-     *   }
-     * }
-     *
-     * ```
      *
      */
     private function decodeObjectsInArray(array $array): array
@@ -512,29 +279,6 @@ class JsonDecoder implements JsonDecoderInterface
      *
      * @return array<mixed>
      *
-     * @example
-     *
-     * ```
-     * var_dump($json->__toString());
-     *
-     * // example output
-     * string(136) "{"__class__":"Darling\\PHPTextTypes\\classes\\strings\\ClassString","__data__":{"string":"Darling\\PHPTextTypes\\classes\\strings\\Id"}}"
-     *
-     * var_dump($this->decodeJsonToArray($json));
-     *
-     * // example output
-     * array(2) {
-     *   '__class__' =>
-     *   string(48) "Darling\PHPTextTypes\classes\strings\ClassString"
-     *   '__data__' =>
-     *   array(1) {
-     *     'string' =>
-     *     string(39) "Darling\PHPTextTypes\classes\strings\Id"
-     *   }
-     * }
-     *
-     * ```
-     *
      */
     private function decodeJsonToArray(Json $json): array
     {
@@ -547,12 +291,6 @@ class JsonDecoder implements JsonDecoderInterface
      *
      * @return Json
      *
-     * @example
-     *
-     * ```
-     *
-     * ```
-     *
      */
     private function encodeValueAsJson(mixed $value): Json
     {
@@ -564,12 +302,6 @@ class JsonDecoder implements JsonDecoderInterface
      * object data.
      *
      * @return bool
-     *
-     * @example
-     *
-     * ```
-     *
-     * ```
      *
      */
     private function valueIsAJsonStringThatContainsJsonEncodedObjectData(
@@ -590,12 +322,6 @@ class JsonDecoder implements JsonDecoderInterface
      *
      * @return ClassString
      *
-     * @example
-     *
-     * ```
-     *
-     * ```
-     *
      */
     private function determineClass(Json $json): ClassString
     {
@@ -614,12 +340,6 @@ class JsonDecoder implements JsonDecoderInterface
      * @param Reflection $reflection
      *
      * @return object
-     *
-     * @example
-     *
-     * ```
-     *
-     * ```
      *
      */
     private function mockInstanceOfReflectedClass(
@@ -641,12 +361,6 @@ class JsonDecoder implements JsonDecoderInterface
      *
      * @return Reflection
      *
-     * @example
-     *
-     * ```
-     *
-     * ```
-     *
      */
     private function reflectJsonEncodedObject(Json $json): Reflection
     {
@@ -658,12 +372,6 @@ class JsonDecoder implements JsonDecoderInterface
      * and Json::DATA_INDEX strings, false otherwise.
      *
      * @return bool
-     *
-     * @example
-     *
-     * ```
-     *
-     * ```
      *
      */
     private function stringContainsClassAndDataIndex(
@@ -678,12 +386,6 @@ class JsonDecoder implements JsonDecoderInterface
      * Determine if a string is a valid json string.
      *
      * @return bool
-     *
-     * @example
-     *
-     * ```
-     *
-     * ```
      *
      */
     private function isAValidJsonString(string $string): bool
