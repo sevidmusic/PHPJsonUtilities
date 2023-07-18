@@ -132,8 +132,6 @@ class JsonDecoder implements JsonDecoderInterface
         if($reflection->type()->__toString() === ReflectionClass::class) {
             $data = $this->decodeJsonToArray($json);
             $encodedNameProperty = (
-
-
                 is_array($data[Json::DATA_INDEX])
                 &&
                 isset($data[Json::DATA_INDEX][self::REFLECTION_CLASS_NAME_PROPERTY_NAME])
