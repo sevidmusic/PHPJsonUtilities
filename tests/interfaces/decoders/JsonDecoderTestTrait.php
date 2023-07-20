@@ -56,18 +56,6 @@ trait JsonDecoderTestTrait
      *
      * @return void
      *
-     * @example
-     *
-     * ```
-     * protected function setUp(): void
-     * {
-     *     $this->setJsonDecoderTestInstance(
-     *         new \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder()
-     *     );
-     * }
-     *
-     * ```
-     *
      */
     abstract protected function setUp(): void;
 
@@ -277,12 +265,6 @@ trait JsonDecoderTestTrait
      *
      * @return bool
      *
-     * @example
-     *
-     * ```
-     *
-     * ```
-     *
      */
     private function valueIsAJsonStringThatContainsJsonEncodedObjectData(
         mixed $originalValue
@@ -303,12 +285,6 @@ trait JsonDecoderTestTrait
      * @param array<mixed> $array
      *
      * @return array<mixed>
-     *
-     * @example
-     *
-     * ```
-     *
-     * ```
      *
      */
     private function decodeObjectsInArray(array $array): array
@@ -338,12 +314,6 @@ trait JsonDecoderTestTrait
      *
      * @return array<mixed>
      *
-     * @example
-     *
-     * ```
-     *
-     * ```
-     *
      */
     private function decodeToArray(Json $json): array
     {
@@ -356,6 +326,8 @@ trait JsonDecoderTestTrait
      * Test that the decode() method returns the original data.
      *
      * @covers JsonDecoder->decode()
+     *
+     * @group JsonDecoderTests
      *
      */
     public function test_decode_returns_the_original_data(): void

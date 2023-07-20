@@ -35,14 +35,9 @@ class Json extends Text implements JsonInterface
     protected function encodeMixedValueAsJson(mixed $data): string
     {
         if(is_object($data)) {
-#            if(in_array(JsonInterface::class, class_implements($data))) {
-#                /** @var JsonInterface $data */
-#                return $data->__toString();
-#            }
             return $this->encodeObjectAsJson($data);
         }
         return match(gettype($data)) {
-#            'string' => $this->encodeStringAsJson($data),
             'array' => $this->encodeArrayAsJson($data),
             default => strval($this->jsonEncode($data))
         };
