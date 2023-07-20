@@ -16,9 +16,7 @@ class Json extends Text implements JsonInterface
      * The json encoded $data can be obtained via the __toString()
      * method.
      *
-     * If the specified $data is is already a valid json string,
-     * then the $data will not be encoded, i.e., the __toString()
-     * method will return the $data unmodified.
+     * @param mixed $data The data to encode as json.
      *
      */
     public function __construct(mixed $data)
@@ -115,15 +113,12 @@ class Json extends Text implements JsonInterface
             $data[$propertyName] = $propertyValue;
 
         }
-        return strval(
-            $this->jsonEncode(
-                [
-                    self::CLASS_INDEX =>
-                        $objectReflection->type()->__toString(),
-                    self::DATA_INDEX =>
-                        $data
-                ]
-            )
+        return $this->jsonEncode(
+            [
+                self::CLASS_INDEX =>
+                    $objectReflection->type()->__toString(),
+                self::DATA_INDEX => $data
+            ]
         );
     }
 
