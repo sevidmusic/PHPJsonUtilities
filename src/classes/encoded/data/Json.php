@@ -2,7 +2,7 @@
 
 namespace Darling\PHPJsonUtilities\classes\encoded\data;
 
-use Darling\PHPJsonUtilities\interfaces\encoded\data\Json as JsonInterface;
+use \Darling\PHPJsonUtilities\interfaces\encoded\data\Json as JsonInterface;
 use \Darling\PHPReflectionUtilities\classes\utilities\ObjectReflection;
 use \Darling\PHPTextTypes\classes\strings\Text;
 
@@ -66,7 +66,8 @@ class Json extends Text implements JsonInterface
     }
 
     /**
-     * Recursively encode objects in an array as json.
+     * Recursively encode objects in the specified array as json,
+     * and return the modified array.
      *
      * @param array<mixed> $array
      *

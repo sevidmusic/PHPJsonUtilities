@@ -2,20 +2,8 @@
 
 namespace Darling\PHPJsonUtilities\tests\interfaces\encoded\data;
 
-use Darling\PHPJsonUtilities\interfaces\encoded\data\Json;
-use \Darling\PHPJsonUtilities\classes\encoded\data\Json as JsonInsance;
+use \Darling\PHPJsonUtilities\interfaces\encoded\data\Json;
 use \Darling\PHPReflectionUtilities\classes\utilities\ObjectReflection;
-use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
-use \Darling\PHPTextTypes\classes\strings\ClassString;
-use \Darling\PHPTextTypes\classes\strings\Id;
-use \Darling\PHPTextTypes\classes\strings\Text;
-use \Darling\PHPTextTypes\classes\strings\Name;
-use \Directory;
-use \ReflectionClass;
-use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestClassDefinesReadOnlyProperties;
-use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestClassA;
-use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestClassB;
-use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestIterator;
 
 /**
  * The JsonTestTrait defines common tests for implementations of
@@ -78,6 +66,14 @@ trait JsonTestTrait
         $this->json = $jsonTestInstance;
     }
 
+    /**
+     * Set the string that is expected to be returned by the
+     * __toString() method defined by the Json instance being
+     * tested.
+     *
+     * @return void
+     *
+     */
     protected function setExpectedJsonString(mixed $data): void
     {
         $this-> expectedJsonString = $this->encodeMixedValueAsJson(
@@ -85,57 +81,32 @@ trait JsonTestTrait
         );
     }
 
-    protected function encodeMixedValueAsJson(mixed $data): string
-    {
-        if(is_object($data)) {
-            return $this->encodeObjectAsJson($data);
-        }
-        return match(gettype($data)) {
-            'array' => $this->encodeArrayAsData($data),
-            default => strval($this->jsonEncode($data))
-        };
-    }
-
     /**
-     * Return true if the specified string is a valid json string,
-     * false otherwise.
-     *
-     * @return bool
-     *
-     */
-    private function stringIsAJsonString(string $string): bool
-    {
-        return (false !== json_decode($string)) && (json_last_error() === JSON_ERROR_NONE);
-    }
-
-    /**
-     * Return a json encoded version of specified string.
-     *
-     * If the string is already valid json string it will
-     * be returned unmodified.
+     * Encode a value of any type as json.
      *
      * @return string
      *
      */
-    private function encodeStringAsJson(string $string): string
+    protected function encodeMixedValueAsJson(mixed $data): string
     {
-        return match($this->stringIsAJsonString($string)) {
-            true => $string,
-            default => strval($this->jsonEncode($string)),
+        return match(gettype($data)) {
+            'object' => $this->encodeObjectAsJson($data),
+            'array' => $this->encodeArrayAsJson($data),
+            default => strval($this->jsonEncode($data)),
         };
     }
 
-
     /**
-     * Encode an array as json, making sure to properly encode
-     * objects that exist in the array.
+     * Recursively encode an array as json.
+     *
+     * Objects in the array will also be properly encoded as json.
      *
      * @param array<mixed> $array
      *
      * @return string
      *
      */
-    private function encodeArrayAsData(array $array): string
+    private function encodeArrayAsJson(array $array): string
     {
         foreach($array as $key => $value) {
             if(is_array($value)) {
@@ -152,7 +123,8 @@ trait JsonTestTrait
     }
 
     /**
-     * Recursively encode objects in an array as json.
+     * Recursively encode objects in the specified array as json,
+     * and return the modified array.
      *
      * @param array<mixed> $array
      *
@@ -175,19 +147,19 @@ trait JsonTestTrait
     }
 
     /**
-     * Encode an object as json.
+     * Encode an object as json, including it's property data.
      *
      * @return string
      *
      */
     private function encodeObjectAsJson(object $object): string
     {
-        $data = [];
+        $propertyData = [];
         $objectReflection = $this->objectReflection($object);
         foreach($objectReflection->propertyValues() as $propertyName => $propertyValue)
         {
             if(is_object($propertyValue)) {
-                $data[$propertyName] = $this->encodeObjectAsJson(
+                $propertyData[$propertyName] = $this->encodeObjectAsJson(
                     $propertyValue
                 );
                continue;
@@ -195,24 +167,16 @@ trait JsonTestTrait
             if(is_array($propertyValue)) {
                 $propertyValue = $this->encodeObjectsInArrayAsJson($propertyValue);
             }
-            $data[$propertyName] = $propertyValue;
+            $propertyData[$propertyName] = $propertyValue;
 
         }
-        return strval(
-            $this->jsonEncode(
-                [
-                    self::CLASS_INDEX =>
-                        $objectReflection->type()->__toString(),
-                    self::DATA_INDEX =>
-                        $data
-                ]
-            )
+        return $this->jsonEncode(
+            [
+                self::CLASS_INDEX =>
+                    $objectReflection->type()->__toString(),
+                self::DATA_INDEX => $propertyData
+            ]
         );
-    }
-
-    private function jsonEncode(mixed $data): string
-    {
-        return strval(json_encode($data, JSON_PRESERVE_ZERO_FRACTION, 2147483647));
     }
 
     /**
@@ -229,6 +193,16 @@ trait JsonTestTrait
         return new ObjectReflection($object);
     }
 
+    /**
+     * Encode the specified $data as json.
+     *
+     * @return string
+     *
+     */
+    private function jsonEncode(mixed $data): string
+    {
+        return strval(json_encode($data, JSON_PRESERVE_ZERO_FRACTION, 2147483647));
+    }
     /**
      * Test that the __toString() method returns the expected json
      * string.
