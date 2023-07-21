@@ -51,18 +51,9 @@ class Json extends Text implements JsonInterface
      */
     private function encodeArrayAsJson(array $array): string
     {
-        foreach($array as $key => $value) {
-            if(is_array($value)) {
-                $array[$key] = $this->encodeObjectsInArrayAsJson(
-                    $value
-                );
-                continue;
-            }
-            if(is_object($value)) {
-                $array[$key] = $this->encodeObjectAsJson($value);
-            }
-        }
-        return strval($this->jsonEncode($array));
+        return $this->jsonEncode(
+            $this->encodeObjectsInArrayAsJson($array)
+        );
     }
 
     /**
