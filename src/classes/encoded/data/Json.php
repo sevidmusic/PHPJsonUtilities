@@ -99,16 +99,21 @@ class Json extends Text implements JsonInterface
     {
         $propertyData = [];
         $objectReflection = $this->objectReflection($object);
-        foreach($objectReflection->propertyValues() as $propertyName => $propertyValue)
+        foreach(
+            $objectReflection->propertyValues()
+            as
+            $propertyName => $propertyValue
+        )
         {
             if(is_object($propertyValue)) {
-                $propertyData[$propertyName] = $this->encodeObjectAsJson(
-                    $propertyValue
-                );
+                $propertyData[$propertyName] =
+                    $this->encodeObjectAsJson($propertyValue);
                continue;
             }
             if(is_array($propertyValue)) {
-                $propertyValue = $this->encodeObjectsInArrayAsJson($propertyValue);
+                $propertyValue = $this->encodeObjectsInArrayAsJson(
+                    $propertyValue
+                );
             }
             $propertyData[$propertyName] = $propertyValue;
 
