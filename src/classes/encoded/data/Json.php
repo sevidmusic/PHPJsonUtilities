@@ -144,7 +144,13 @@ class Json extends Text implements JsonInterface
      */
     private function jsonEncode(mixed $data): string
     {
-        return strval(json_encode($data, JSON_PRESERVE_ZERO_FRACTION, 2147483647));
+        return strval(
+            json_encode(
+                $data,
+                JSON_PRESERVE_ZERO_FRACTION,
+                2147483647
+            )
+        );
     }
 
 }
