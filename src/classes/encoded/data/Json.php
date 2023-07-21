@@ -40,8 +40,9 @@ class Json extends Text implements JsonInterface
     }
 
     /**
-     * Encode an array as json, making sure to properly encode
-     * objects that exist in the array.
+     * Recursively encode an array as json.
+     *
+     * Objects in the array will also be properly encoded as json.
      *
      * @param array<mixed> $array
      *
@@ -88,19 +89,19 @@ class Json extends Text implements JsonInterface
     }
 
     /**
-     * Encode an object as json.
+     * Encode an object as json, including it's property data.
      *
      * @return string
      *
      */
     private function encodeObjectAsJson(object $object): string
     {
-        $data = [];
+        $propertyData = [];
         $objectReflection = $this->objectReflection($object);
         foreach($objectReflection->propertyValues() as $propertyName => $propertyValue)
         {
             if(is_object($propertyValue)) {
-                $data[$propertyName] = $this->encodeObjectAsJson(
+                $propertyData[$propertyName] = $this->encodeObjectAsJson(
                     $propertyValue
                 );
                continue;
@@ -108,14 +109,14 @@ class Json extends Text implements JsonInterface
             if(is_array($propertyValue)) {
                 $propertyValue = $this->encodeObjectsInArrayAsJson($propertyValue);
             }
-            $data[$propertyName] = $propertyValue;
+            $propertyData[$propertyName] = $propertyValue;
 
         }
         return $this->jsonEncode(
             [
                 self::CLASS_INDEX =>
                     $objectReflection->type()->__toString(),
-                self::DATA_INDEX => $data
+                self::DATA_INDEX => $propertyData
             ]
         );
     }
