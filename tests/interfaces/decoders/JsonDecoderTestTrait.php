@@ -263,6 +263,44 @@ trait JsonDecoderTestTrait
         return $array;
     }
 
+    private function objectOrUnknownClass(mixed $value): object
+    {
+        return match(is_object($value)) {
+            true => $value,
+            default => new UnknownClass(),
+        };
+    }
+
+    /** @param array<mixed> $array */
+    private function arrayContainsJsonEncodedObjectData(array $array): bool
+    {
+        return
+            is_array($array[Json::DATA_INDEX])
+            &&
+            isset($array[Json::DATA_INDEX][$this->dataStringIndex])
+            &&
+            is_string($array[Json::DATA_INDEX][$this->dataStringIndex]);
+    }
+
+    private function determineClass(mixed $value): ClassString
+    {
+        return new ClassString($this->objectOrUnknownClass($value));
+    }
+
+    private function jsonStringIsAnEncodedJsonInstance(string $vlaue): bool
+    {
+        return
+            str_contains(
+                $vlaue,
+                strval(json_encode(JsonInstance::class))
+            );
+    }
+
+    private function classDefinesReadOnlyProperties(ClassString $class): bool
+    {
+        return false;
+    }
+
     /**
      * Test that the decode() method returns the original data.
      *
@@ -275,14 +313,11 @@ trait JsonDecoderTestTrait
     {
         $data = $this->randomData();
         $json = $this->JsonInstance($data);
-        $expectedData = $this->decodeJson($json);
         $decodedData = $this->jsonDecoderTestInstance()->decode($json);
         match(
             is_object($data)
             &&
-            is_object($decodedData)
-            &&
-            $this->classDefinesReadOnlyProperties
+            $this->classDefinesReadOnlyProperties(new ClassString($data))
         ) {
             true =>
                 $this->assertEquals(
@@ -303,7 +338,7 @@ trait JsonDecoderTestTrait
                 ),
             default =>
                 $this->assertEquals(
-                    $expectedData,
+                    $data,
                     $decodedData,
                     $this->testFailedMessage(
                         $this->jsonDecoderTestInstance(),
@@ -314,37 +349,5 @@ trait JsonDecoderTestTrait
         };
     }
 
-    private function objectOrUnknownClass(mixed $value): object
-    {
-        return match(is_object($value)) {
-            true => $value,
-            default => new UnknownClass(),
-        };
-    }
-
-    private function determineClass(mixed $value): ClassString
-    {
-        return new ClassString($this->objectOrUnknownClass($value));
-    }
-
-    private function jsonStringIsAnEncodedJsonInstance(string $vlaue): bool
-    {
-        return
-            str_contains(
-                $vlaue,
-                strval(json_encode(JsonInstance::class))
-            );
-    }
-
-    /** @param array<mixed> $array */
-    private function arrayContainsJsonEncodedObjectData(array $array): bool
-    {
-        return
-            is_array($array[Json::DATA_INDEX])
-            &&
-            isset($array[Json::DATA_INDEX][$this->dataStringIndex])
-            &&
-            is_string($array[Json::DATA_INDEX][$this->dataStringIndex]);
-    }
 }
 
