@@ -77,15 +77,28 @@ trait JsonDecoderTestTrait
         $this->jsonDecoder = $jsonDecoderTestInstance;
     }
 
-    private function JsonInstance(mixed $data): Json
+    /**
+     * Return a JsonInstance that encodes the specified $data.
+     *
+     * @return JsonInstance
+     *
+     */
+    private function JsonInstance(mixed $data): JsonInstance
     {
         return new JsonInstance($data);
     }
 
 
+    /**
+     * Decode the specified Json.
+     *
+     * @return mixed
+     *
+     */
     private function decodeJson(Json $json): mixed
     {
-        $data = $this->decodeToArray($json);
+        $data = json_decode($json, true);
+        $data = (is_array($data) ? $data : []);
         if(
             isset($data[Json::CLASS_INDEX])
             &&
@@ -124,15 +137,20 @@ trait JsonDecoderTestTrait
                         $name => $originalValue
                     ) {
                         if(
-                            $this->valueIsAJsonStringThatContainsJsonEncodedObjectData(
-                                $originalValue
-                            )
+                            is_string($originalValue)
+                            &&
+                            (false !== json_decode($originalValue))
+                            &&
+                            str_contains($originalValue, Json::CLASS_INDEX)
+                            &&
+                            str_contains($originalValue, Json::DATA_INDEX)
                         ) {
                             if(
                                 is_string($originalValue)
                                 &&
-                                $this->jsonStringIsAnEncodedJsonInstance(
-                                    $originalValue
+                                str_contains(
+                                    $originalValue,
+                                    strval(json_encode(JsonInstance::class))
                                 )
                             ) {
                                 $jsonDecodedValue = json_decode(
@@ -142,9 +160,11 @@ trait JsonDecoderTestTrait
                                 if(
                                     is_array($jsonDecodedValue)
                                     &&
-                                    $this->arrayContainsJsonEncodedObjectData(
-                                        $jsonDecodedValue
-                                    )
+                                    is_array($jsonDecodedValue[Json::DATA_INDEX])
+                                    &&
+                                    isset($jsonDecodedValue[Json::DATA_INDEX][$this->dataStringIndex])
+                                    &&
+                                    is_string($jsonDecodedValue[Json::DATA_INDEX][$this->dataStringIndex])
                                 ) {
                                     $originalValue = $this->jsonInstance(
                                         $jsonDecodedValue[Json::DATA_INDEX][$this->dataStringIndex]
