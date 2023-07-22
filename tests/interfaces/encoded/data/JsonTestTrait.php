@@ -147,19 +147,21 @@ trait JsonTestTrait
     {
         $propertyData = [];
         $objectReflection = $this->objectReflection($object);
-        foreach($objectReflection->propertyValues() as $propertyName => $propertyValue)
-        {
-            if(is_object($propertyValue)) {
-                $propertyData[$propertyName] = $this->encodeObjectAsJson(
-                    $propertyValue
-                );
-               continue;
-            }
-            if(is_array($propertyValue)) {
-                $propertyValue = $this->encodeObjectsInArrayAsJson($propertyValue);
-            }
-            $propertyData[$propertyName] = $propertyValue;
-
+        foreach(
+            $objectReflection->propertyValues()
+            as
+            $propertyName => $propertyValue
+        ) {
+            $propertyData[$propertyName] =
+                match(gettype($propertyValue)) {
+                    'object' => $this->encodeObjectAsJson(
+                        $propertyValue
+                    ),
+                    'array' => $this->encodeObjectsInArrayAsJson(
+                        $propertyValue
+                    ),
+                    default => $propertyValue,
+                };
         }
         return $this->jsonEncode(
             [
@@ -192,7 +194,13 @@ trait JsonTestTrait
      */
     private function jsonEncode(mixed $data): string
     {
-        return strval(json_encode($data, JSON_PRESERVE_ZERO_FRACTION, 2147483647));
+        return strval(
+            json_encode(
+                $data,
+                JSON_PRESERVE_ZERO_FRACTION,
+                2147483647
+            )
+        );
     }
     /**
      * Test that the __toString() method returns the expected json
