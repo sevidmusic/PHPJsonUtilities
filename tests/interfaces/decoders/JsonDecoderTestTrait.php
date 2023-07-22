@@ -6,22 +6,11 @@ use \Darling\PHPJsonUtilities\classes\encoded\data\Json as JsonInstance;
 use \Darling\PHPJsonUtilities\interfaces\decoders\JsonDecoder;
 use \Darling\PHPJsonUtilities\interfaces\encoded\data\Json;
 use \Darling\PHPMockingUtilities\classes\mock\values\MockClassInstance;
-use \Darling\PHPReflectionUtilities\classes\utilities\ObjectReflection;
 use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
 use \Darling\PHPTextTypes\classes\strings\ClassString;
-use \Darling\PHPTextTypes\classes\strings\Id;
-use \Darling\PHPTextTypes\classes\strings\Name;
-use \Darling\PHPTextTypes\classes\strings\Text;
 use \Darling\PHPTextTypes\classes\strings\UnknownClass;
-use \Darling\PHPUnitTestUtilities\Tests\dev\mock\classes\PrivateStaticProperties;
-use \Directory;
 use \ReflectionClass;
 use \ReflectionProperty;
-use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestClassDefinesReadOnlyProperties;
-use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestClassA;
-use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestClassB;
-use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestIterator;
-use \Darling\PHPJsonUtilities\tests\dev\test\classes\TestClassThatDefinesAPropertyThatAcceptsAJsonInstance;
 
 /**
  * The JsonDecoderTestTrait defines common tests for implementations
