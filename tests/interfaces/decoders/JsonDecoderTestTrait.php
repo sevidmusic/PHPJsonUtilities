@@ -181,11 +181,12 @@ trait JsonDecoderTestTrait
                             $originalValue = $this->decodeObjectsInArray($originalValue);
                         }
                         if($reflectionClass->hasProperty($name)) {
+                            $propertyReflection = new ReflectionProperty(
+                                $reflectionClass->name,
+                                $name
+                            );
                             if(
-                                $this->propertyIsNotReadOnly(
-                                    $name,
-                                    $reflectionClass
-                                )
+                                !$propertyReflection->isReadOnly()
                                 &&
                                 !is_null($originalValue)
                             ) {
@@ -233,62 +234,6 @@ trait JsonDecoderTestTrait
     }
 
     /**
-     * Determine if a property is defined as readonly.
-     *
-     * If the property is defined by the class reflected by the
-     * specified $reflectionClass, and the property is not defined
-     * as readonly, true will be returned.
-     *
-     * If the property is defined by the class reflected by the
-     * specified $reflectionClass, and the property is defined
-     * as readonly, false will be returned.
-     *
-     * If the property is not defined by the class reflected by the
-     * specified $reflectionClass, null will be returned.
-     *
-     * @param $propertyName The name of the property to check.
-     *
-     * @param ReflectionClass<object> $reflectionClass
-     *
-     * @return bool
-     *
-     */
-    private function propertyIsNotReadOnly(
-        string $propertyName,
-        ReflectionClass $reflectionClass
-    ): ?bool
-    {
-        if($reflectionClass->hasProperty($propertyName)) {
-            $propertyReflection = new ReflectionProperty(
-                $reflectionClass->name,
-                $propertyName
-            );
-            return !$propertyReflection->isReadOnly();
-        }
-        return null;
-    }
-
-    /**
-     * Determine if a $value is a json string that contains Json encoded
-     * object data.
-     *
-     * @return bool
-     *
-     */
-    private function valueIsAJsonStringThatContainsJsonEncodedObjectData(
-        mixed $originalValue
-    ): bool
-    {
-        return is_string($originalValue)
-            &&
-            (false !== json_decode($originalValue))
-            &&
-            str_contains($originalValue, Json::CLASS_INDEX)
-            &&
-            str_contains($originalValue, Json::DATA_INDEX);
-    }
-
-    /**
      * Decode objects that are encoded as Json in the specified array.
      *
      * @param array<mixed> $array
@@ -317,19 +262,6 @@ trait JsonDecoderTestTrait
         }
         return $array;
     }
-
-    /**
-     * [Description]
-     *
-     * @return array<mixed>
-     *
-     */
-    private function decodeToArray(Json $json): array
-    {
-        $data = json_decode($json, true);
-        return (is_array($data) ? $data : []);
-    }
-
 
     /**
      * Test that the decode() method returns the original data.
