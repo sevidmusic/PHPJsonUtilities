@@ -67,9 +67,9 @@ trait JsonTestTrait
     }
 
     /**
-     * Set the string that is expected to be returned by the
-     * __toString() method defined by the Json instance being
-     * tested.
+     * Use the specified $data to determine and set the string that
+     * is expected to be returned by the __toString() method defined
+     * by the Json instance being tested.
      *
      * @return void
      *
