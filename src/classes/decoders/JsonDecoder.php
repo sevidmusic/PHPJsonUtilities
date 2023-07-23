@@ -147,13 +147,7 @@ class JsonDecoder implements JsonDecoderInterface
                                     $object,
                                     $originalValue
                                 );
-                            } /*else {
-                                $this->classDefinesReadOnlyProperties
-                                    = match(!is_null($originalValue)) {
-                                        true => true,
-                                        default => false,
-                                    };
-                                }*/
+                            }
                         }
                     }
                     $reflectionClass =
