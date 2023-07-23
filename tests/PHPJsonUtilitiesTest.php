@@ -40,15 +40,38 @@ class PHPJsonUtilitiesTest extends TestCase
     {
         $data = [
             new TestClassCoversMultipleEdgeCases(
-                strval(json_encode(
-                    'A json encoded string encoded via json_encode()'
-                )),
-                new ObjectReflection($this),
-                new Json(json_encode(['foo', 'bar', 'bax'])),
+                strval(json_encode($this->randomChars())),
+                new ObjectReflection(new Id()),
+                new Json(
+                    json_encode(
+                        [$this->randomChars() => $this->randomChars()]
+                    )
+                ),
                 new Id(),
                 function() : void { },
                 new TestIterator,
-                $array = [1, 2, 4],
+                [
+                    $this->randomClassStringOrObjectInstance(),
+                    $this->randomObjectInstance(),
+                    $this->randomChars(),
+                    $this->randomChars() => $this->randomChars(),
+                    [$this->randomChars() => $this->randomChars()],
+                    [
+                        $this->randomClassStringOrObjectInstance(),
+                        $this->randomObjectInstance(),
+                        $this->randomChars(),
+                        $this->randomChars() => $this->randomChars(),
+                        [$this->randomChars() => $this->randomChars()],
+                        new Json(
+                            json_encode(
+                                [$this->randomChars()
+                                =>
+                                $this->randomChars()
+                                ]
+                            )
+                        ),
+                    ],
+                ],
             ),
 #            $this->randomChars(),
 #            $this->randomClassStringOrObjectInstance(),
