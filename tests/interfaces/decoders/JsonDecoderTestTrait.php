@@ -94,6 +94,7 @@ trait JsonDecoderTestTrait
             default => new UnknownClass(),
         };
     }
+
     private function determineClass(mixed $value): ClassString
     {
         return new ClassString($this->objectOrUnknownClass($value));
