@@ -86,6 +86,13 @@ trait JsonDecoderTestTrait
         return new JsonInstance($data);
     }
 
+    /**
+     * If the specified $value is an object, return it unmodified,
+     * otherwise return an instance of an UnknownClass.
+     *
+     * @return object
+     *
+     */
     private function objectOrUnknownClass(mixed $value): object
     {
         return match(is_object($value)) {
@@ -94,11 +101,28 @@ trait JsonDecoderTestTrait
         };
     }
 
+    /**
+     * If the specified $value is an object, return an instance of a
+     * ClassString for the specified $value.
+     *
+     * Otherwise return an instance of a ClassString for an
+     * UnknownClass.
+     *
+     * @return ClassString
+     *
+     */
     private function determineClass(mixed $value): ClassString
     {
         return new ClassString($this->objectOrUnknownClass($value));
     }
 
+    /**
+     * Return true if the specified $class defines readonly properties,
+     * false otherwise.
+     *
+     * @return bool
+     *
+     */
     private function classDefinesReadOnlyProperties(ClassString $class): bool
     {
         $reflection = new Reflection($class);
