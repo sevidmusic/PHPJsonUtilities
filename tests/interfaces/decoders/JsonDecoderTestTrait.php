@@ -9,6 +9,7 @@ use \Darling\PHPMockingUtilities\classes\mock\values\MockClassInstance;
 use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
 use \Darling\PHPTextTypes\classes\strings\ClassString;
 use \Darling\PHPTextTypes\classes\strings\UnknownClass;
+use \Darling\PHPTextTypes\classes\strings\Id;
 use \ReflectionClass;
 use \ReflectionProperty;
 
@@ -183,5 +184,109 @@ trait JsonDecoderTestTrait
         };
     }
 
+    /**
+     * Test that the decode() method can decode a Json encoded
+     * string.
+     *
+     * @covers JsonDecoder->decode()
+     *
+     * @group JsonDecoderTests
+     *
+     */
+    public function test_decode_can_decode_a_Json_encoded_string(): void
+    {
+        $string = str_shuffle('abcdefghijklmnopqrstuvwxyz');
+        $json = $this->JsonInstance($string);
+        $decodedString = $this->jsonDecoderTestInstance()->decode($json);
+        $this->assertEquals(
+            $string,
+            $decodedString,
+            $this->testFailedMessage(
+                $this->jsonDecoderTestInstance(),
+                'decode',
+                'return the original string'
+            ),
+        );
+    }
+
+    /**
+     * Test that the decode() method can decode a Json encoded
+     * json string.
+     *
+     * @covers JsonDecoder->decode()
+     *
+     * @group JsonDecoderTests
+     *
+     */
+    public function test_decode_can_decode_a_Json_encoded_json_string(): void
+    {
+        $jsonJsonString = json_encode(
+            [
+                str_shuffle('abcdefghijklmnopqrstuvwxyz'),
+                new Id(),
+            ]
+        );
+        $json = $this->JsonInstance($jsonJsonString);
+        $decodedJsonString = $this->jsonDecoderTestInstance()->decode($json);
+        $this->assertEquals(
+            $jsonJsonString,
+            $decodedJsonString,
+            $this->testFailedMessage(
+                $this->jsonDecoderTestInstance(),
+                'decode',
+                'return the original jsonJsonString'
+            ),
+        );
+    }
+
+    /**
+     * Test that the decode() method can decode a Json encoded Json
+     * instance.
+     *
+     * @covers JsonDecoder->decode()
+     *
+     * @group JsonDecoderTests
+     *
+     */
+    public function test_decode_can_decode_a_Json_instance(): void
+    {
+        $initialJson = $this->JsonInstance(new Id());
+        $json = $this->JsonInstance($json);
+        $decodedJson = $this->jsonDecoderTestInstance()->decode($json);
+        $this->assertEquals(
+            $initialJson,
+            $decodedJson,
+            $this->testFailedMessage(
+                $this->jsonDecoderTestInstance(),
+                'decode',
+                'return the original string'
+            ),
+        );
+    }
+
+    /**
+     * Test that the decode() method can decode a Json encoded array
+     * that contained object instances before it was encoded.
+     *
+     * @covers JsonDecoder->decode()
+     *
+     * @group JsonDecoderTests
+     *
+     */
+    public function test_decode_can_decode_an_array_that_contains_object_instances(): void
+    {
+        $array = [new Id(), $this->randomData(), [new Id(), new Id()]];
+        $json = $this->JsonInstance($array);
+        $decodedJson = $this->jsonDecoderTestInstance()->decode($json);
+        $this->assertEquals(
+            $array,
+            $decodedJson,
+            $this->testFailedMessage(
+                $this->jsonDecoderTestInstance(),
+                'decode',
+                'return the original string'
+            ),
+        );
+    }
 }
 
