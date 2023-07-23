@@ -101,6 +101,13 @@ trait JsonDecoderTestTrait
 
     private function classDefinesReadOnlyProperties(ClassString $class): bool
     {
+        $reflection = new Reflection($class);
+        foreach($reflection->propertyNames() as $propertyName) {
+            $reflectedProperty = new ReflectionProperty($class->__toString(), $propertyName);
+            if($reflectedProperty->isReadOnly()) {
+                return true;
+            }
+        }
         return false;
     }
 
