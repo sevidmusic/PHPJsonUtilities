@@ -24,7 +24,6 @@ trait JsonDecoderTestTrait
 
     private string $dataStringIndex = 'string';
     private string $reflectionClassNamePropertyName  = 'name';
-    private bool $classDefinesReadOnlyProperties = false;
 
     /**
      * @var JsonDecoder $jsonDecoder An instance of a JsonDecoder
