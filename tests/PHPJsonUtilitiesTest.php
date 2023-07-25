@@ -46,49 +46,6 @@ class PHPJsonUtilitiesTest extends TestCase
     protected function predefinedTestData(): array
     {
         $all = [
-            new TestClassCoversMultipleEdgeCases(
-                strval(json_encode($this->randomChars())),
-                new ObjectReflection(new Id()),
-                new Json(
-                    json_encode(
-                        [
-                            $this->randomChars()
-                            =>
-                            $this->randomChars()
-                        ]
-                    )
-                ),
-                new Id(),
-                function() : void { },
-                    new TestIterator,
-                    [
-                        $this->randomClassStringOrObjectInstance(),
-                        $this->randomObjectInstance(),
-                        $this->randomChars(),
-                        $this->randomChars() => $this->randomChars(),
-                        [$this->randomChars() => $this->randomChars()],
-                        [
-                            $this->randomClassStringOrObjectInstance(),
-                            $this->randomObjectInstance(),
-                            $this->randomChars(),
-                            $this->randomChars() => $this->randomChars(),
-                            [
-                                $this->randomChars()
-                                =>
-                                $this->randomChars()
-                            ],
-                            new Json(
-                                json_encode(
-                                    [
-                                        $this->randomChars()
-                                        =>
-                                        $this->randomChars()
-                                    ]
-                                )
-                            ),
-                        ],
-                    ],
-            ),
             $this->randomChars(),
             $this->randomClassStringOrObjectInstance(),
             $this->randomFloat(),
@@ -143,7 +100,7 @@ class PHPJsonUtilitiesTest extends TestCase
             new ReflectionClass($this),
             new TestClassB(),
         ];
-        $targeted = [
+        $failing = [
             new TestClassCoversMultipleEdgeCases(
                 strval(json_encode($this->randomChars())),
                 new ObjectReflection(new Id()),
@@ -188,7 +145,7 @@ class PHPJsonUtilitiesTest extends TestCase
                     ],
             )
         ];
-        return $targeted;
+        return $failing;
     }
 
     protected function randomData(): mixed
