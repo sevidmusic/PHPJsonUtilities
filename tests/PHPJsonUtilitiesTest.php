@@ -43,7 +43,7 @@ class PHPJsonUtilitiesTest extends TestCase
      * @return array<mixed>
      *
      */
-    public function testData(): array
+    protected function predefinedTestData(): array
     {
         $all = [
             new TestClassCoversMultipleEdgeCases(
@@ -193,7 +193,7 @@ class PHPJsonUtilitiesTest extends TestCase
 
     protected function randomData(): mixed
     {
-        $data = $this->testData();
+        $data = $this->predefinedTestData();
         return $data[array_rand($data)];
     }
 }

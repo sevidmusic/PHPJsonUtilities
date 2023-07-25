@@ -146,8 +146,8 @@ trait JsonDecoderTestTrait
      */
     public function test_decode_returns_the_original_data(): void
     {
-        $testData = $this->testData();
-        foreach($testData as $data) {
+        $predefinedTestData = $this->predefinedTestData();
+        foreach($predefinedTestData as $data) {
             $json = $this->JsonInstance($data);
             $decodedData = $this->jsonDecoderTestInstance()->decode($json);
             match(
