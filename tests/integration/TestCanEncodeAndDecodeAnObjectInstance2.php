@@ -32,16 +32,16 @@ use \Darling\PHPTextTypes\classes\strings\UnknownClass;
 use \Darling\PHPUnitTestUtilities\Tests\dev\mock\classes\PrivateMethods;
 
 $originalObjects = [
-    new TestClassA(new Id(), new Name(new Text('Name'))),
-    new TestIterator(),
-    new TestClassB(),
-    new AlphanumericText(new Text('AlphanumericText')),
-    new Id(),
-    new Name(new Text('Name')),
-    new SafeText(new Text('SafeText')),
-    new Text('Text'),
-    new UnknownClass(),
-    new PrivateMethods(),
+#    new TestIterator(),
+#    new TestClassB(),
+#    new Text('Text'),
+#    new UnknownClass(),
+#    new PrivateMethods(),
+    new TestClassA(new Id(), new Name(new Text('Name'))), // fails
+    new AlphanumericText(new Text('AlphanumericText')), // fails
+    new Id(), // fails
+    new Name(new Text('Name')), // fails
+    new SafeText(new Text('SafeText')), // fails
 ];
 
 $originalObject = $originalObjects[array_rand($originalObjects)];
