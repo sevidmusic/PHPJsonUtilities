@@ -96,12 +96,10 @@ trait JsonDecoderTestTrait
      */
     private function objectOrUnknownClass(mixed $value): object
     {
-        $m = match(is_object($value)) {
+        return match(is_object($value)) {
             true => $value,
             default => new UnknownClass(),
         };
-#        if($m instanceof UnknownClass) { var_dump($value); }
-        return $m;
     }
 
     /**
@@ -130,9 +128,11 @@ trait JsonDecoderTestTrait
     {
         $reflection = new Reflection($class);
         foreach($reflection->propertyNames() as $propertyName) {
-            $reflectedProperty = new ReflectionProperty($class->__toString(), $propertyName);
-            if($reflectedProperty->isReadOnly()) {
-                return true;
+            if($reflection->reflectionClass()->hasProperty($propertyName)) {
+                $reflectedProperty = new ReflectionProperty($class->__toString(), $propertyName);
+                if($reflectedProperty->isReadOnly()) {
+                    return true;
+                }
             }
         }
         return false;
@@ -158,10 +158,6 @@ trait JsonDecoderTestTrait
                 $this->classDefinesReadOnlyProperties(new ClassString($data))
             ) {
                 true =>
-/**
-                    var_dump($decodedData)
-                    &&
-*/
                     $this->assertEquals(
                         $this->determineClass($data),
                         $this->determineClass($decodedData),

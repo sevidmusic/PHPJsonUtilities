@@ -59,7 +59,7 @@ class JsonDecoder implements JsonDecoderInterface
             $mockClassInstance = new MockClassInstance(
                 $reflection
             );
-            $object = $mockClassInstance->mockInstance();
+            $object = $mockClassInstance->mockInstance(); // mockInstance() fails when iterator is expected by class's constructor # currently fails because a MockClassInstance cannot mock a class that expects an implementation of PHP's Iterator interface | re-enable once this issue is resolved
             $reflectionClass = new ReflectionClass($object);
             while ($reflectionClass) {
                 foreach (
