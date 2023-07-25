@@ -32,33 +32,7 @@ use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
 use \Darling\PHPTextTypes\classes\strings\ClassString;
 use \Darling\PHPTextTypes\classes\strings\Id;
 use \Darling\PHPTextTypes\classes\strings\Name;
-
-class Bar {
-
-    /** @var array<Id> */
-    private array $ids;
-
-    public function __construct(
-        private Json $json,
-        Id ...$ids
-    ) {
-        foreach($ids as $id) {
-            $this->ids[] = $id;
-        }
-    }
-
-    public function json(): Json
-    {
-        return $this->json;
-    }
-
-    /** @return array<Id> */
-    public function ids(): array
-    {
-        return $this->ids;
-    }
-
-}
+use \Darling\PHPJsonUtilities\tests\dev\test\classes\ClassDefinesPropertiesThatMayBeAssignedAJsonInstanceThatContainsNestedJsonInstances;
 
 $mn = new MockClassInstance(
     new Reflection(
@@ -85,7 +59,7 @@ $id2 = $mi->mockInstance();
 $id3 = $mi->mockInstance();
 /** @var Id $id4 */
 $id4 = $mi->mockInstance();
-$bar = new Bar(new Json($mn->mockInstance()), $id1, $id2, $id3, $id4);
+$bar = new ClassDefinesPropertiesThatMayBeAssignedAJsonInstanceThatContainsNestedJsonInstances(new Json($mn->mockInstance()), $id1, $id2, $id3, $id4);
 $fails = 0;
 $passes = 0;
 
@@ -116,7 +90,7 @@ for($i = 0; $i < rand(1, 11); $i++) {
     } else {
         $fails++;
     }
-    $bar = new Bar($barJson, $id1, $id2, $id3, $id4);
+    $bar = new ClassDefinesPropertiesThatMayBeAssignedAJsonInstanceThatContainsNestedJsonInstances($barJson, $id1, $id2, $id3, $id4);
 }
 if($fails === 0) {
     echo "\033[38;5;0m\033[48;5;84mPasses: " . $passes . " \033[48;5;0m" . PHP_EOL;
