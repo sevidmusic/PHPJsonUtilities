@@ -99,8 +99,6 @@ class JsonDecoder implements JsonDecoderInterface
                             &&
                             !is_null($propertyValue)
                         ) {
-                            $acceptedTypes =
-                                $reflection->propertyTypes();
                             $property =
                                 $reflectionClass->getProperty(
                                     $propertyName
