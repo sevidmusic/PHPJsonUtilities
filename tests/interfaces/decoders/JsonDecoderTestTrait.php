@@ -146,42 +146,44 @@ trait JsonDecoderTestTrait
      */
     public function test_decode_returns_the_original_data(): void
     {
-        $data = $this->randomData();
-        $json = $this->JsonInstance($data);
-        $decodedData = $this->jsonDecoderTestInstance()->decode($json);
-        match(
-            is_object($data)
-            &&
-            $this->classDefinesReadOnlyProperties(new ClassString($data))
-        ) {
-            true =>
-                $this->assertEquals(
-                    $this->determineClass($data),
-                    $this->determineClass($decodedData),
-                    $this->testFailedMessage(
-                        $this->jsonDecoderTestInstance(),
-                        'decode',
-                        'return an object of the same type ' .
-                        'as the original object if the original ' .
-                        'object is an instance of a class that ' .
-                        'defines readonly properties. ' .
-                        'If the original object is an instance ' .
-                        'of a class that defines readonly ' .
-                        'properties it may not be possible to ' .
-                        'decode it to it\'s original state.'
+        $testData = $this->testData();
+        foreach($testData as $data) {
+            $json = $this->JsonInstance($data);
+            $decodedData = $this->jsonDecoderTestInstance()->decode($json);
+            match(
+                is_object($data)
+                &&
+                $this->classDefinesReadOnlyProperties(new ClassString($data))
+            ) {
+                true =>
+                    $this->assertEquals(
+                        $this->determineClass($data),
+                        $this->determineClass($decodedData),
+                        $this->testFailedMessage(
+                            $this->jsonDecoderTestInstance(),
+                            'decode',
+                            'return an object of the same type ' .
+                            'as the original object if the original ' .
+                            'object is an instance of a class that ' .
+                            'defines readonly properties. ' .
+                            'If the original object is an instance ' .
+                            'of a class that defines readonly ' .
+                            'properties it may not be possible to ' .
+                            'decode it to it\'s original state.'
+                        ),
                     ),
-                ),
-            default =>
-                $this->assertEquals(
-                    $data,
-                    $decodedData,
-                    $this->testFailedMessage(
-                        $this->jsonDecoderTestInstance(),
-                        'decode',
-                        'return the original data'
-                    ),
-                )
-        };
+                default =>
+                    $this->assertEquals(
+                        $data,
+                        $decodedData,
+                        $this->testFailedMessage(
+                            $this->jsonDecoderTestInstance(),
+                            'decode',
+                            'return the original data'
+                        ),
+                    )
+            };
+        }
     }
 
     /**
@@ -220,21 +222,21 @@ trait JsonDecoderTestTrait
      */
     public function test_decode_can_decode_a_Json_encoded_json_string(): void
     {
-        $jsonJsonString = json_encode(
+        $jsonString = json_encode(
             [
                 str_shuffle('abcdefghijklmnopqrstuvwxyz'),
                 new Id(),
             ]
         );
-        $json = $this->JsonInstance($jsonJsonString);
+        $json = $this->JsonInstance($jsonString);
         $decodedJsonString = $this->jsonDecoderTestInstance()->decode($json);
         $this->assertEquals(
-            $jsonJsonString,
+            $jsonString,
             $decodedJsonString,
             $this->testFailedMessage(
                 $this->jsonDecoderTestInstance(),
                 'decode',
-                'return the original jsonJsonString'
+                'return the original jsonString'
             ),
         );
     }
@@ -251,7 +253,7 @@ trait JsonDecoderTestTrait
     public function test_decode_can_decode_a_Json_instance(): void
     {
         $initialJson = $this->JsonInstance(new Id());
-        $json = $this->JsonInstance($json);
+        $json = $this->JsonInstance($initialJson);
         $decodedJson = $this->jsonDecoderTestInstance()->decode($json);
         $this->assertEquals(
             $initialJson,
