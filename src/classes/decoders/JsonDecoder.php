@@ -20,13 +20,7 @@ class JsonDecoder implements JsonDecoderInterface
 
     public function decode(Json $json): mixed
     {
-        $decodedValue = $this->decodeJsonString($json->__toString());
-        if(is_array($decodedValue)) {
-            $decodedValue = $this->decodeObjectsInArray(
-                $decodedValue
-            );
-        }
-        return $decodedValue;
+        return $this->decodeJsonString($json->__toString());
     }
 
 
