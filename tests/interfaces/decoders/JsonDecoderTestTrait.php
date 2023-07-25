@@ -146,7 +146,7 @@ trait JsonDecoderTestTrait
      * @group JsonDecoderTests
      *
      */
-    public function disabled_test_decode_returns_the_original_data(): void
+    public function test_decode_returns_the_original_data(): void
     {
         $predefinedTestData = $this->predefinedTestData();
         foreach($predefinedTestData as $data) {
@@ -158,6 +158,10 @@ trait JsonDecoderTestTrait
                 $this->classDefinesReadOnlyProperties(new ClassString($data))
             ) {
                 true =>
+/**
+                    var_dump($decodedData)
+                    &&
+*/
                     $this->assertEquals(
                         $this->determineClass($data),
                         $this->determineClass($decodedData),

@@ -114,7 +114,7 @@ class JsonDecoder implements JsonDecoderInterface
                         )
                     );
                 }
-            } // end while
+            }
             return $object;
         };
         return $this->decodeObjectsInArray($data);
