@@ -75,9 +75,11 @@ if(
 } else {
     echo "\033[38;5;0m\033[48;5;196m Failed\033[48;5;0m" . PHP_EOL . PHP_EOL;
 }
+/** For debugging:
 
 echo "\033[38;5;0m\033[48;5;45m Expected: \033[48;5;0m" . PHP_EOL . PHP_EOL;
 var_dump($expectedJsonString);
 echo "\033[38;5;0m\033[48;5;202m Actual: \033[48;5;0m" . PHP_EOL . PHP_EOL;
 var_dump($jsonEncodedString->__toString());
 
+ */

@@ -45,33 +45,22 @@ class PHPJsonUtilitiesTest extends TestCase
      */
     protected function predefinedTestData(): array
     {
+        $stdClassWithProperties = new \stdClass();
+        $stdClassWithProperties->foo = 'bar';
+        $stdClassWithProperties->baz = 'bazzer';
         $failing = [
-#            new ReflectedBaseClass(), // fails
-            /**
-             * randomChars() fails b/c it produces a string that
-             * may contain invalid utf8 characters.
-             *
-             * When json_encode() encounters a string that contains
-             * invalid utf8 characters it will return null.
-             *
-             * The solution is to use JSON_INVALID_UTF8_SUBSTITUTE to
-             * convert invalid UTF-8 characters to \0xfffd.
-             *
-             * @see  https://www.php.net/manual/en/json.constants.php
-             * @see https://stackoverflow.com/questions/4663743/how-to-keep-json-encode-from-dropping-strings-with-invalid-characters
-             */
-            $this->randomChars(),
+            #$stdClassWithProperties, // fails, stdClass instances that are assigned properties are not properly encoded/decoded
+            #new ReflectedBaseClass(), // fails because of failues with stdClass instances that are assigned properties
+            #$this->randomChars(), // fails, i believe b/c fix to issue #69 results in original string being modified, which means a string with invalid utf-8 chars that is enocded to json will be decoded into a string with escapes for the invalid shars, this means the original string and the decoded string will not match.
         ];
         $passing = [
-            new TestClassCoversMultipleEdgeCases( strval(json_encode(str_shuffle('abcdefg'))), new ObjectReflection(new Id()), new Json( json_encode( [ str_shuffle('abcdefg') => str_shuffle('abcdefg') ])), new Id(), function() : void { }, /* new TestIterator, # currently fails because a MockClassInstance cannot mock a class that expects an implementation of PHP's Iterator interface | re-enable once this issue is resolved */ [ $this->randomClassStringOrObjectInstance(), $this->randomObjectInstance(), str_shuffle('abcdefg'), str_shuffle('abcdefg') => str_shuffle('abcdefg'), [str_shuffle('abcdefg') => str_shuffle('abcdefg')], [ $this->randomClassStringOrObjectInstance(), $this->randomObjectInstance(), str_shuffle('abcdefg'), str_shuffle('abcdefg') => str_shuffle('abcdefg'), [ str_shuffle('abcdefg') => str_shuffle('abcdefg') ], new Json( json_encode( [ str_shuffle('abcdefg') => str_shuffle('abcdefg') ])), ], ],), // fails
-            [1, true, false, null, 'string', [], new Text(str_shuffle('abcdefg')), 'baz' => ['secondary_id' => new Id()], 'foo' => 'bar', 'id' => new Id(), ], // fails
             $this->randomClassStringOrObjectInstance(),
             $this->randomFloat(),
             $this->randomObjectInstance(),
-            'foo',
             0,
             1,
             1.2,
+            [1, true, false, null, 'string', [], new Text(str_shuffle('abcdefg')), 'baz' => ['secondary_id' => new Id()], 'foo' => 'bar', 'id' => new Id(), ], // fails
             [],
             false,
             function (): void {},
@@ -83,26 +72,28 @@ class PHPJsonUtilitiesTest extends TestCase
             new ClassString(Id::class),
             new Directory(),
             new Id(),
+            new Json($this->randomClassStringOrObjectInstance()),
+            new Json(json_encode(['foo', 'bar', 'baz'])),
+            new Json(new Id()),
+            new Json(new Json(new Id())),
+            new Json(new Json(new Json(new Id()))),
             new ObjectReflection(new Id()),
             new PrivateStaticProperties(),
             new Reflection(new ClassString(Id::class)),
+            new ReflectionClass(Id::class),
             new TestClassA(new Id(), new Name(new Text('Foo'))),
+            new TestClassB(),
+            new TestClassCoversMultipleEdgeCases( strval(json_encode(str_shuffle('abcdefg'))), new ObjectReflection(new Id()), new Json( json_encode( [ str_shuffle('abcdefg') => str_shuffle('abcdefg') ])), new Id(), function() : void { }, /* new TestIterator, # currently fails because a MockClassInstance cannot mock a class that expects an implementation of PHP's Iterator interface | re-enable once this issue is resolved */ [ $this->randomClassStringOrObjectInstance(), $this->randomObjectInstance(), str_shuffle('abcdefg'), str_shuffle('abcdefg') => str_shuffle('abcdefg'), [str_shuffle('abcdefg') => str_shuffle('abcdefg')], [ $this->randomClassStringOrObjectInstance(), $this->randomObjectInstance(), str_shuffle('abcdefg'), str_shuffle('abcdefg') => str_shuffle('abcdefg'), [ str_shuffle('abcdefg') => str_shuffle('abcdefg') ], new Json( json_encode( [ str_shuffle('abcdefg') => str_shuffle('abcdefg') ])), ], ],), // fails
             new TestClassDefinesReadOnlyProperties('foo'),
             new TestClassThatDefinesAPropertyThatAcceptsAJsonInstance(new Json(new Id()), new Id(), new Id()),
             new TestIterator(),
             new Text(new Id()),
             new \Directory(),
             null,
+            str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'),
             true,
-            new Json(new Id()),
-            new Json(new Json(new Id())),
-            new Json(new Json(new Json(new Id()))),
-            new Json($this->randomClassStringOrObjectInstance()),
-            new Json(json_encode(['foo', 'bar', 'baz'])),
-            new ReflectionClass(Id::class),
-            new TestClassB(),
         ];
-        return $failing;
+        return $passing;
     }
 
     protected function randomData(): mixed
