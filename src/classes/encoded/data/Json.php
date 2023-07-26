@@ -140,7 +140,7 @@ class Json extends Text implements JsonInterface
         return strval(
             json_encode(
                 $data,
-                JSON_PRESERVE_ZERO_FRACTION,
+                JSON_PRESERVE_ZERO_FRACTION | JSON_INVALID_UTF8_SUBSTITUTE,
                 2147483647
             )
         );

@@ -150,7 +150,12 @@ class JsonDecoder implements JsonDecoderInterface
 
     private function jsonDecode(string $jsonString): mixed
     {
-        return json_decode($jsonString, true, 2147483647, JSON_PRESERVE_ZERO_FRACTION);
+        return json_decode(
+            $jsonString,
+            true,
+            2147483647,
+            JSON_PRESERVE_ZERO_FRACTION | JSON_INVALID_UTF8_SUBSTITUTE
+        );
     }
 }
 
