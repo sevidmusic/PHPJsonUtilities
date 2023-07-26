@@ -71,7 +71,7 @@ echo "\033[38;5;0m\033[48;5;111mRunning test" . __FILE__ . " \033[48;5;0m";
 if(
     $jsonEncodedString->__toString() === $expectedJsonString
 ) {
-    echo "\033[38;5;0m\033[48;5;84mPassed\033[48;5;0m";
+    echo "\033[38;5;0m\033[48;5;84mPassed\033[48;5;0m" . PHP_EOL . PHP_EOL;
 } else {
     echo "\033[38;5;0m\033[48;5;196m Failed\033[48;5;0m" . PHP_EOL . PHP_EOL;
 }
