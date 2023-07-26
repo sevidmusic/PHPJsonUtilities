@@ -46,8 +46,21 @@ class PHPJsonUtilitiesTest extends TestCase
     protected function predefinedTestData(): array
     {
         $failing = [
-            new ReflectedBaseClass(), // fails
-            substr($this->randomChars(), 5, 15), // fails | probably because of odd characters
+#            new ReflectedBaseClass(), // fails
+            /**
+             * randomChars() fails b/c it produces a string that
+             * may contain invalid utf8 characters.
+             *
+             * When json_encode() encounters a string that contains
+             * invalid utf8 characters it will return null.
+             *
+             * The solution is to use JSON_INVALID_UTF8_SUBSTITUTE to
+             * convert invalid UTF-8 characters to \0xfffd.
+             *
+             * @see  https://www.php.net/manual/en/json.constants.php
+             * @see https://stackoverflow.com/questions/4663743/how-to-keep-json-encode-from-dropping-strings-with-invalid-characters
+             */
+            $this->randomChars(),
         ];
         $passing = [
             new TestClassCoversMultipleEdgeCases( strval(json_encode(str_shuffle('abcdefg'))), new ObjectReflection(new Id()), new Json( json_encode( [ str_shuffle('abcdefg') => str_shuffle('abcdefg') ])), new Id(), function() : void { }, /* new TestIterator, # currently fails because a MockClassInstance cannot mock a class that expects an implementation of PHP's Iterator interface | re-enable once this issue is resolved */ [ $this->randomClassStringOrObjectInstance(), $this->randomObjectInstance(), str_shuffle('abcdefg'), str_shuffle('abcdefg') => str_shuffle('abcdefg'), [str_shuffle('abcdefg') => str_shuffle('abcdefg')], [ $this->randomClassStringOrObjectInstance(), $this->randomObjectInstance(), str_shuffle('abcdefg'), str_shuffle('abcdefg') => str_shuffle('abcdefg'), [ str_shuffle('abcdefg') => str_shuffle('abcdefg') ], new Json( json_encode( [ str_shuffle('abcdefg') => str_shuffle('abcdefg') ])), ], ],), // fails
@@ -89,7 +102,7 @@ class PHPJsonUtilitiesTest extends TestCase
             new ReflectionClass(Id::class),
             new TestClassB(),
         ];
-        return $passing;
+        return $failing;
     }
 
     protected function randomData(): mixed
