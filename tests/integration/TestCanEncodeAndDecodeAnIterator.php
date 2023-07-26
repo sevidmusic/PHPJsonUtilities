@@ -1,28 +1,23 @@
 <?php
 
 /**
- * This file demonstrates how to use a Json instance to encode
- * an iterator as json.
+ * Purpose of this integration test:
  *
- * This example should be run from this library's examples directory.
- *
- * For example:
- *
- * ```
- * php ./examples/exampleOfEncodingAnIterator.php
- *
- * ```
+ * Test that Iterators can be encoded as json via a Json instance, and
+ * that a Json instance used to encode an Iterator can be decoded back
+ * to it's original value via a JsonDecoder.
  *
  */
 
-require_once(
-    str_replace('examples' , '', __DIR__) .
-    DIRECTORY_SEPARATOR .
-    'vendor' .
-    DIRECTORY_SEPARATOR .
-    'autoload.php'
+include(
+    str_replace(
+        'tests' . DIRECTORY_SEPARATOR . 'integration',
+        '',
+        __DIR__
+    ) .'vendor/autoload.php'
 );
 
+use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
 
 /** @implements Iterator<int> */
@@ -71,9 +66,6 @@ class exampleIterator implements Iterator {
     }
 }
 
-/**
- * Example of encoding an iterator:
- */
 $iterator = new exampleIterator(1, 2, 3, 4, 5);
 $iterator->previous();
 $iterator->previous();
@@ -82,12 +74,15 @@ $iterator->next();
 
 $jsonEncodedIterator = new Json($iterator);
 
-echo $jsonEncodedIterator . PHP_EOL;
+$jsonDecoder = new JsonDecoder();
 
-/**
- * example output:
- *
- * {"__class__":"exampleIterator","__data__":{"position":3,"ints":[1,2,3,4,5]}}
- *
- */
+echo "\033[38;5;0m\033[48;5;111mRunning test" . __FILE__ . " \033[48;5;0m";
+
+if(
+    $jsonDecoder->decode($jsonEncodedIterator) == $iterator
+) {
+    echo "\033[38;5;0m\033[48;5;84mPassed\033[48;5;0m";
+} else {
+    echo "\033[38;5;0m\033[48;5;196mFailed\033[48;5;0m";
+}
 

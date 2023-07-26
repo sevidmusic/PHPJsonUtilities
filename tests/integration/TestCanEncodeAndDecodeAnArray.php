@@ -5,8 +5,10 @@
  *
  * Test that arrays can be encoded as json via a Json instance, and
  * that a Json instance used to encode an array can be decoded back
- * to it's original value.
+ * to it's original value via a JsonDecoder.
+ *
  */
+
 include(
     str_replace(
         'tests' . DIRECTORY_SEPARATOR . 'integration',
@@ -54,14 +56,14 @@ $array = [
     # function(): void {}, # fails
 ];
 
-$testJson = new Json($array);
+$jsonEncodedArrary = new Json($array);
+
 $jsonDecoder = new JsonDecoder();
-$decodedArray = $jsonDecoder->decode($testJson);
 
 echo "\033[38;5;0m\033[48;5;111mRunning test" . __FILE__ . " \033[48;5;0m";
 
 if(
-    $array == $decodedArray
+    $jsonDecoder->decode($jsonEncodedArrary) == $array
 ) {
     echo "\033[38;5;0m\033[48;5;84mPassed\033[48;5;0m";
 } else {

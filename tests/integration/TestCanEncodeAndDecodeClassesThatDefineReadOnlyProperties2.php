@@ -1,9 +1,16 @@
 <?php
 
 /**
- * This test is disabled until issue #48 is resolved
- * @see https://github.com/sevidmusic/PHPJsonUtilities/issues/48
+ * Purpose of this integration test:
+ *
+ * Test that instances of a class that defines readonly
+ * propertiess can be encoded as json via a Json instance, and
+ * that a Json instance used to encode an instance of a class
+ * that defines readonly properties can be decoded back to it's
+ * original value via a JsonDecoder.
+ *
  */
+
 require(
     str_replace(
         'tests' . DIRECTORY_SEPARATOR . 'integration',
