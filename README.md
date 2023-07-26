@@ -36,7 +36,7 @@ instance.
 # Overview
 
 - [Installation](#installation)
-- [Example](#exampleofencodinganddecodingavalue)
+- [Example](#example-of-encoding-and-decoding-a-value)
 
 # Installation
 
