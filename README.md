@@ -36,7 +36,7 @@ instance.
 # Overview
 
 - [Installation](#installation)
-- [Example](#exampleofencodinganddecodingavalue)
+- [Example](#example-of-encoding-and-decoding-a-value)
 
 # Installation
 
@@ -144,6 +144,28 @@ echo ($value->bool() === $decodedValue->bool() ? 'true' : 'false') . PHP_EOL;
 
 echo 'string property values match' . PHP_EOL;
 echo ($value->string() === $decodedValue->string() ? 'true' : 'false') . PHP_EOL;
+
+```
+
+### Expected Output
+
+```
+types match
+true
+object are equal in terms of type and property values.
+true
+float property values match
+true
+array property values match
+true
+json property values match in terms of object equality.
+true
+int property values match
+true
+bool property values match
+true
+string property values match
+true
 
 ```
 
