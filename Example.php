@@ -1,58 +1,14 @@
-```
-   ___  __ _____     __              __  ____  _ ___ __  _
-  / _ \/ // / _ \__ / /__ ___  ___  / / / / /_(_) (_) /_(_)__ ___
- / ___/ _  / ___/ // (_-</ _ \/ _ \/ /_/ / __/ / / / __/ / -_|_-<
-/_/  /_//_/_/   \___/___/\___/_//_/\____/\__/_/_/_/\__/_/\__/___/
-
-
-             A library for working with json in php
-
-
-         https://github.com/sevidmusic/PHPJsonUtilities
-
-```
-
-The PHPJsonUtilities library provides classes for working with
-`json` in php.
-
-The following classes are provided by this library:
-
-```
-\Darling\PHPJsonUtilities\classes\encoded\data\Json
-```
-
-Which is a `\Stringable` type that can be used to encode values of
-various types as valid `json`.
-
-```
-\Darling\PHPJsonUtilities\classes\decoders\JsonDecoder
-```
-
-Which provides a `decode()` method that can be used
-to decode values that were encoded as `json` via a
-`\Darling\PHPJsonUtilities\classes\encoded\data\Json`
-instance.
-
-# Overview
-
-- [Installation](#installation)
-- [Example](#exampleofencodinganddecodingavalue)
-
-# Installation
-
-```
-composer require darling/php-json-utilities
-```
-
-# Example of encoding and decoding a value
-
-```
 <?php
 
 include(__DIR__ . DIRECTORY_SEPARATOR . 'vendor/autoload.php');
 
 use \Darling\PHPJsonUtilities\classes\decoders\JsonDecoder;
 use \Darling\PHPJsonUtilities\classes\encoded\data\Json;
+
+/**
+ * This file demonstrates the basic usage of the Json
+ * and JsonDecoder classes.
+ */
 
 class Foo {
 
@@ -144,14 +100,4 @@ echo ($value->bool() === $decodedValue->bool() ? 'true' : 'false') . PHP_EOL;
 
 echo 'string property values match' . PHP_EOL;
 echo ($value->string() === $decodedValue->string() ? 'true' : 'false') . PHP_EOL;
-
-```
-
-# More Examples
-
-See the
-[integration tests](https://github.com/sevidmusic/PHPJsonUtilities/tree/main/tests/integration)
-defined in the `tests/integration/` directory for more examples of how
-to use the classes provided by this library.
-
 
