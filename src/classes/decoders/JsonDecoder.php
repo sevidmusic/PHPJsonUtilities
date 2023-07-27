@@ -10,6 +10,7 @@ use \Darling\PHPReflectionUtilities\classes\utilities\Reflection;
 use \Darling\PHPTextTypes\classes\strings\ClassString;
 use \Darling\PHPTextTypes\classes\strings\UnknownClass;
 use \ReflectionClass;
+use \ReflectionObject;
 use \ReflectionProperty;
 
 class JsonDecoder implements JsonDecoderInterface
@@ -56,11 +57,39 @@ class JsonDecoder implements JsonDecoderInterface
                 return new ReflectionClass($encodedNameProperty);
             }
             $reflection = new Reflection(new ClassString($class));
+            if($class === \stdClass::class) {
+                $stdClass = new \stdClass();
+
+                foreach (
+                    $propertyData
+                    as
+                    $propertyName => $propertyValue
+                ) {
+                    if(
+                        $class !== JsonInstance::class
+                        &&
+                        is_string($propertyValue)
+                        &&
+                        (false !== $this->jsonDecode($propertyValue))
+                        &&
+                        str_contains($propertyValue, Json::CLASS_INDEX)
+                        &&
+                        str_contains($propertyValue, Json::DATA_INDEX)
+                    ) {
+                        $propertyValue = $this->decodeJsonString($propertyValue);
+                    }
+                    if(is_array($propertyValue)) {
+                        $propertyValue = $this->decodeObjectsInArray($propertyValue);
+                    }
+                    $stdClass->$propertyName = $propertyValue;
+                }
+                return $stdClass;
+            }
             $mockClassInstance = new MockClassInstance(
                 $reflection
             );
-            $object = $mockClassInstance->mockInstance(); // mockInstance() fails when iterator is expected by class's constructor # currently fails because a MockClassInstance cannot mock a class that expects an implementation of PHP's Iterator interface | re-enable once this issue is resolved
-            $reflectionClass = new ReflectionClass($object);
+            $object = $mockClassInstance->mockInstance();
+            $reflectionClass = new ReflectionObject($object);
             while ($reflectionClass) {
                 foreach (
                     $propertyData
