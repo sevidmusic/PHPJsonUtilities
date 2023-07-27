@@ -101,16 +101,16 @@
         },
         {
             "name": "darling/php-reflection-utilities",
-            "version": "v1.0.9",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sevidmusic/PHPReflectionUtilities.git",
-                "reference": "ebc97492c4b5b01a9925acc4575ead17af30b42b"
+                "reference": "8fddea13792464727644577ae0b0a062b3a44db4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sevidmusic/PHPReflectionUtilities/zipball/ebc97492c4b5b01a9925acc4575ead17af30b42b",
-                "reference": "ebc97492c4b5b01a9925acc4575ead17af30b42b",
+                "url": "https://api.github.com/repos/sevidmusic/PHPReflectionUtilities/zipball/8fddea13792464727644577ae0b0a062b3a44db4",
+                "reference": "8fddea13792464727644577ae0b0a062b3a44db4",
                 "shasum": ""
             },
             "require": {
@@ -142,9 +142,9 @@
             "description": "A collection of php classes that can be used to aide in reflection with PHP",
             "support": {
                 "issues": "https://github.com/sevidmusic/PHPReflectionUtilities/issues",
-                "source": "https://github.com/sevidmusic/PHPReflectionUtilities/tree/v1.0.9"
+                "source": "https://github.com/sevidmusic/PHPReflectionUtilities/tree/v1.1.0"
             },
-            "time": "2023-06-03T22:38:43+00:00"
+            "time": "2023-07-27T07:01:24+00:00"
         },
         {
             "name": "darling/php-text-types",
@@ -529,16 +529,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "10.1.2",
+            "version": "10.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "db1497ec8dd382e82c962f7abbe0320e4882ee4e"
+                "reference": "be1fe461fdc917de2a29a452ccf2657d325b443d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/db1497ec8dd382e82c962f7abbe0320e4882ee4e",
-                "reference": "db1497ec8dd382e82c962f7abbe0320e4882ee4e",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/be1fe461fdc917de2a29a452ccf2657d325b443d",
+                "reference": "be1fe461fdc917de2a29a452ccf2657d325b443d",
                 "shasum": ""
             },
             "require": {
@@ -595,7 +595,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
                 "security": "https://github.com/sebastianbergmann/php-code-coverage/security/policy",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/10.1.2"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/10.1.3"
             },
             "funding": [
                 {
@@ -603,7 +603,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-05-22T09:04:27+00:00"
+            "time": "2023-07-26T13:45:28+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
