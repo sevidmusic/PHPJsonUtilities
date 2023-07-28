@@ -26,5 +26,7 @@ interface JsonDecoder
 
     public function decode(Json $json): mixed;
 
+    public function decodeJsonString(string $json): mixed;
+
 }
 
