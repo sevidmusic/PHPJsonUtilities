@@ -238,7 +238,7 @@ trait JsonDecoderTestTrait
             $this->testFailedMessage(
                 $this->jsonDecoderTestInstance(),
                 'decode',
-                'return the original jsonString'
+                'return the original json string'
             ),
         );
     }
@@ -263,7 +263,7 @@ trait JsonDecoderTestTrait
             $this->testFailedMessage(
                 $this->jsonDecoderTestInstance(),
                 'decode',
-                'return the original string'
+                'return the original Json instance'
             ),
         );
     }
@@ -288,9 +288,167 @@ trait JsonDecoderTestTrait
             $this->testFailedMessage(
                 $this->jsonDecoderTestInstance(),
                 'decode',
+                'return the original array'
+            ),
+        );
+    }
+
+    /**
+     * Test that the decodeJsonString() method can decode a Json encoded array
+     * that contained object instances before it was encoded.
+     *
+     * @covers JsonDecoder->decodeJsonString()
+     *
+     * @group JsonDecoderTests
+     *
+     */
+    public function test_decodeJsonString_can_decode_an_array_that_contains_object_instances(): void
+    {
+        $array = [new Id(), [new Id(), new Id()]];
+        $json = $this->JsonInstance($array);
+        $decodedJson = $this->jsonDecoderTestInstance()->decodeJsonString($json);
+        $this->assertEquals(
+            $array,
+            $decodedJson,
+            $this->testFailedMessage(
+                $this->jsonDecoderTestInstance(),
+                'decodeJsonString',
+                'return the original array'
+            ),
+        );
+    }
+
+
+    /**
+     * Test that the decodeJsonString() method can decode a Json encoded Json
+     * instance.
+     *
+     * @covers JsonDecoder->decodeJsonString()
+     *
+     * @group JsonDecoderTests
+     *
+     */
+    public function test_decodeJsonString_can_decode_a_Json_instance(): void
+    {
+        $initialJson = $this->JsonInstance(new Id());
+        $json = $this->JsonInstance($initialJson);
+        $decodedJson = $this->jsonDecoderTestInstance()->decodeJsonString($json);
+        $this->assertEquals(
+            $initialJson,
+            $decodedJson,
+            $this->testFailedMessage(
+                $this->jsonDecoderTestInstance(),
+                'decodeJsonString',
+                'return the original Json'
+            ),
+        );
+    }
+
+
+    /**
+     * Test that the decodeJsonString() method can decode a Json encoded
+     * json string.
+     *
+     * @covers JsonDecoder->decodeJsonString()
+     *
+     * @group JsonDecoderTests
+     *
+     */
+    public function test_decodeJsonString_can_decode_a_Json_encoded_json_string(): void
+    {
+        $jsonString = json_encode(
+            [
+                str_shuffle('abcdefghijklmnopqrstuvwxyz'),
+                new Id(),
+            ]
+        );
+        $json = $this->JsonInstance($jsonString);
+        $decodedJsonString = $this->jsonDecoderTestInstance()->decodeJsonString($json);
+        $this->assertEquals(
+            $jsonString,
+            $decodedJsonString,
+            $this->testFailedMessage(
+                $this->jsonDecoderTestInstance(),
+                'decodeJsonString',
+                'return the original json string'
+            ),
+        );
+    }
+
+
+    /**
+     * Test that the decodeJsonString() method can decode a Json encoded
+     * string.
+     *
+     * @covers JsonDecoder->decodeJsonString()
+     *
+     * @group JsonDecoderTests
+     *
+     */
+    public function test_decodeJsonString_can_decode_a_Json_encoded_string(): void
+    {
+        $string = str_shuffle('abcdefghijklmnopqrstuvwxyz');
+        $json = $this->JsonInstance($string);
+        $decodedString = $this->jsonDecoderTestInstance()->decodeJsonString($json);
+        $this->assertEquals(
+            $string,
+            $decodedString,
+            $this->testFailedMessage(
+                $this->jsonDecoderTestInstance(),
+                'decodeJsonString',
                 'return the original string'
             ),
         );
+    }
+
+    /**
+     * Test that the decodeJsonString() method returns the original data.
+     *
+     * @covers JsonDecoder->decodeJsonString()
+     *
+     * @group JsonDecoderTests
+     *
+     */
+    public function test_decodeJsonString_returns_the_original_data(): void
+    {
+        $predefinedTestData = $this->predefinedTestData();
+        foreach($predefinedTestData as $data) {
+            $json = $this->JsonInstance($data);
+            $decodedData = $this->jsonDecoderTestInstance()->decodeJsonString($json);
+            match(
+                is_object($data)
+                &&
+                $this->classDefinesReadOnlyProperties(new ClassString($data))
+            ) {
+                true =>
+                    $this->assertEquals(
+                        $this->determineClass($data),
+                        $this->determineClass($decodedData),
+                        $this->testFailedMessage(
+                            $this->jsonDecoderTestInstance(),
+                            'decodeJsonString',
+                            'return an object of the same type ' .
+                            'as the original object if the original ' .
+                            'object is an instance of a class that ' .
+                            'defines readonly properties. ' .
+                            'If the original object is an instance ' .
+                            'of a class that defines readonly ' .
+                            'properties it may not be possible to ' .
+                            'decode it to it\'s original state.'
+                        ),
+                    ),
+                default =>
+                    $this->assertEquals(
+                        $data,
+                        $decodedData,
+                        $this->testFailedMessage(
+                            $this->jsonDecoderTestInstance(),
+                            'decodeJsonString',
+                            'return the original data'
+                        ),
+                    )
+            };
+        }
     }
 }
 

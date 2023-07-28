@@ -16,7 +16,6 @@ use \ReflectionProperty;
 class JsonDecoder implements JsonDecoderInterface
 {
 
-#    private string $dataStringIndex = 'string';
     private string $reflectionClassNamePropertyName  = 'name';
 
     public function decode(Json $json): mixed
@@ -24,8 +23,7 @@ class JsonDecoder implements JsonDecoderInterface
         return $this->decodeJsonString($json->__toString());
     }
 
-
-    private function decodeJsonString(string $json): mixed
+    public function decodeJsonString(string $json): mixed
     {
         $data = $this->jsonDecode($json);
         if(!is_array($data)) {
